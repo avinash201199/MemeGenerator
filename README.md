@@ -1,13 +1,17 @@
 # Getting Started with Create React App
 
-To run this project on localhost <br><br>
+To run this project on your computer <br><br>
 
 1. Fork <br>
 2. Clone the project or download zip file and extract.<br>
 3. Install node js -https://nodejs.org/en/download/ <br>
 4. Open project folder on Vscode and run command `npm install`  on terminal of vs code<br>
-5. Then run command `npm start`<br>
+5. Then run command `npm start`<br><br>
+6. The project will open on the browser on localhost:3000<br>
 
+The Project url - https://avinash201199.github.io/MemeGenerator/ <br>
+
+<hr>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
