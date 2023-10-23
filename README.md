@@ -34,8 +34,8 @@ git clone https://github.com/<your user name>/MemeGenerator.git
 3. Go the folder
 
 ```bash
-  npm install MemeGenerator
   cd MemeGenerator
+  npm install 
 ```
 
 4. Add the git upstream
