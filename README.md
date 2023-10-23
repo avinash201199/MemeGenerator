@@ -40,7 +40,7 @@ git clone https://github.com/<your user name>/MemeGenerator.git
 
 4. Add the git upstream
 ```bash 
-git add upstream https://github.com/avinash201199/MemeGenerator.git
+git remote add upstream https://github.com/avinash201199/MemeGenerator.git
 ```
 
 5. Make your own branch
