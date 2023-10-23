@@ -1,6 +1,5 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
-
 const Meme = ({ meme, setMeme }) => {
     const [form, setForm] = useState({
         template_id: meme.id,
@@ -27,11 +26,6 @@ const Meme = ({ meme, setMeme }) => {
 
             })
     }
-
-    // const save = () => {
-
-    //     console.log(meme.url);
-    // }
     function save() {
         var xhr = new XMLHttpRequest();
         var url = meme.url;
