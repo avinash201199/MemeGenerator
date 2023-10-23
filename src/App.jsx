@@ -1,4 +1,3 @@
-import React from "react";
 import "./style.css"
 import Temp from "./Temp"
 import Meme from "./Meme"

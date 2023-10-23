@@ -1,82 +1,61 @@
-# Getting Started with Create React App
 
-To run this project on your computer <br><br>
+# Meme Generator
 
-1. Fork <br>
-2. Clone the project or download zip file and extract.<br>
-3. Install node js -https://nodejs.org/en/download/ <br>
-4. Open project folder on Vscode and run command `npm install`  on terminal of vs code<br>
-5. Then run command `npm start`<br><br>
-6. The project will open on the browser with localhost:3000<br>
+## Table of Contents
+1. Introduction
+2. Features
+3. Getting Started
+4. Prerequisites
+5. Installation
+6. Contributing
+7. License
 
-The Project url - https://avinash201199.github.io/MemeGenerator/ <br>
 
-<hr>
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Introduction
+Welcome to the Meme Generator Website! This documentation will guide you through the setup, usage, and customization of our React-based meme generator. This web application allows users to create, view, and edit memes with ease.
+## Installation
 
-## Available Scripts
+1. Fork the repo
 
-In the project directory, you can run:
+2. Clone the repos 
+```bash 
+git clone https://github.com/<your user name>/MemeGenerator.git
+```
+3. Go the folder
 
-### `npm start`
+```bash
+  npm install MemeGenerator
+  cd MemeGenerator
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4. Add the git upstream
+```bash 
+git add upstream https://github.com/avinash201199/MemeGenerator.git
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+5. Make your own branch
+``` bash
+git checkout -b <your branch> 
+```
 
-### `npm test`
+6. Add your changes
+```bash 
+git add .
+```
+7. Commit your changes
+```bash 
+git commit -m <your message>
+```
+8. Push your changes
+```bash 
+git push
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Contributing
 
-### `npm run build`
+Contributions are always welcome!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See `contributing.md` for ways to get started.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Please adhere to this project's `code of conduct`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
