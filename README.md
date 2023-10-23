@@ -13,6 +13,16 @@
 
 # Introduction
 Welcome to the Meme Generator Website! This documentation will guide you through the setup, usage, and customization of our React-based meme generator. This web application allows users to create, view, and edit memes with ease.
+
+
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+
+
+
 ## Installation
 
 1. Fork the repo
@@ -59,3 +69,6 @@ See `contributing.md` for ways to get started.
 
 Please adhere to this project's `code of conduct`.
 
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
