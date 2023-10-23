@@ -18,7 +18,8 @@ Welcome to the Meme Generator Website! This documentation will guide you through
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![image](https://github.com/avinash201199/MemeGenerator/assets/61057666/b80b2277-8d3b-4f4f-bca4-9a7e810d51bb)
+
 
 
 
