@@ -14,6 +14,60 @@ body {
   border: 30px solid transparent;
 }
 
+/*
+Added Navbar
+*/
+/* Navbar container */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.925); /* Background color for the navbar */
+  color: #fff; /* Text color */
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  border: 1px solid rgba(0, 0, 0, 0.678);
+  align-items: center;
+  padding: 20px 40px; /* Adjust padding as needed */
+  box-shadow:rgba(63, 64, 65, 0.363) 0px 7px 7px,
+  rgba(124, 215, 221, 0.22) 0px 7px 7px;; /* Add a subtle shadow */
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Logo style */
+.logo {
+ /* Adjust font size as needed */
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+/* Navigation links style */
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-right: 20px; /* Adjust spacing between links */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px; /* Adjust font size as needed */
+  transition: color 0.2s; /* Smooth color transition */
+}
+
+/* Hover effect for links */
+.nav-links a:hover {
+  color: #6fb7d7; /* Change color on hover */
+  text-decoration: underline; /* Add an underline on hover */
+}
+
+
 .meme {
   width: 100%;
   height: 350px;
