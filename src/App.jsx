@@ -3,6 +3,7 @@ import Temp from "./Temp"
 import Meme from "./Meme"
 import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
 
 const App = () => {
     const [temp, setTemp] = useState([]);
@@ -16,7 +17,7 @@ const App = () => {
     }, []);
     return (
         <div className="App">
-            <h1>Meme Generator</h1>
+            <Navbar/>
             {meme === null ? (<Temp temp={temp} setMeme={setMeme} />) : (<Meme meme={meme} setMeme={setMeme} />)}
             <Footer /> 
         </div>
