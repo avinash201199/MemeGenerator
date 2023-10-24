@@ -1,6 +1,7 @@
 import "./style.css"
 import Temp from "./Temp"
 import Meme from "./Meme"
+import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
         <div className="App">
             <h1>Meme Generator</h1>
             {meme === null ? (<Temp temp={temp} setMeme={setMeme} />) : (<Meme meme={meme} setMeme={setMeme} />)}
+            <Footer /> 
         </div>
     );
 }
