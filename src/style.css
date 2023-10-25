@@ -105,6 +105,7 @@ h1 {
 
 .memebnao {
   text-align: center;
+  margin-top: 5%;
 }
 
 .memebnao img {
@@ -177,3 +178,46 @@ input {
 .footer p {
   margin: 0;
 }
+
+
+/* media query for responsive design  */
+
+@media screen and (max-width: 1500px) {
+  .template {
+    width: 50%;
+   
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .template {
+    width: 100%;
+  }
+}
+
+
+/* MEDIA QUERY FOR NAVBAR */
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo {
+    margin-bottom: 20px;
+    margin-left : 130px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav-links li {
+    margin-right: 0;
+  }
+}
+
+
