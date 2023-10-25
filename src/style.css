@@ -177,3 +177,33 @@ input {
 .footer p {
   margin: 0;
 }
+
+
+
+/*Search bar*/
+
+/* MemeSearch.css */
+/* MemeSearch.css */
+.meme-search {
+  text-align: center;
+  margin: 20px 0;
+ 
+}
+
+.mem {
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border: 2px solid #333;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+ 
+}
+
+.search-input::placeholder {
+  color: white;
+}
+
+
