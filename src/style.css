@@ -206,4 +206,12 @@ input {
   color: white;
 }
 
+.goback{
+  border: none;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 20px;
+}
 
