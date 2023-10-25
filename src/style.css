@@ -5,7 +5,8 @@
 }
 
 body {
-  background-color: rgba(0, 0, 0, 0.925);
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: #bbe3f5;
 }
 
 .template {
@@ -19,22 +20,12 @@ Added Navbar
 */
 /* Navbar container */
 .navbar {
-  background-color: rgba(0, 0, 0, 0.925); /* Background color for the navbar */
-  color: #fff; /* Text color */
   display: flex;
-  justify-content: space-between;
-  border-radius: 5px;
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.678);
-  align-items: center;
-  padding: 20px 40px; /* Adjust padding as needed */
-  box-shadow:rgba(63, 64, 65, 0.363) 0px 7px 7px,
-  rgba(124, 215, 221, 0.22) 0px 7px 7px;; /* Add a subtle shadow */
-  color: white;
+  padding: 0.5rem 4.5rem; /* Adjust padding as needed */
   position: sticky;
   top: 0;
   z-index: 1;
+  border-bottom: 2px solid #ddf5ff;
 }
 
 /* Logo style */

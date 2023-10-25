@@ -1,17 +1,23 @@
 import React from "react";
 
-
 const Navbar = () => {
     return (
-        <nav className="navbar">
-            <div className="logo">Meme Generator</div>
-            <ul className="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#memes">Memes</a></li>
-                <li><a href="#about">About</a></li>
-                {/* Add more anchor tags for other sections if needed */}
-            </ul>
-        </nav>
+        <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a href="#" class="navbar-brand fs-4">Memes</a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto fs-6">
+                    <a href="#" class="nav-item nav-link"> <span className="mx-3">Home</span> </a>
+                    <a href="#" class="nav-item nav-link"><span className="mx-3">Memes</span></a>
+                    <a href="#" class="nav-item nav-link"><span className="mx-3">About</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+      
     );
 }
 
