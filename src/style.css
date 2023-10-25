@@ -215,3 +215,44 @@ input {
   height: 20px;
 }
 
+
+/*About us page*/
+
+.about-us {
+  width: 100vw;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  height: 100vh;
+  background-color:black;
+  text-align: left;
+  color: white;
+  gap:20px;
+}
+.right{
+  width:50%;
+}
+.left{
+  width:50%;
+}
+.left img{
+  width: 500px;
+}
+
+ h2 {
+  font-size: 24px;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 10px;
+}
+
+.about-us p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
