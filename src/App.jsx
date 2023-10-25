@@ -10,43 +10,7 @@ import "./style.css";
 const App = () => {
     const [temp, setTemp] = useState([]);
     const [meme, setMeme] = useState(null);
-
-    const handleSearch = (query) => {
-        const username = "RituGupta";
-        const password = "Ritu@123";
-    
-        
-        fetch(`https://api.imgflip.com/search_memes?username=${username}&password=${password}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password, query }),
-        })
-        
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(`Request failed with status: ${res.status}`);
-                }
-                return res.json();
-            })
-            .then((data) => {
-                console.log(data);
-                if (data && data.success) {
-                    setTemp(data.data.memes);
-                    console.log(data.data.memes)
-                } else {
-                    console.error("API Error:", data.error_message);
-                    
-                }
-            })
-            .catch((error) => {
-                console.error("Error searching for memes:", error);
-               
-            });
-    };
-    
-    
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         fetch("https://api.imgflip.com/get_memes")
@@ -56,11 +20,19 @@ const App = () => {
             });
     }, []);
 
+    // Function to filter memes based on the search query
+    const filteredMemes = temp.filter((meme) =>
+        meme.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="App">
             <Navbar />
-            <MemeSearch onSearch={handleSearch} />
-            {meme === null ? <Temp temp={temp} setMeme={setMeme} /> : <Meme meme={meme} setMeme={setMeme} />}
+
+            {/* Add the search input field */}
+            <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
+            {meme === null ? <Temp temp={filteredMemes} setMeme={setMeme} /> : <Meme meme={meme} setMeme={setMeme} />}
             <Footer />
         </div>
     );

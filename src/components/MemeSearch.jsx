@@ -1,25 +1,22 @@
-import React, { useState } from "react";
-import "../style.css"; 
+// MemeSearch.js
+import React from "react";
+import "../style.css";
 
-const MemeSearch = ({ onSearch }) => {
-    const [searchQuery, setSearchQuery] = useState("");
-
-    const handleSearch = () => {
-        onSearch(searchQuery);
+const MemeSearch = ({ searchQuery, setSearchQuery }) => {
+    const handleSearchChange = (event) => {
+        // Update the search query state in the parent component
+        setSearchQuery(event.target.value);
     };
 
     return (
-        <div className="search-container"> 
+        <div className="meme-search">
             <input
-                className="search-input" 
+            className="mem"
                 type="text"
-                placeholder="Search for memes..."
+                placeholder="Search Memes"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
             />
-            <button className="search-button" onClick={handleSearch}>
-                Search
-            </button>
         </div>
     );
 };

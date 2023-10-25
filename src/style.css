@@ -182,41 +182,28 @@ input {
 
 /*Search bar*/
 
-
-.search-container {
-  
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
+/* MemeSearch.css */
+/* MemeSearch.css */
+.meme-search {
+  text-align: center;
+  margin: 20px 0;
+ 
 }
 
-.search-input {
-  width: 400px;
+.mem {
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
   padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  border: 2px solid #333;
   border-radius: 20px;
-  margin-right: 10px;
-}
-
-.search-button {
-  background-color: black; 
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  cursor: pointer;
   font-size: 16px;
-}
-
-.search-button:hover {
-  background-color:white;
-  color: black; 
-}
-
-.search-button:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+ 
 }
+
+.search-input::placeholder {
+  color: white;
+}
+
+
