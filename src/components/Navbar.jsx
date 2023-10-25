@@ -1,16 +1,30 @@
 import React from "react";
-
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+
+    const goBack = () => {
+        // Use the navigate function with -1 to go back one level in the route hierarchy
+        navigate(-1);
+    };
+
     return (
         <nav className="navbar">
             <div className="logo">Meme Generator</div>
             <ul className="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#memes">Memes</a></li>
-                <li><a href="#about">About</a></li>
-                {/* Add more anchor tags for other sections if needed */}
+                <li>
+                    <Link to="/">Home</Link>
+                </li>
+                <li>
+                    <Link to="/memes">Memes</Link>
+                </li>
+                <li>
+                    <Link to="/about">About</Link>
+                </li>
+                <button onClick={()=>navigate(-1)}>goBack</button>
             </ul>
+           
         </nav>
     );
 }

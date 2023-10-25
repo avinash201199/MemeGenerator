@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+
 const Meme = ({ meme, setMeme }) => {
+  
     const [form, setForm] = useState({
         template_id: meme.id,
         username: "RituGupta",
