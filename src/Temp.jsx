@@ -3,10 +3,10 @@
 // eslint-disable-next-line react/prop-types
 const Temp = ({ temp, setMeme }) => {
     return (
-        <div className="container mx-auto p-4">
+        <div className="Templates">
             {temp.map(temps => (
                 <div key={temps.id}
-                    className="template w-1/3 inline-block border-30 border-transparent"
+                    className="template"
                     onClick={() => {
                         setMeme(temps)
                         // console.log(setMeme);

@@ -50,7 +50,7 @@ const Home = () => {
   };
 
   return (
-    <div className="bg-black text-white">
+    <div className="App">
    
       <Navbar />
      
