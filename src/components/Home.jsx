@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import MemeSearch from "./MemeSearch";
@@ -8,33 +7,68 @@ import Footer from "./Footer";
 import "../style.css";
 
 const Home = () => {
-    const [temp, setTemp] = useState([]);
-    const [meme, setMeme] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
+  const [temp, setTemp] = useState([]);
+  const [meme, setMeme] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9); // Number of memes to display per page
 
-    useEffect(() => {
-        fetch("https://api.imgflip.com/get_memes")
-            .then((res) => res.json())
-            .then((data) => {
-                setTemp(data.data.memes);
-            });
-    }, []);
+  useEffect(() => {
+    fetch("https://api.imgflip.com/get_memes")
+      .then((res) => res.json())
+      .then((data) => {
+        setTemp(data.data.memes);
+      });
+  }, []);
 
-    // Function to filter memes based on the search query
-    const filteredMemes = temp.filter((meme) =>
-        meme.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Function to filter memes based on the search query
+  const filteredMemes = temp.filter((meme) =>
+    meme.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    return (
-        
-        <div className="App">
-            <Navbar />
-            <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            {meme === null ? <Temp temp={filteredMemes} setMeme={setMeme} /> : <Meme meme={meme} setMeme={setMeme} />}
-            <Footer />
-        </div>
-        
-    );
+  // Calculate the index of the last and first item on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMemes = filteredMemes.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Function to change the current page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(filteredMemes.length / itemsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  return (
+    <div className="App">
+      <Navbar />
+      <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      {meme === null ? (
+        <Temp temp={currentMemes} setMeme={setMeme} />
+      ) : (
+        <Meme meme={meme} setMeme={setMeme} />
+      )}
+
+      <div className="pagination">
+        <button onClick={prevPage}>Previous</button>
+        {Array.from({ length: Math.ceil(filteredMemes.length / itemsPerPage) }, (_, i) => (
+          <button key={i} onClick={() => paginate(i + 1)}>{i + 1}</button>
+  ))}
+        <button onClick={nextPage}>Next</button>
+      </div>
+
+      <Footer />
+    </div>
+  );
 };
 
 export default Home;

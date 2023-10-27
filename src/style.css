@@ -257,3 +257,20 @@ input {
   line-height: 1.5;
   margin-bottom: 1rem;
 }
+
+.pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 100px;
+  gap:2px;
+ 
+}
+
+.pagination button{
+  background-color: white;
+  padding: 5px 5px;
+  border:1px solid grey;
+  border-radius: 2px;
+  cursor: pointer;
+}
