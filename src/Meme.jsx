@@ -46,8 +46,8 @@ const Meme = ({ meme, setMeme }) => {
         xhr.send();
     }
     return (
-        <div className="memebnao">
-            <img src={meme.url} alt="meme"></img>
+        <div className="memebnao items-center  text-center">
+            <img className="w-auto h-96 border-1 border-black" src={meme.url} alt="meme"></img>
 
             <div>
                 {[...Array(meme.box_count)].map((_, index) => (
@@ -65,10 +65,10 @@ const Meme = ({ meme, setMeme }) => {
                     </input>))}
             </div>
 
-            <div className="btns">
-                <span> <button className="backbtn" title="Back" onClick={() => { setMeme(null) }}>Back</button></span>
-                <span><button className="generatebutton" onClick={generatememe}>Generate Meme</button></span>
-                <span><button className="generatebutton" onClick={save} >Save</button></span>
+            <div className="btns mt-6">
+                <span> <button className="backbtn text-xl bg-transparent w-40 h-11 rounded-10 text-green-400 bg-blue-500 cursor-pointer" title="Back" onClick={() => { setMeme(null) }}>Back</button></span>
+                <span><button className="generatebutton mt-7 h-11 w-48 ml-16 bg-transparent text-1.1rem rounded-10 text-green-400 bg-blue-500 cursor-pointer" onClick={generatememe}>Generate Meme</button></span>
+                <span><button className="generatebutton mt-7 h-11 w-48 ml-16 bg-transparent text-1.1rem rounded-10 text-green-400 bg-blue-500 cursor-pointer" onClick={save} >Save</button></span>
 
             </div>
         </div>

@@ -5,6 +5,7 @@ import Temp from "../Temp";
 import Meme from "../Meme";
 import Footer from "./Footer";
 import "../style.css";
+import "../index.css";
 
 const Home = () => {
   const [temp, setTemp] = useState([]);
@@ -49,8 +50,10 @@ const Home = () => {
   };
 
   return (
-    <div className="App">
+    <div className="bg-black text-white">
+   
       <Navbar />
+     
       <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       {meme === null ? (
         <Temp temp={currentMemes} setMeme={setMeme} />
@@ -58,12 +61,12 @@ const Home = () => {
         <Meme meme={meme} setMeme={setMeme} />
       )}
 
-      <div className="pagination">
-        <button onClick={prevPage}>Previous</button>
+      <div className="pagination flex items-center justify-center mb-100 gap-2">
+        <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" onClick={prevPage}>Previous</button>
         {Array.from({ length: Math.ceil(filteredMemes.length / itemsPerPage) }, (_, i) => (
-          <button key={i} onClick={() => paginate(i + 1)}>{i + 1}</button>
+          <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" key={i} onClick={() => paginate(i + 1)}>{i + 1}</button>
   ))}
-        <button onClick={nextPage}>Next</button>
+        <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" onClick={nextPage}>Next</button>
       </div>
 
       <Footer />
