@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import Navbar from "./Navbar";
 import MemeSearch from "./MemeSearch";
 import Temp from "../Temp";
@@ -13,6 +14,8 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(9); // Number of memes to display per page
+
+  
 
   useEffect(() => {
     fetch("https://api.imgflip.com/get_memes")
@@ -51,17 +54,15 @@ const Home = () => {
 
   return (
     <div className="App">
-      <Navbar />
+      <Navbar meme={meme} setMeme={setMeme} />
 
       {meme === null ? (
         <>
-          {" "}
           <MemeSearch
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
           <Temp temp={currentMemes} setMeme={setMeme} />
-          
           <div className="pagination flex items-center justify-center mb-100 gap-2">
             <button
               className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer"
@@ -90,7 +91,10 @@ const Home = () => {
           </div>
         </>
       ) : (
-        <Meme meme={meme} setMeme={setMeme} />
+        <>
+          {/* {navigate("/meme")}; */}
+          <Meme meme={meme} setMeme={setMeme} />
+        </>
       )}
 
       <Footer />

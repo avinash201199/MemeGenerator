@@ -152,12 +152,16 @@ h2 {
 .memebnao {
   text-align: center;
   margin-top: 5%;
+  
 }
 
 .memebnao img {
   width: auto;
   height: 400px;
   border: 1px solid var(--color-background);
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 5%;
 }
 
 .btns {
@@ -335,7 +339,7 @@ input {
 }
 
 .pagination button{
-  background-color: white;
+  background-color: var(--color-text);
   padding: 5px 5px;
   border:1px solid grey;
   border-radius: 2px;
