@@ -105,6 +105,10 @@ h1 {
 }
 
 .memebnao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
 }
 
@@ -274,3 +278,65 @@ input {
   border-radius: 2px;
   cursor: pointer;
 }
+
+
+/*Mobile responsive*/
+/* Add a media query for screens with a maximum width of 768px (typical for mobile devices) */
+@media (max-width: 768px) {
+  .template {
+    width: 100%; /* Make the template full width on smaller screens */
+    border: 10px solid transparent; /* Reduce border size for better visual appearance */
+  }
+  .navbar {
+    width: 100%;;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px 20px; /* Reduce padding for the navbar */
+  }
+  .logo {
+    display: none;
+    font-size: 1.5rem; /* Reduce logo font size for better fit */
+  }
+  .nav-links li {
+    margin-right: 10px; /* Reduce spacing between navigation links */
+  }
+  .generatebutton {
+    margin-left: 10px;
+  }
+  .memebnao img {
+    width: 100%; /* Make the meme images scale to the screen width */
+    height: auto; /* Maintain aspect ratio */
+  }
+  .backbtn {
+    font-size: 16px; /* Reduce button font size for better fit */
+  }
+  input {
+    width: 100%; /* Make input fields full width */
+    height: 40px;
+    margin-left: 0; /* Remove left margin */
+  }
+  .pagination {
+    margin-top: 10px;
+    margin-bottom: 100px; /* Reduce margin for better spacing */
+  }
+  .pagination button {
+    padding: 3px 3px; /* Reduce button padding */
+  }
+  .about-us {
+    flex-direction: column; /* Stack content vertically on smaller screens */
+    align-items: center; /* Center content on smaller screens */
+  }
+  .left img {
+    width: 100%; /* Make the image scale to the screen width */
+    max-width: 300px; /* Set a maximum width to ensure it fits on the screen */
+    height: auto; /* Maintain aspect ratio */
+  }
+  h2 {
+    font-size: 20px; /* Reduce heading font size for better fit */
+  }
+}
+
+
+
+
