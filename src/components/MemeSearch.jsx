@@ -1,6 +1,7 @@
 // MemeSearch.js
 import React from "react";
 import "../style.css";
+import "../index.css";
 
 const MemeSearch = ({ searchQuery, setSearchQuery }) => {
     const handleSearchChange = (event) => {
@@ -9,9 +10,9 @@ const MemeSearch = ({ searchQuery, setSearchQuery }) => {
     };
 
     return (
-        <div className="meme-search">
+        <div className="meme-search text-center mt-20">
             <input
-            className="mem"
+            className="mem w-full max-w-300 p-2 border-2 border-gray-300 rounded-20 text-2xl outline-none"
                 type="text"
                 placeholder="Search Memes"
                 value={searchQuery}
