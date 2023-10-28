@@ -1,3 +1,64 @@
+:root {
+  /* ====== */
+
+  /* BREAKPOINTS */
+  --bp-max-xs: 575px;
+  --bp-min-sm: 576px;
+  --bp-min-md: 768px;
+  --bp-min-lg: 992px;
+  --bp-min-xl: 1200px;
+  --bp-min-xxl: 1400px;
+
+  /* COLORS */
+
+  --color-background: #000000ec;
+  --color-primary: #6fb7d7;
+  --color-secondary: #8bf710ec;
+  --color-tertiary: #0C356A;
+  --color-text: #fff;
+
+  /* ====== */
+
+  /* FONTS */
+
+  --font-family-body: "Oxanium", cursive;
+  /* --font-family-title: "Poppins", "Helvetica Neue", helvetica, arial,
+     sans-serif;
+   --font-family-display: "Poppins", "Helvetica Neue", helvetica, arial,
+     sans-serif;
+   --font-family-mono: source-code-pro, "Menlo", "Monaco", "Consolas",
+     "Courier New", monospace;
+   --font-family-input: var(--font-family-body);  */
+
+  /* font sizes */
+  --font-size-em: 1.2em;
+  --font-size-mammoth: 2.488rem;
+  --font-size-xhuge: 2.074rem;
+  --font-size-huge: 1.728rem;
+  --font-size-xlarge: 1.44rem;
+  --font-size-large: 1.2rem;
+  --font-size-normal: 1rem;
+  --font-size-tiny: 0.579rem;
+
+  /* line heights */
+  --line-height: 1.5;
+  --line-height-thin: 1.25;
+
+  /* weights */
+  --font-weight-bold: 600;
+  --font-weight-semibold: 500;
+  --font-weight-normal: 400;
+  --font-weight-light: 300;
+  --font-weight-thin: 200;
+
+  /* TEMPLATE WIDTHS */
+  --template-width-sm: 33.3333%;
+  --template-width-md: 50%;
+  --template-width-lg: 100%;
+
+  /* ====== */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,33 +66,39 @@
 }
 
 body {
-  background-color: rgba(0, 0, 0, 0.925);
+  background-color: var(--color-background);
+}
+
+h2 {                                                
+  font-size: var(--font-size-xhuge);
+  color: var(--color-text);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 10px;
 }
 
 .template {
-  width: 33.3333%;
+  width: var(--template-width-sm);
   display: inline-block;
   border: 30px solid transparent;
 }
 
-/*
-Added Navbar
-*/
+/*Added Navbar*/
 /* Navbar container */
 .navbar {
-  background-color: rgba(0, 0, 0, 0.925); /* Background color for the navbar */
-  color: #fff; /* Text color */
+  background-color: var(--color-background); /* Background color for the navbar */
+  color: var(--color-text); /* Text color */
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.678);
   align-items: center;
   padding: 20px 40px; /* Adjust padding as needed */
-  box-shadow:rgba(63, 64, 65, 0.363) 0px 7px 7px,
-  rgba(124, 215, 221, 0.22) 0px 7px 7px;; /* Add a subtle shadow */
-  color: white;
+  box-shadow: rgba(63, 64, 65, 0.363) 0px 7px 7px,
+    rgba(124, 215, 221, 0.22) 0px 7px 7px; 
+  color: var(--color-text);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -39,7 +106,7 @@ Added Navbar
 
 /* Logo style */
 .logo {
- /* Adjust font size as needed */
+  /* Adjust font size as needed */
   font-weight: bold;
   font-size: 2rem;
 }
@@ -56,19 +123,15 @@ Added Navbar
 
 .nav-links a {
   text-decoration: none;
-  color: #fff;
-  font-size: 18px; /* Adjust font size as needed */
+  color: var(--color-text);
+  font-size: var(--font-size-large); /* Adjust font size as needed */
   transition: color 0.2s; /* Smooth color transition */
 }
 
 /* Hover effect for links */
 .nav-links a:hover {
-  color: #6fb7d7; /* Change color on hover */
-  text-decoration: underline; /* Add an underline on hover */
+  color: var(--color-primary); /* Change color on hover */
 }
-
-
-
 
 .template .meme {
   width: 100%;
@@ -76,7 +139,7 @@ Added Navbar
   background-size: cover;
   background-position: center;
   cursor: pointer;
-  transition: all 0.3s; 
+  transition: all 0.3s;
   border-radius: 5px;
 }
 
@@ -85,24 +148,6 @@ Added Navbar
   transform: scale(1.05); /* Add a scale effect on hover */
 }
 
-h1 {
-  width: 100%;
-  min-height: 60px;
-  background-color: rgba(0, 0, 0, 0.438);
-  box-shadow: rgba(63, 64, 65, 0.363) 0px 7px 7px,
-    rgba(124, 215, 221, 0.22) 0px 7px 7px;
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.678);
-  /* font-family: 'Luckiest Guy', cursive; */
-  font-size: 2rem;
-  text-align: center;
-  padding: 5px;
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
 
 .memebnao {
   text-align: center;
@@ -112,7 +157,7 @@ h1 {
 .memebnao img {
   width: auto;
   height: 400px;
-  border: 1px solid black;
+  border: 1px solid var(--color-background);
 }
 
 .btns {
@@ -121,16 +166,13 @@ h1 {
 }
 
 .backbtn {
-  /* float:left; */
-  font-size: 20px;
+  font-size: var(--font-size-large);
   background: transparent;
   width: 100px;
   height: 45px;
-  /* margin-right: 100px; */
-  /* margin-top: 2%; */
   border-radius: 10px;
-  color: rgb(139, 247, 16);
-  background-color: blue;
+  color: var(--color-secondary);
+  background-color: var(--color-tertiary);
   cursor: pointer;
 }
 
@@ -142,9 +184,9 @@ input {
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 1px solid white;
-  color: rgb(139, 247, 16);
-  font-size: 15px;
+  border-bottom: 1px solid var(--color-text);
+  color: var(--color-secondary);
+  font-size: var(--font-size-large);
 }
 
 ::placeholder {
@@ -158,17 +200,16 @@ input {
   width: 150px;
   margin-left: 60px;
   background: transparent;
-  font-size: 1.1rem;
+  font-size: var(--font-size-large);
   border-radius: 10px;
-  color: rgb(139, 247, 16);
-  background-color: blue;
+  color: var(--color-secondary);
+  background-color: var(--color-tertiary);
   cursor: pointer;
 }
 
-
 .footer {
-  background-color: rgba(0, 0, 0, 0.925);
-  color: #fff;
+  background-color: var(--color-background);
+  color: var(--color-text);
   padding: 10px 0;
   text-align: center;
   position: fixed;
@@ -180,16 +221,12 @@ input {
   margin: 0;
 }
 
-
-
 /* media query for responsive design  */
 
 @media screen and (max-width: 1500px) {
   .template {
     width: 50%;
-   
   }
-
 }
 
 @media screen and (max-width: 768px) {
@@ -197,7 +234,6 @@ input {
     width: 100%;
   }
 }
-
 
 /* MEDIA QUERY FOR NAVBAR */
 
@@ -209,7 +245,7 @@ input {
 
   .logo {
     margin-bottom: 20px;
-    margin-left : 130px;
+    margin-left: 130px;
   }
 
   .nav-links {
@@ -222,8 +258,7 @@ input {
   }
 }
 
-
-=======
+/* ======= */
 
 /*Search bar*/
 
@@ -232,7 +267,6 @@ input {
 .meme-search {
   text-align: center;
   margin: 20px 0;
- 
 }
 
 .mem {
@@ -242,16 +276,13 @@ input {
   padding: 10px;
   border: 2px solid #333;
   border-radius: 20px;
-  font-size: 16px;
+  font-size: var(--font-size-normal);
   outline: none;
- 
 }
 
-.search-input::placeholder {
-  color: white;
-}
 
-.goback{
+
+.goback {
   border: none;
   border-radius: 10px;
   align-items: center;
@@ -259,7 +290,6 @@ input {
   width: 60px;
   height: 20px;
 }
-
 
 /*About us page*/
 
@@ -272,32 +302,25 @@ input {
   align-items: center;
   padding: 1.5rem;
   height: 100vh;
-  background-color:black;
+  background-color: var(--color-background);
   text-align: left;
-  color: white;
-  gap:20px;
+  color: var(--color-text);
+  gap: 20px;
 }
-.right{
-  width:50%;
+.right {
+  width: 50%;
 }
-.left{
-  width:50%;
+.left {
+  width: 50%;
 }
-.left img{
+.left img {
   width: 500px;
 }
 
- h2 {
-  font-size: 24px;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 10px;
-}
+
 
 .about-us p {
-  font-size: 16px;
+  font-size: var(--font-size-large);
   line-height: 1.5;
   margin-bottom: 1rem;
 }
