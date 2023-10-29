@@ -52,22 +52,27 @@ const Home = () => {
   return (
     <div className="App">
    
-      <Navbar />
+    <Navbar meme={meme} setMeme={setMeme} />
      
-      <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      
       {meme === null ? (
+        
+        <>
+        <MemeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <Temp temp={currentMemes} setMeme={setMeme} />
-      ) : (
-        <Meme meme={meme} setMeme={setMeme} />
-      )}
-
-      <div className="pagination  mb-[100px] flex items-center justify-center mb-100 gap-2">
+        <div className="pagination  mb-[100px] flex items-center justify-center mb-100 gap-2">
         <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" onClick={prevPage}>Previous</button>
         {Array.from({ length: Math.ceil(filteredMemes.length / itemsPerPage) }, (_, i) => (
           <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" key={i} onClick={() => paginate(i + 1)}>{i + 1}</button>
   ))}
         <button className="bg-white p-1 border border-gray-300 rounded-2 cursor-pointer" onClick={nextPage}>Next</button>
       </div>
+        </>
+      ) : (
+        <Meme meme={meme} setMeme={setMeme} />
+      )}
+
+      
 
       <Footer />
     </div>
