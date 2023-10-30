@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div className="App">
-      <Navbar meme={meme} setMeme={setMeme} />
+      <Navbar setMeme={setMeme} />
 
       {meme === null ? (
         <>

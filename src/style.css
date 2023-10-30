@@ -102,6 +102,7 @@ h2 {
   position: sticky;
   top: 0;
   z-index: 1;
+  margin-bottom: 40px;
 }
 
 /* Logo style */
@@ -150,6 +151,10 @@ h2 {
 
 
 .memebnao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
   margin-top: 5%;
   
@@ -209,6 +214,7 @@ input {
   color: var(--color-secondary);
   background-color: var(--color-tertiary);
   cursor: pointer;
+  margin-bottom: 100px;
 }
 
 .footer {
