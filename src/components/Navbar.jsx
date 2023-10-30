@@ -3,19 +3,20 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css"
 
-const Navbar = () => {
+const Navbar = ({meme , setMeme}) => {
     const navigate = useNavigate();
 
 
     return (
         <nav className="navbar  bg-black text-white flex justify-between rounded-full border-1 border-black border-opacity-70 items-center px-10 py-2 shadow-md sticky top-0 z-10">
             <div className="logo font-bold text-2xl">Meme Generator</div>
+            
             <ul className="nav-links list-none flex">
                 <li className="mr-20">
-                    <Link to="/">Home</Link>
+                    <Link to="/" onClick={() => setMeme(null)}>Home</Link>
                 </li>
                 <li className="mr-20">
-                    <Link to="/memes">Memes</Link>
+                    <Link to="/" onClick={() => setMeme(null)}>Memes</Link>
                 </li>
                 <li className="mr-20">
                     <Link to="/about">About</Link>
