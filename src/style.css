@@ -87,22 +87,25 @@ h2 {
 /*Added Navbar*/
 /* Navbar container */
 .navbar {
-  background-color: var(--color-background); /* Background color for the navbar */
-  color: var(--color-text); /* Text color */
+  background-color: var(--color-background);
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   align-items: center;
-  padding: 20px 40px; /* Adjust padding as needed */
-  box-shadow: rgba(63, 64, 65, 0.363) 0px 7px 7px,
-    rgba(124, 215, 221, 0.22) 0px 7px 7px; 
+  padding: 20px 40px;
+  box-shadow: inset rgba(63, 64, 65, 0.363) -10px -14px 16px, rgba(124, 215, 221, 0.22) 1px -2px 20px 20px;
   color: var(--color-text);
   position: sticky;
   top: 0;
   z-index: 1;
   margin-bottom: 40px;
+  margin-top: 10px;
+  width : 90%;
+  margin-left: 5%;
 }
 
 /* Logo style */
@@ -351,3 +354,58 @@ input {
   border-radius: 2px;
   cursor: pointer;
 }
+
+/*Mobile responsive*/
+
+@media (max-width: 768px) {
+  .template {
+    width: 100%; 
+    border: 10px solid transparent; 
+  }
+  .navbar {
+    width: 100%;;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px 20px; 
+  }
+  .logo {
+    display: none; 
+  }
+
+  .nav-links li {
+    margin-right: 10px; 
+  }
+  .generatebutton {
+    margin-left: 10px;
+  }
+  .memebnao img {
+    width: 100%; 
+    height: auto; 
+  }
+  .backbtn {
+    font-size: var(--font-size-large); 
+  }
+  input {
+    width: 100%; 
+    height: 40px;
+    margin-left: 0;
+  }
+  .pagination {
+    margin-top: 10px;
+    margin-bottom: 100px; 
+  }
+  .pagination button {
+    padding: 3px 3px; 
+  }
+  .about-us {
+    flex-direction: column; 
+    align-items: center;
+  }
+  .left img {
+    width: 100%; 
+    max-width: 300px; 
+    height: auto; 
+  }
+}
+
