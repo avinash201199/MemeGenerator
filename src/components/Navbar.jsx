@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css"
 
-const Navbar = ({meme , setMeme}) => {
+const Navbar = ({setMeme}) => {
     const navigate = useNavigate();
 
 
@@ -13,10 +13,10 @@ const Navbar = ({meme , setMeme}) => {
             
             <ul className="nav-links list-none flex">
                 <li className="mr-20">
-                    <Link to="/" onClick={() => setMeme(null)}>Home</Link>
+                    <Link to="/"onClick={() => setMeme(null)} >Home</Link>
                 </li>
                 <li className="mr-20">
-                    <Link to="/" onClick={() => setMeme(null)}>Memes</Link>
+                    <Link to="/"  onClick={() => setMeme(null)} >Memes</Link>
                 </li>
                 <li className="mr-20">
                     <Link to="/about">About</Link>

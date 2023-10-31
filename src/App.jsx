@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Route,Routes } from "react-router-dom";
 
 import Home from "./components/Home";
@@ -15,6 +15,8 @@ const App = () => {
         <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+           
+            {/* Define other routes here */}
         </Routes>
        
         
