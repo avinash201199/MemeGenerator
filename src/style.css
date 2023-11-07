@@ -342,3 +342,30 @@ input {
 
 
 
+/* Style the vertical scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Set the color of the scrollbar thumb */
+  border-radius: 6px; /* Round the corners of the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Change the thumb color on hover */
+}
+
+/* Style the horizontal scrollbar */
+::-webkit-scrollbar-track-horizontal {
+  background-color: #eee; /* Set the color of the horizontal scrollbar track */
+}
+
+::-webkit-scrollbar-thumb-horizontal {
+  background-color: #888; /* Set the color of the horizontal scrollbar thumb */
+  border-radius: 6px; /* Round the corners of the thumb */
+}
+
+::-webkit-scrollbar-thumb-horizontal:hover {
+  background-color: #555; /* Change the horizontal thumb color on hover */
+}
