@@ -338,10 +338,6 @@ input {
     font-size: 20px; 
   }
 }
-
-
-
-
 /* Style the vertical scrollbar */
 ::-webkit-scrollbar {
   width: 12px; /* Set the width of the scrollbar */
