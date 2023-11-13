@@ -1,14 +1,11 @@
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../index.css"
 
-const Navbar = ({meme , setMeme}) => {
+const Navbar = ({setMeme}) => {
     const navigate = useNavigate();
 
-    const goBack = () => {
-        // Use the navigate function with -1 to go back one level in the route hierarchy
-        navigate(-1);
-    };
 
     return (
         <nav className="navbar  bg-black text-white flex justify-between rounded-full border-1 border-black border-opacity-70 items-center px-10 py-2 shadow-md sticky top-0 z-10">
@@ -16,10 +13,10 @@ const Navbar = ({meme , setMeme}) => {
             
             <ul className="nav-links list-none flex">
                 <li className="mr-20">
-                    <Link to="/" onClick={() => setMeme(null)}>Home</Link>
+                    <Link to="/"onClick={() => setMeme(null)} >Home</Link>
                 </li>
                 <li className="mr-20">
-                    <Link to="/" onClick={() => setMeme(null)}>Memes</Link>
+                    <Link to="/"  onClick={() => setMeme(null)} >Memes</Link>
                 </li>
                 <li className="mr-20">
                     <Link to="/about">About</Link>
