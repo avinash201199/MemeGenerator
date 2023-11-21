@@ -53,6 +53,7 @@ const Home = () => {
   };
 
   return (
+    
     <div className="App">
       <Navbar setMeme={setMeme} />
 
