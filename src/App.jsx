@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import "./style.css";
 import About from "./components/About";
 import History from "./components/History";
+import NotFound from "./components/NotFound";
 
 
 
@@ -17,8 +18,7 @@ const App = () => {
             <Route exact path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
-
-            {/* Define other routes here */}
+            <Route path="*" element={<NotFound />} />
         </Routes>
        
         
