@@ -41,11 +41,19 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
                         </Link>
                     </li>
                     <li>
-                        <Link 
-                            to="/about" 
+                        <Link
+                            to="/about"
                             className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
                         >
                             About
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/history"
+                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
+                        >
+                            History
                         </Link>
                     </li>
                     <li>

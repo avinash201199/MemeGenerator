@@ -13,6 +13,19 @@ const Meme = ({ meme, setMeme }) => {
 
     const [memeGenerated, setMemeGenerated] = useState(false);
 
+    const saveMemeToHistory = (memeData) => {
+        const savedMemes = JSON.parse(localStorage.getItem('memeHistory') || '[]');
+        const newMeme = {
+            id: Date.now(),
+            url: memeData.url,
+            template_name: meme.name || 'Unknown Template',
+            texts: form.boxes.map(box => box.text || ''),
+            created_at: new Date().toISOString()
+        };
+        savedMemes.unshift(newMeme);
+        localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
+    };
+
     const generatememe = () => {
         let url = `https://api.imgflip.com/caption_image?template_id=${form.template_id}&username=${form.username}&password=${form.password}`;
         form.boxes.map((box, index) => {
@@ -24,6 +37,7 @@ const Meme = ({ meme, setMeme }) => {
                 if (data.success === true) {
                     setMeme({ ...meme, url: data.data.url })
                     setMemeGenerated(true);
+                    saveMemeToHistory(data.data);
 
                 } else {
                     alert("Enter Some Text");
