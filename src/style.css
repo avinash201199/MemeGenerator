@@ -217,7 +217,7 @@ input {
   color: var(--color-secondary);
   background-color: var(--color-tertiary);
   cursor: pointer;
-  margin-bottom: 100px;
+  margin-bottom: 20px;
 }
 
 .footer {
@@ -225,9 +225,8 @@ input {
   color: var(--color-text);
   padding: 10px 0;
   text-align: center;
-  position: fixed;
-  bottom: 0;
   width: 100%;
+  margin-top: auto;
 }
 
 .footer p {
@@ -252,22 +251,25 @@ input {
 
 @media screen and (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 10px 15px;
   }
 
   .logo {
-    margin-bottom: 20px;
-    margin-left: 130px;
+    font-size: 1.5rem;
   }
 
   .nav-links {
-    width: 100%;
-    justify-content: space-around;
+    gap: 8px;
   }
 
-  .nav-links li {
-    margin-right: 0;
+  .nav-links a {
+    font-size: 0.875rem;
+  }
+
+  .goback {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-width: auto;
   }
 }
 
@@ -296,12 +298,12 @@ input {
 
 
 .goback {
-  border: none;
-  border-radius: 10px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 20px;
+  border: none;
+  min-width: auto;
+  height: auto;
 }
 
 /*About us page*/
@@ -342,17 +344,49 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 100px;
-  gap:2px;
- 
+  margin-bottom: 20px;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .pagination button{
-  background-color: var(--color-text);
-  padding: 5px 5px;
-  border:1px solid grey;
-  border-radius: 2px;
+  background-color: #1f2937;
+  color: #d1d5db;
+  padding: 8px 12px;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  min-width: 40px;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #374151;
+  color: white;
+  border-color: #6b7280;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8) !important;
+  color: white !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 4px 20px 0 rgba(37, 99, 235, 0.6), 0 0 0 3px rgba(59, 130, 246, 0.4) !important;
+  transform: scale(1.15) !important;
+  font-weight: bold !important;
+  z-index: 10;
+  position: relative;
+}
+
+.pagination button.active:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 6px 25px 0 rgba(37, 99, 235, 0.7), 0 0 0 3px rgba(59, 130, 246, 0.5) !important;
+  transform: scale(1.2) !important;
 }
 
 /*Mobile responsive*/
@@ -393,7 +427,7 @@ input {
   }
   .pagination {
     margin-top: 10px;
-    margin-bottom: 100px; 
+    margin-bottom: 20px; 
   }
   .pagination button {
     padding: 3px 3px; 
