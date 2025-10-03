@@ -9,28 +9,24 @@
   --bp-min-xl: 1200px;
   --bp-min-xxl: 1400px;
 
-  /* COLORS */
-
+  /* COLORS - DARK THEME (default) */
   --color-background: #000000ec;
   --color-primary: #6fb7d7;
   --color-secondary: #8bf710ec;
   --color-tertiary: #0C356A;
   --color-text: #fff;
 
+  /* Light theme variables */
+  --color-background-light: #ffffff;
+  --color-text-light: #000000;
+  --color-primary-light: #2563eb;
+  --color-secondary-light: #dc2626;
+  --color-tertiary-light: #1e40af;
+
   /* ====== */
 
   /* FONTS */
-
   --font-family-body: "Oxanium", cursive;
-  /* --font-family-title: "Poppins", "Helvetica Neue", helvetica, arial,
-     sans-serif;
-   --font-family-display: "Poppins", "Helvetica Neue", helvetica, arial,
-     sans-serif;
-   --font-family-mono: source-code-pro, "Menlo", "Monaco", "Consolas",
-     "Courier New", monospace;
-   --font-family-input: var(--font-family-body);  */
-
-  /* font sizes */
   --font-size-em: 1.2em;
   --font-size-mammoth: 2.488rem;
   --font-size-xhuge: 2.074rem;
@@ -39,24 +35,25 @@
   --font-size-large: 1.2rem;
   --font-size-normal: 1rem;
   --font-size-tiny: 0.579rem;
-
-  /* line heights */
   --line-height: 1.5;
   --line-height-thin: 1.25;
-
-  /* weights */
   --font-weight-bold: 600;
   --font-weight-semibold: 500;
   --font-weight-normal: 400;
   --font-weight-light: 300;
   --font-weight-thin: 200;
-
-  /* TEMPLATE WIDTHS */
   --template-width-sm: 33.3333%;
   --template-width-md: 50%;
   --template-width-lg: 100%;
+}
 
-  /* ====== */
+/* LIGHT THEME */
+.light-theme {
+  --color-background: var(--color-background-light);
+  --color-text: var(--color-text-light);
+  --color-primary: var(--color-primary-light);
+  --color-secondary: var(--color-secondary-light);
+  --color-tertiary: var(--color-tertiary-light);
 }
 
 * {
@@ -67,6 +64,8 @@
 
 body {
   background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h2 {                                                
@@ -84,8 +83,7 @@ h2 {
   border: 30px solid transparent;
 }
 
-/*Added Navbar*/
-/* Navbar container */
+/* Navbar container - FIXED: Using CSS variables */
 .navbar {
   background-color: var(--color-background);
   display: flex;
@@ -97,44 +95,46 @@ h2 {
   border-bottom-right-radius: 50px;
   align-items: center;
   padding: 20px 40px;
-  box-shadow: inset rgba(63, 64, 65, 0.363) -10px -14px 16px, rgba(124, 215, 221, 0.22) 1px -2px 20px 20px;
+  box-shadow: inset rgba(63, 64, 65, 0.363) -10px -14px 16px, 
+              rgba(124, 215, 221, 0.22) 1px -2px 20px 20px;
   color: var(--color-text);
   position: sticky;
   top: 0;
   z-index: 1;
   margin-bottom: 40px;
   margin-top: 10px;
-  width : 90%;
+  width: 90%;
   margin-left: 5%;
+  transition: all 0.3s ease;
 }
 
 /* Logo style */
 .logo {
-  /* Adjust font size as needed */
   font-weight: bold;
   font-size: 2rem;
+  color: var(--color-text);
 }
 
 /* Navigation links style */
 .nav-links {
   list-style: none;
   display: flex;
+  align-items: center;
 }
 
 .nav-links li {
-  margin-right: 20px; /* Adjust spacing between links */
+  margin-right: 20px;
 }
 
 .nav-links a {
   text-decoration: none;
   color: var(--color-text);
-  font-size: var(--font-size-large); /* Adjust font size as needed */
-  transition: color 0.2s; /* Smooth color transition */
+  font-size: var(--font-size-large);
+  transition: color 0.2s;
 }
 
-/* Hover effect for links */
 .nav-links a:hover {
-  color: var(--color-primary); /* Change color on hover */
+  color: var(--color-primary);
 }
 
 .template .meme {
@@ -148,10 +148,9 @@ h2 {
 }
 
 .template .meme:hover {
-  filter: grayscale(100%); /* Apply a grayscale effect on hover */
-  transform: scale(1.05); /* Add a scale effect on hover */
+  filter: grayscale(100%);
+  transform: scale(1.05);
 }
-
 
 .memebnao {
   display: flex;
@@ -160,13 +159,12 @@ h2 {
   flex-direction: column;
   text-align: center;
   margin-top: 5%;
-  
 }
 
 .memebnao img {
   width: auto;
   height: 400px;
-  border: 1px solid var(--color-background);
+  border: 1px solid var(--color-text);
   border-radius: 5px;
   margin: 0 auto;
   margin-bottom: 5%;
@@ -186,6 +184,8 @@ h2 {
   color: var(--color-secondary);
   background-color: var(--color-tertiary);
   cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 input {
@@ -197,13 +197,14 @@ input {
   border-left: none;
   border-right: none;
   border-bottom: 1px solid var(--color-text);
-  color: var(--color-secondary);
+  color: var(--color-text);
   font-size: var(--font-size-large);
 }
 
+/* FIXED: Placeholder color using CSS variable */
 ::placeholder {
-  color: rgb(139, 247, 16);
-  opacity: 0.5;
+  color: var(--color-secondary);
+  opacity: 0.7;
 }
 
 .generatebutton {
@@ -218,6 +219,8 @@ input {
   background-color: var(--color-tertiary);
   cursor: pointer;
   margin-bottom: 100px;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 .footer {
@@ -228,55 +231,14 @@ input {
   position: fixed;
   bottom: 0;
   width: 100%;
+  transition: all 0.3s ease;
 }
 
 .footer p {
   margin: 0;
 }
 
-/* media query for responsive design  */
-
-@media screen and (max-width: 1500px) {
-  .template {
-    width: 50%;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .template {
-    width: 100%;
-  }
-}
-
-/* MEDIA QUERY FOR NAVBAR */
-
-@media screen and (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .logo {
-    margin-bottom: 20px;
-    margin-left: 130px;
-  }
-
-  .nav-links {
-    width: 100%;
-    justify-content: space-around;
-  }
-
-  .nav-links li {
-    margin-right: 0;
-  }
-}
-
-/* ======= */
-
-/*Search bar*/
-
-/* MemeSearch.css */
-/* MemeSearch.css */
+/* Search bar */
 .meme-search {
   text-align: center;
   margin: 20px 0;
@@ -287,13 +249,14 @@ input {
   width: 100%;
   max-width: 300px;
   padding: 10px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-text);
   border-radius: 20px;
   font-size: var(--font-size-normal);
   outline: none;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: all 0.3s ease;
 }
-
-
 
 .goback {
   border: none;
@@ -302,10 +265,12 @@ input {
   justify-content: center;
   width: 60px;
   height: 20px;
+  background: var(--color-tertiary);
+  color: var(--color-secondary);
+  cursor: pointer;
 }
 
-/*About us page*/
-
+/* About us page */
 .about-us {
   width: 100vw;
   margin: 1rem auto;
@@ -330,32 +295,119 @@ input {
   width: 500px;
 }
 
-
-
 .about-us p {
   font-size: var(--font-size-large);
   line-height: 1.5;
   margin-bottom: 1rem;
 }
 
-.pagination{
+.pagination {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 100px;
-  gap:2px;
- 
+  gap: 2px;
 }
 
-.pagination button{
+.pagination button {
   background-color: var(--color-text);
+  color: var(--color-background);
   padding: 5px 5px;
-  border:1px solid grey;
+  border: 1px solid var(--color-text);
   border-radius: 2px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/*Mobile responsive*/
+/* Theme toggle button styles */
+/* Add this to your style.css */
+.theme-toggle {
+  background: transparent;
+  border: 2px solid var(--color-text);
+  color: var(--color-text);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-semibold);
+  transition: all 0.3s ease;
+  margin-left: 20px;
+  margin-right: 20px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  transform: scale(1.05);
+}
+
+/* Better spacing for navbar items */
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Consistent spacing */
+}
+
+.nav-links li {
+  margin-right: 0; /* Remove individual margins since we're using gap */
+}
+
+/* Specific spacing for larger screens */
+@media screen and (min-width: 769px) {
+  .nav-links {
+    gap: 30px;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+  .theme-toggle {
+    margin: 10px 0;
+    min-width: 80px;
+    padding: 6px 12px;
+    font-size: var(--font-size-tiny);
+  }
+  
+  .nav-links {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+/* Media queries */
+@media screen and (max-width: 1500px) {
+  .template {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .template {
+    width: 100%;
+  }
+  
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo {
+    margin-bottom: 20px;
+    margin-left: 130px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .nav-links li {
+    margin-right: 0;
+  }
+}
 
 @media (max-width: 768px) {
   .template {
@@ -363,7 +415,7 @@ input {
     border: 10px solid transparent; 
   }
   .navbar {
-    width: 100%;;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -372,7 +424,6 @@ input {
   .logo {
     display: none; 
   }
-
   .nav-links li {
     margin-right: 10px; 
   }
@@ -407,5 +458,4 @@ input {
     max-width: 300px; 
     height: auto; 
   }
-}
-
+} 
