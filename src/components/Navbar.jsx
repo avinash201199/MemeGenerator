@@ -49,12 +49,13 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
                         </Link>
                     </li>
                     <li>
-                        <button 
-                            className="goback bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium" 
+                        <button
+                            className="goback bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                navigate(-1);
+                                setMeme && setMeme(null);
+                                navigate("/");
                             }}
                         >
                             ← Go Back
