@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import Navbar from './Navbar';
+
 
 const History = () => {
     const [savedMemes, setSavedMemes] = useState([]);
@@ -64,197 +66,203 @@ const History = () => {
 
     if (savedMemes.length === 0) {
         return (
-            <div style={{
-                padding: '40px 20px',
-                textAlign: 'center',
-                color: 'white',
-                minHeight: '60vh'
-            }}>
-                <h2>Meme History</h2>
-                <p style={{ fontSize: '18px', marginTop: '20px' }}>
-                    No memes in history yet. Generate some memes to see them here!
-                </p>
-            </div>
+            <>
+                <Navbar />
+                <div style={{
+                    padding: '40px 20px',
+                    textAlign: 'center',
+                    color: 'white',
+                    minHeight: '60vh'
+                }}>
+                    <h2>Meme History</h2>
+                    <p style={{ fontSize: '18px', marginTop: '20px' }}>
+                        No memes in history yet. Generate some memes to see them here!
+                    </p>
+                </div>
+            </>
         );
     }
 
     return (
-        <div style={{ padding: '20px', minHeight: '80vh' }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '30px',
-                flexWrap: 'wrap',
-                gap: '10px'
-            }}>
-                <h2 style={{ color: 'white', margin: 0 }}>Meme History ({savedMemes.length})</h2>
-                <button
-                    onClick={clearHistory}
-                    style={{
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 20px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '14px'
-                    }}
-                >
-                    Clear History
-                </button>
-            </div>
+        <>
+            <Navbar />
+            <div style={{ padding: '20px', minHeight: '80vh' }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '30px',
+                    flexWrap: 'wrap',
+                    gap: '10px'
+                }}>
+                    <h2 style={{ color: 'white', margin: 0 }}>Meme History ({savedMemes.length})</h2>
+                    <button
+                        onClick={clearHistory}
+                        style={{
+                            backgroundColor: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                        }}
+                    >
+                        Clear History
+                    </button>
+                </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '20px',
-                padding: '0 10px'
-            }}>
-                {savedMemes.map((meme) => (
-                    <div key={meme.id} style={{
-                        backgroundColor: '#2d3748',
-                        borderRadius: '10px',
-                        padding: '15px',
-                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                    }}>
-                        <img
-                            src={meme.url}
-                            alt="Generated meme"
-                            style={{
-                                width: '100%',
-                                height: '200px',
-                                objectFit: 'contain',
-                                borderRadius: '5px',
-                                backgroundColor: '#1a202c'
-                            }}
-                        />
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                    gap: '20px',
+                    padding: '0 10px'
+                }}>
+                    {savedMemes.map((meme) => (
+                        <div key={meme.id} style={{
+                            backgroundColor: '#2d3748',
+                            borderRadius: '10px',
+                            padding: '15px',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                        }}>
+                            <img
+                                src={meme.url}
+                                alt="Generated meme"
+                                style={{
+                                    width: '100%',
+                                    height: '200px',
+                                    objectFit: 'contain',
+                                    borderRadius: '5px',
+                                    backgroundColor: '#1a202c'
+                                }}
+                            />
 
-                        <div style={{ marginTop: '15px' }}>
-                            <p style={{
-                                color: 'white',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
-                                margin: '0 0 5px 0'
-                            }}>
-                                {meme.template_name}
-                            </p>
+                            <div style={{ marginTop: '15px' }}>
+                                <p style={{
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    margin: '0 0 5px 0'
+                                }}>
+                                    {meme.template_name}
+                                </p>
 
-                            {meme.texts.length > 0 && (
-                                <div style={{ marginBottom: '10px' }}>
-                                    {meme.texts.map((text, index) => (
-                                        text && <p key={index} style={{
-                                            color: '#cbd5e0',
-                                            fontSize: '12px',
-                                            margin: '2px 0',
-                                            fontStyle: 'italic'
-                                        }}>
-                                            &quot;{text}&quot;
-                                        </p>
-                                    ))}
+                                {meme.texts.length > 0 && (
+                                    <div style={{ marginBottom: '10px' }}>
+                                        {meme.texts.map((text, index) => (
+                                            text && <p key={index} style={{
+                                                color: '#cbd5e0',
+                                                fontSize: '12px',
+                                                margin: '2px 0',
+                                                fontStyle: 'italic'
+                                            }}>
+                                                &quot;{text}&quot;
+                                            </p>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <p style={{
+                                    color: '#a0aec0',
+                                    fontSize: '11px',
+                                    margin: '0 0 15px 0'
+                                }}>
+                                    {formatDate(meme.created_at)}
+                                </p>
+
+                                <div style={{
+                                    display: 'flex',
+                                    gap: '8px',
+                                    flexWrap: 'wrap',
+                                    marginBottom: '10px'
+                                }}>
+                                    <button
+                                        onClick={() => downloadMeme(meme.url, meme.id)}
+                                        style={{
+                                            backgroundColor: '#4299e1',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '6px 12px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '12px'
+                                        }}
+                                    >
+                                        📥 Download
+                                    </button>
+
+                                    <button
+                                        onClick={() => copyToClipboard(meme.url)}
+                                        style={{
+                                            backgroundColor: '#6B7280',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '6px 12px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '12px'
+                                        }}
+                                    >
+                                        📋 Copy
+                                    </button>
                                 </div>
-                            )}
 
-                            <p style={{
-                                color: '#a0aec0',
-                                fontSize: '11px',
-                                margin: '0 0 15px 0'
-                            }}>
-                                {formatDate(meme.created_at)}
-                            </p>
+                                <div style={{
+                                    display: 'flex',
+                                    gap: '6px',
+                                    flexWrap: 'wrap'
+                                }}>
+                                    <button
+                                        onClick={() => shareToTwitter(meme.url)}
+                                        style={{
+                                            backgroundColor: '#1DA1F2',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '5px 8px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '11px'
+                                        }}
+                                    >
+                                        🐦
+                                    </button>
 
-                            <div style={{
-                                display: 'flex',
-                                gap: '8px',
-                                flexWrap: 'wrap',
-                                marginBottom: '10px'
-                            }}>
-                                <button
-                                    onClick={() => downloadMeme(meme.url, meme.id)}
-                                    style={{
-                                        backgroundColor: '#4299e1',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '6px 12px',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        fontSize: '12px'
-                                    }}
-                                >
-                                    📥 Download
-                                </button>
+                                    <button
+                                        onClick={() => shareToFacebook(meme.url)}
+                                        style={{
+                                            backgroundColor: '#4267B2',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '5px 8px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '11px'
+                                        }}
+                                    >
+                                        📘
+                                    </button>
 
-                                <button
-                                    onClick={() => copyToClipboard(meme.url)}
-                                    style={{
-                                        backgroundColor: '#6B7280',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '6px 12px',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        fontSize: '12px'
-                                    }}
-                                >
-                                    📋 Copy
-                                </button>
-                            </div>
-
-                            <div style={{
-                                display: 'flex',
-                                gap: '6px',
-                                flexWrap: 'wrap'
-                            }}>
-                                <button
-                                    onClick={() => shareToTwitter(meme.url)}
-                                    style={{
-                                        backgroundColor: '#1DA1F2',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '5px 8px',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        fontSize: '11px'
-                                    }}
-                                >
-                                    🐦
-                                </button>
-
-                                <button
-                                    onClick={() => shareToFacebook(meme.url)}
-                                    style={{
-                                        backgroundColor: '#4267B2',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '5px 8px',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        fontSize: '11px'
-                                    }}
-                                >
-                                    📘
-                                </button>
-
-                                <button
-                                    onClick={() => shareToReddit(meme.url)}
-                                    style={{
-                                        backgroundColor: '#FF4500',
-                                        color: 'white',
-                                        border: 'none',
-                                        padding: '5px 8px',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                        fontSize: '11px'
-                                    }}
-                                >
-                                    🔥
-                                </button>
+                                    <button
+                                        onClick={() => shareToReddit(meme.url)}
+                                        style={{
+                                            backgroundColor: '#FF4500',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '5px 8px',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            fontSize: '11px'
+                                        }}
+                                    >
+                                        🔥
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
