@@ -5,6 +5,7 @@ import { ThemeProvider } from "./ThemeContext";
 import Home from "./components/Home";
 import "./style.css";
 import About from "./components/About";
+import History from "./components/History";
 
 const App = () => {
     return (

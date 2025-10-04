@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 const Meme = ({ meme, setMeme }) => {
-  
+
     const [form, setForm] = useState({
         template_id: meme.id,
         username: "RituGupta",
@@ -10,6 +10,21 @@ const Meme = ({ meme, setMeme }) => {
         boxes: [],
 
     });
+
+    const [memeGenerated, setMemeGenerated] = useState(false);
+
+    const saveMemeToHistory = (memeData) => {
+        const savedMemes = JSON.parse(localStorage.getItem('memeHistory') || '[]');
+        const newMeme = {
+            id: Date.now(),
+            url: memeData.url,
+            template_name: meme.name || 'Unknown Template',
+            texts: form.boxes.map(box => box.text || ''),
+            created_at: new Date().toISOString()
+        };
+        savedMemes.unshift(newMeme);
+        localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
+    };
 
     const generatememe = () => {
         let url = `https://api.imgflip.com/caption_image?template_id=${form.template_id}&username=${form.username}&password=${form.password}`;
@@ -21,6 +36,8 @@ const Meme = ({ meme, setMeme }) => {
             .then((data) => {
                 if (data.success === true) {
                     setMeme({ ...meme, url: data.data.url })
+                    setMemeGenerated(true);
+                    saveMemeToHistory(data.data);
 
                 } else {
                     alert("Enter Some Text");
@@ -45,6 +62,31 @@ const Meme = ({ meme, setMeme }) => {
         }
         xhr.send();
     }
+
+    const shareToTwitter = () => {
+        const text = "Check out this meme I made!";
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(meme.url)}`;
+        window.open(url, '_blank');
+    };
+
+    const shareToFacebook = () => {
+        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(meme.url)}`;
+        window.open(url, '_blank');
+    };
+
+    const shareToReddit = () => {
+        const title = "Check out this meme I made!";
+        const url = `https://reddit.com/submit?url=${encodeURIComponent(meme.url)}&title=${encodeURIComponent(title)}`;
+        window.open(url, '_blank');
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(meme.url).then(() => {
+            alert("Meme URL copied to clipboard!");
+        }).catch(() => {
+            alert("Failed to copy URL");
+        });
+    };
     return (
         <div className="memebnao">
             <img src={meme.url} alt="meme"></img>
@@ -69,8 +111,87 @@ const Meme = ({ meme, setMeme }) => {
                 <span> <button className="backbtn" title="Back" onClick={() => { setMeme(null) }}>Back</button></span>
                 <span><button className="generatebutton" onClick={generatememe}>Generate Meme</button></span>
                 <span><button className="generatebutton" onClick={save} >Save</button></span>
-
             </div>
+
+            {memeGenerated && (
+                <div className="share-btns" style={{ marginTop: '15px' }}>
+                    <h4 style={{ color: 'white', marginBottom: '10px', textAlign: 'center' }}>Share Your Meme:</h4>
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <button
+                            className="share-btn twitter"
+                            onClick={shareToTwitter}
+                            style={{
+                                backgroundColor: '#1DA1F2',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 12px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            🐦 Twitter
+                        </button>
+                        <button
+                            className="share-btn facebook"
+                            onClick={shareToFacebook}
+                            style={{
+                                backgroundColor: '#4267B2',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 12px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            📘 Facebook
+                        </button>
+                        <button
+                            className="share-btn reddit"
+                            onClick={shareToReddit}
+                            style={{
+                                backgroundColor: '#FF4500',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 12px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            🔥 Reddit
+                        </button>
+                        <button
+                            className="share-btn copy"
+                            onClick={copyToClipboard}
+                            style={{
+                                backgroundColor: '#6B7280',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 12px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            📋 Copy Link
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

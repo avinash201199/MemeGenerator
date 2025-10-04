@@ -228,8 +228,6 @@ input {
   color: var(--color-text);
   padding: 10px 0;
   text-align: center;
-  position: fixed;
-  bottom: 0;
   width: 100%;
   transition: all 0.3s ease;
 }
@@ -259,8 +257,7 @@ input {
 }
 
 .goback {
-  border: none;
-  border-radius: 10px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 60px;
@@ -444,7 +441,7 @@ input {
   }
   .pagination {
     margin-top: 10px;
-    margin-bottom: 100px; 
+    margin-bottom: 20px; 
   }
   .pagination button {
     padding: 3px 3px; 
