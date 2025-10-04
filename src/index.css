@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mobile Navbar Overrides */
+@media (max-width: 1023px) {
+  .navbar {
+    padding: 10px 20px !important;
+    border-radius: 15px !important;
+    margin: 5px !important;
+    width: calc(100% - 10px) !important;
+  }
+  
+  /* Ensure mobile menu items don't overflow */
+  nav {
+    overflow-x: hidden !important;
+  }
+  
+  /* Better touch targets for mobile */
+  nav button, nav a {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* Ensure the navbar doesn't break on very small screens */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px 15px !important;
+    border-radius: 10px !important;
+    margin: 3px !important;
+    width: calc(100% - 6px) !important;
+  }
+}
