@@ -91,7 +91,7 @@ const Meme = ({ meme, setMeme }) => {
         <div className="memebnao">
             <img src={meme.url} alt="meme"></img>
 
-            <div>
+            <div className="input-container">
                 {[...Array(meme.box_count)].map((_, index) => (
                     <input
                         key={index}
@@ -108,9 +108,9 @@ const Meme = ({ meme, setMeme }) => {
             </div>
 
             <div className="btns">
-                <span> <button className="backbtn" title="Back" onClick={() => { setMeme(null) }}>Back</button></span>
-                <span><button className="generatebutton" onClick={generatememe}>Generate Meme</button></span>
-                <span><button className="generatebutton" onClick={save} >Save</button></span>
+                <button className="backbtn" title="Back" onClick={() => { setMeme(null) }}>Back</button>
+                <button className="generatebutton" onClick={generatememe}>Generate Meme</button>
+                <button className="generatebutton" onClick={save} >Save</button>
             </div>
 
             {memeGenerated && (
