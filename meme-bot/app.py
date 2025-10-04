@@ -55,12 +55,28 @@ def generate_meme():
         
         topic = data.get('topic', '').strip()
         context = data.get('context', '').strip()
+        custom_top_text = data.get('custom_top_text', '').strip()
+        custom_bottom_text = data.get('custom_bottom_text', '').strip()
+        template_url = data.get('template_url', '').strip()
+        template_id = data.get('template_id', '').strip()
         
-        if not topic:
-            return jsonify({"error": "Topic is required"}), 400
+        if not topic and not (custom_top_text and custom_bottom_text):
+            return jsonify({"error": "Topic is required or both custom texts must be provided"}), 400
         
         # Generate the meme
-        result = meme_generator.create_meme(topic, context if context else None)
+        if custom_top_text and custom_bottom_text:
+            # Use custom text provided by user
+            result = meme_generator.create_meme_with_custom_text(
+                topic if topic else "Custom Meme", 
+                custom_top_text, 
+                custom_bottom_text,
+                context,
+                template_url if template_url else None,
+                template_id if template_id else None
+            )
+        else:
+            # Generate text using AI
+            result = meme_generator.create_meme(topic, context if context else None)
         
         if result['success']:
             # Return success response with meme info

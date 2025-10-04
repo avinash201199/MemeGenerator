@@ -430,6 +430,117 @@ class MemeGeneratorClean:
                 "filename": None
             }
 
+    def create_meme_with_custom_text(self, topic, top_text, bottom_text, custom_context=None, template_url=None, template_id=None):
+        """
+        Create a meme with custom user-provided text.
+        
+        Args:
+            topic (str): Topic for the meme (used for filename)
+            top_text (str): Custom top text for the meme
+            bottom_text (str): Custom bottom text for the meme
+            custom_context (str, optional): Additional context
+            template_url (str, optional): Specific template URL to use
+            template_id (str, optional): Specific template ID to use
+            
+        Returns:
+            dict: Contains success status, filename/error message, and metadata
+        """
+        # Use existing template if provided, otherwise get a new one
+        if template_url:
+            try:
+                response = requests.get(template_url)
+                response.raise_for_status()
+                img = Image.open(BytesIO(response.content))
+                width, height = img.size
+            except Exception as e:
+                print(f"Error loading existing template: {e}")
+                # Fallback to getting a new template
+                template_url, width, height = self.get_meme_template()
+                if not template_url:
+                    return {
+                        "success": False,
+                        "error": "Failed to fetch meme template",
+                        "filename": None
+                    }
+        else:
+            template_url, width, height = self.get_meme_template()
+            if not template_url:
+                return {
+                    "success": False,
+                    "error": "Failed to fetch meme template",
+                    "filename": None
+                }
+
+        try:
+            # Load and prepare image
+            response = requests.get(template_url)
+            response.raise_for_status()
+            img = Image.open(BytesIO(response.content))
+            
+            # Ensure minimum image size
+            min_size = 800
+            if img.width < min_size or img.height < min_size:
+                ratio = max(min_size / img.width, min_size / img.height)
+                new_size = (int(img.width * ratio), int(img.height * ratio))
+                img = img.resize(new_size, Image.Resampling.LANCZOS)
+
+            # Prepare drawing with custom text
+            draw = ImageDraw.Draw(img)
+            
+            # Calculate text parameters
+            longest_text = max(top_text, bottom_text, key=len)
+            font_size = self._calculate_font_size(img, longest_text)
+            
+            # Create font object
+            try:
+                font = ImageFont.truetype(self.font_path, font_size)
+            except Exception as e:
+                print(f"Error loading font: {e}")
+                raise FileNotFoundError("Cannot load font for meme generation")
+            
+            # Calculate layout parameters
+            margin = int(img.height * 0.06)
+            max_text_width = img.width - (2 * margin)
+            line_height = int(font_size * 1.3)
+            stroke_width = max(2, int(font_size * 0.04))
+
+            # Draw top text
+            y_position = margin
+            for line in self._wrap_text(top_text, font, max_text_width):
+                x_position = (img.width - font.getlength(line)) // 2
+                self._draw_text_with_outline(draw, line, x_position, y_position, font, stroke_width)
+                y_position += line_height
+
+            # Draw bottom text
+            bottom_lines = self._wrap_text(bottom_text, font, max_text_width)
+            y_position = img.height - margin - (len(bottom_lines) * line_height)
+            for line in bottom_lines:
+                x_position = (img.width - font.getlength(line)) // 2
+                self._draw_text_with_outline(draw, line, x_position, y_position, font, stroke_width)
+                y_position += line_height
+
+            # Save the meme
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{self.output_dir}/meme_{topic.split()[0].replace(' ', '_')}_{timestamp}.png"
+            img.save(filename)
+            
+            return {
+                "success": True,
+                "filename": filename,
+                "top_text": top_text,
+                "bottom_text": bottom_text,
+                "topic": topic,
+                "context": custom_context,
+                "timestamp": timestamp
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "filename": None
+            }
+
     def get_topic_categories(self):
         """Get predefined topic categories for the frontend."""
         return {

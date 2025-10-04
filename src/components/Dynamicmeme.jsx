@@ -11,9 +11,6 @@ const Dynamicmeme = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTopText, setEditedTopText] = useState('');
-  const [editedBottomText, setEditedBottomText] = useState('');
 
   // API base URL
   const API_BASE_URL = 'http://localhost:5000';
@@ -114,9 +111,6 @@ const Dynamicmeme = () => {
   const displayMeme = (data) => {
     setCurrentMemeFilename(data.filename);
     setMemeData(data);
-    setEditedTopText(data.top_text);
-    setEditedBottomText(data.bottom_text);
-    setIsEditing(false);
   };
 
   const downloadMeme = () => {
@@ -131,9 +125,6 @@ const Dynamicmeme = () => {
     setContextInput('');
     setShowExamples(false);
     setSelectedCategory('');
-    setIsEditing(false);
-    setEditedTopText('');
-    setEditedBottomText('');
     hideMessages();
   };
 
@@ -154,33 +145,6 @@ const Dynamicmeme = () => {
   const hideMessages = () => {
     setErrorMessage('');
     setSuccessMessage('');
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveEdit = () => {
-    if (!editedTopText.trim() && !editedBottomText.trim()) {
-      showError('Please enter at least one text field');
-      return;
-    }
-
-    // Update only the displayed text locally without regenerating the meme
-    setMemeData(prevData => ({
-      ...prevData,
-      top_text: editedTopText,
-      bottom_text: editedBottomText
-    }));
-    
-    setIsEditing(false);
-    showSuccess('Meme text updated successfully!');
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditedTopText(memeData?.top_text || '');
-    setEditedBottomText(memeData?.bottom_text || '');
   };
 
   const handleKeyPress = (e) => {
@@ -388,44 +352,6 @@ const Dynamicmeme = () => {
       marginTop: '40px',
       color: 'white',
       opacity: 0.8
-    },
-    editInput: {
-      width: '100%',
-      padding: '8px',
-      border: '1px solid #e2e8f0',
-      borderRadius: '4px',
-      fontSize: '14px',
-      marginTop: '5px',
-      color: '#000000'
-    },
-    editButtons: {
-      display: 'flex',
-      gap: '10px',
-      marginTop: '10px'
-    },
-    editBtn: {
-      padding: '8px 16px',
-      borderRadius: '6px',
-      border: 'none',
-      cursor: 'pointer',
-      fontSize: '14px',
-      fontWeight: '500'
-    },
-    saveBtn: {
-      background: '#48bb78',
-      color: 'white'
-    },
-    cancelBtn: {
-      background: '#e2e8f0',
-      color: '#4a5568'
-    },
-    editIcon: {
-      background: 'transparent',
-      border: 'none',
-      color: '#667eea',
-      cursor: 'pointer',
-      fontSize: '16px',
-      marginLeft: '10px'
     }
   };
 
@@ -591,77 +517,6 @@ const Dynamicmeme = () => {
                     />
                   </div>
                   
-                  <div style={styles.memeInfo}>
-                    <h3>
-                      <i className="fas fa-info-circle"></i> Meme Details
-                      {!isEditing && (
-                        <button 
-                          style={styles.editIcon}
-                          onClick={handleEdit}
-                          title="Edit meme text"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                      )}
-                    </h3>
-                    
-                    {!isEditing ? (
-                      <>
-                        <div style={styles.memeText}>
-                          <strong>Top Text:</strong> {memeData.top_text}
-                        </div>
-                        <div style={styles.memeText}>
-                          <strong>Bottom Text:</strong> {memeData.bottom_text}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div style={styles.memeText}>
-                          <strong>Top Text:</strong>
-                          <input
-                            type="text"
-                            style={styles.editInput}
-                            value={editedTopText}
-                            onChange={(e) => setEditedTopText(e.target.value)}
-                            placeholder="Enter top text"
-                            maxLength="100"
-                          />
-                        </div>
-                        <div style={styles.memeText}>
-                          <strong>Bottom Text:</strong>
-                          <input
-                            type="text"
-                            style={styles.editInput}
-                            value={editedBottomText}
-                            onChange={(e) => setEditedBottomText(e.target.value)}
-                            placeholder="Enter bottom text"
-                            maxLength="100"
-                          />
-                        </div>
-                        <div style={styles.editButtons}>
-                          <button
-                            style={{...styles.editBtn, ...styles.saveBtn}}
-                            onClick={handleSaveEdit}
-                            disabled={isLoading}
-                          >
-                            <i className="fas fa-save"></i> Save Changes
-                          </button>
-                          <button
-                            style={{...styles.editBtn, ...styles.cancelBtn}}
-                            onClick={handleCancelEdit}
-                            disabled={isLoading}
-                          >
-                            <i className="fas fa-times"></i> Cancel
-                          </button>
-                        </div>
-                      </>
-                    )}
-                    
-                    <div style={styles.memeText}>
-                      <strong>Topic:</strong> {memeData.topic}
-                    </div>
-                  </div>
-                  
                   <div style={styles.btnGroup} className="dynamic-meme-btn-group">
                     <button style={styles.btn} className="dynamic-meme-btn" onClick={downloadMeme}>
                       <i className="fas fa-download"></i> Download Meme
@@ -680,11 +535,6 @@ const Dynamicmeme = () => {
           </div>
         </div>
 
-        <div style={styles.footer}>
-          <p>
-            <i className="fas fa-heart"></i> Made with AI-powered creativity | Share your memes and spread the laughter!
-          </p>
-        </div>
       </div>
     </div>
   );
