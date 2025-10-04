@@ -1,17 +1,14 @@
-// App.js
+// App.jsx
 import React from "react";
-import { Route,Routes } from "react-router-dom";
-
+import { Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./ThemeContext";
 import Home from "./components/Home";
 import "./style.css";
 import About from "./components/About";
 import History from "./components/History";
 import Dynamicmeme from "./components/Dynamicmeme";
 
-
-
 const App = () => {
-
     return (
         
         <Routes>
