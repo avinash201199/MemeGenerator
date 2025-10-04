@@ -42,6 +42,14 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
                     </li>
                     <li>
                         <Link
+                            to="/dynamic"
+                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
+                        >
+                            Dynamic Meme
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
                             to="/about"
                             className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
                         >

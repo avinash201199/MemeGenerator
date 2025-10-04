@@ -127,52 +127,46 @@ class MemeGeneratorClean:
             # Create enhanced prompts for funnier, roasting-style Hinglish memes
             if custom_context:
                 prompt = f"""
-                    You are a Gen Z Indian meme creator who creates SAVAGE and HILARIOUS Hinglish memes that go VIRAL. 
-                    Create a TWO-LINE meme about "{topic}" in the context of "{custom_context}".
+                    You are a next-gen meme creator. Your task is to create a funny Hinglish meme with a PREMISE and a witty PUNCHLINE about "{topic}" in the context of "{custom_context}".
+                    - Use Hinglish (mix of Hindi + English).  
+                    - Make it witty, sarcastic, and clever (avoid basic normie jokes).  
+                    - Use wordplay, double meaning, or relatable Gen-Z humor.  
+                    - Structure: 
+                       1. Premise (setup situation, relatable or exaggerated)  
+                       2. Punchline (twist, witty comeback, or funny irony)  
+                       3. Final meme caption (short & punchy).  
+
+                    Example format:  
+                    Premise: "Exam hall me sab log serious baithe hai"  
+                    Punchline: "Aur main ekdum CID waale Tarika se dekh raha hu—'kuch toh gadbad hai'"  
+                    Caption: "POV: Tumhare 2 number bhi nikal jaaye toh miracle hai 😂"
                     
-                    STYLE REQUIREMENTS:
-                    - Use HINGLISH (Hindi + English mix) like real Gen Z Indians speak
-                    - Be ROASTING and SAVAGE but relatable
-                    - Include popular Gen Z slang: "bro", "yaar", "bestie", "fr fr", "no cap", "periodt", "sus", "vibe"
-                    - Use Indian expressions: "bas kar bhai", "kya bakwas", "are yaar", "sach mein", "bilkul", "matlab", "kaise"
-                    - Make it FUNNY and SHAREABLE - something that would get 1000+ likes
-                    - Reference current trends, social media culture, or relatable struggles
-                    - Be witty with wordplay, puns, or clever observations
-                    
-                    HUMOR STYLE: Roasting, sarcastic, relatable, Gen Z energy
-                    FORMAT: Two lines only, no quotes, no labels
-                    
-                    Example style: "Bro said healthy khana khaunga" / "Phir Maggi midnight mein order kar diya"
+                    Create a similar meme about "{topic}" in "{custom_context}" context.
                 """
             else:
                 prompt = f"""
-                    You are a Gen Z Indian meme creator who creates SAVAGE and HILARIOUS Hinglish memes that go VIRAL.
-                    Create a TWO-LINE roasting meme about "{topic}".
+                    You are a next-gen meme creator. Your task is to create a funny Hinglish meme with a PREMISE and a witty PUNCHLINE about "{topic}".
+                    - Use Hinglish (mix of Hindi + English).  
+                    - Make it witty, sarcastic, and clever (avoid basic normie jokes).  
+                    - Use wordplay, double meaning, or relatable Gen-Z humor.  
+                    - Structure: 
+                       1. Premise (setup situation, relatable or exaggerated)  
+                       2. Punchline (twist, witty comeback, or funny irony)  
+                       3. Final meme caption (short & punchy).  
+
+                    Example format:  
+                    Premise: "Exam hall me sab log serious baithe hai"  
+                    Punchline: "Aur main ekdum CID waale Tarika se dekh raha hu—'kuch toh gadbad hai'"  
+                    Caption: "POV: Tumhare 2 number bhi nikal jaaye toh miracle hai 😂"
                     
-                    STYLE REQUIREMENTS:
-                    - Use HINGLISH (Hindi + English mix) like real Gen Z Indians speak
-                    - Be ROASTING and SAVAGE but relatable and funny
-                    - Include Gen Z slang: "bro", "yaar", "bestie", "fr fr", "no cap", "periodt", "sus", "vibe", "slay"
-                    - Use Indian expressions: "bas kar bhai", "kya bakwas", "are yaar", "sach mein", "bilkul", "matlab"
-                    - Reference social media culture, modern struggles, or trending topics
-                    - Make it VIRAL-worthy - something Gen Z would share instantly
-                    - Be witty, sarcastic, and use clever observations
-                    - Include modern references: Instagram, reels, dating apps, online classes, work from home
-                    
-                    HUMOR STYLE: Roasting, sarcastic, relatable, peak Gen Z energy
-                    FORMAT: Two lines only, no quotes, no labels, pure meme text
-                    
-                    Example styles:
-                    - "Me: Mom I'm an adult now" / "Also me: Mummy paani dedo"
-                    - "LinkedIn pe Professional hun" / "WhatsApp status pe Philosopher"
-                    - "Bro said 5 min mein ready ho jaunga" / "Phir 2 ghante baad online aaya"
+                    Create a similar meme about "{topic}".
                 """
             
             response = self.groq_client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-3.3-70b-versatile",
-                temperature=0.7,
-                max_tokens=100,
+                temperature=0.7,  # Back to stable value for consistent quality
+                max_tokens=150,   # Increased for premise, punchline, and caption
             )
             
             text = response.choices[0].message.content.strip()
@@ -184,31 +178,72 @@ class MemeGeneratorClean:
 
     def _process_generated_text(self, text):
         """
-        Process the generated text into two lines.
+        Process the generated text into two lines for the meme.
         
         Args:
-            text (str): Raw generated text
+            text (str): Raw generated text with Premise, Punchline, and Caption
             
         Returns:
             tuple: (top_text, bottom_text)
         """
         lines = [line.strip() for line in text.split('\n') if line.strip()]
         
-        if len(lines) != 2:
-            if len(lines) == 1:
-                text = lines[0]
-                # Try splitting on punctuation
-                for separator in ['. ', '? ', '! ', '| ']:
-                    if separator in text:
-                        parts = text.split(separator, 1)
-                        return parts[0].strip(), parts[1].strip()
-                
-                # If no punctuation, split at midpoint
-                words = text.split()
-                mid = len(words) // 2
-                return ' '.join(words[:mid]), ' '.join(words[mid:])
+        # Look for premise and punchline in the response
+        premise = ""
+        punchline = ""
         
-        return lines[0], lines[1] if len(lines) > 1 else "Please try again"
+        for line in lines:
+            # Remove common prefixes
+            line = line.replace("Premise:", "").replace("Punchline:", "").replace("Caption:", "").strip()
+            line = line.replace("1.", "").replace("2.", "").replace("3.", "").strip()
+            
+            if not premise and line:
+                premise = line
+            elif not punchline and line and line != premise:
+                punchline = line
+                break
+        
+        # If we couldn't parse properly, try alternative approach
+        if not premise or not punchline:
+            # Try splitting on common patterns
+            for separator in ['. ', '? ', '! ', '" ', '" ']:
+                if separator in text:
+                    parts = text.split(separator, 1)
+                    if len(parts) >= 2:
+                        premise = parts[0].strip().replace("Premise:", "").replace("1.", "").strip()
+                        punchline = parts[1].split('.')[0].strip().replace("Punchline:", "").replace("2.", "").strip()
+                        break
+        
+        # Final fallback - use first two meaningful lines
+        if not premise or not punchline:
+            meaningful_lines = []
+            for line in lines:
+                clean_line = line.replace("Premise:", "").replace("Punchline:", "").replace("Caption:", "")
+                clean_line = clean_line.replace("1.", "").replace("2.", "").replace("3.", "").strip()
+                if clean_line and len(clean_line) > 5:  # Ignore very short lines
+                    meaningful_lines.append(clean_line)
+            
+            if len(meaningful_lines) >= 2:
+                premise = meaningful_lines[0]
+                punchline = meaningful_lines[1]
+            elif len(meaningful_lines) == 1:
+                # Split the single line if it's too long
+                words = meaningful_lines[0].split()
+                mid = len(words) // 2
+                premise = ' '.join(words[:mid])
+                punchline = ' '.join(words[mid:])
+        
+        # Clean up any remaining unwanted text
+        premise = premise.replace('"', '').replace('"', '').replace('"', '').strip()
+        punchline = punchline.replace('"', '').replace('"', '').replace('"', '').strip()
+        
+        # Ensure we have something
+        if not premise:
+            premise = "Meme generation error"
+        if not punchline:
+            punchline = "Please try again"
+            
+        return premise, punchline
 
     def _calculate_font_size(self, img, text, max_width_ratio=0.80):
         """
@@ -399,83 +434,83 @@ class MemeGeneratorClean:
         """Get predefined topic categories for the frontend."""
         return {
             "youth": {
-                "name": "Youth & Gen Z Issues",
+                "name": "Youth & Gen Z Roasts",
                 "examples": [
-                    "Gen Z job interview expectations vs reality",
-                    "Social media addiction among youth",
-                    "Online classes vs offline experience",
-                    "Gig economy and side hustles struggle",
-                    "Mental health awareness in young generation"
+                    "LinkedIn influencers posting cringe motivation",
+                    "People who post gym selfies but never work out",
+                    "Instagram vs reality of college life",
+                    "Dating app conversations that go nowhere", 
+                    "Kids who think they're entrepreneurs at 19"
                 ]
             },
-            "world": {
-                "name": "World Current Events",
+            "social_media": {
+                "name": "Social Media Hypocrisy",
                 "examples": [
-                    "AI taking over jobs but can't cook like mom",
-                    "Climate change activists vs daily lifestyle",
-                    "Cryptocurrency investment vs traditional savings",
-                    "Remote work culture post-pandemic",
-                    "Social media influencing real-world events"
+                    "People who post mental health awareness then judge others",
+                    "Instagram influencers promoting toxic positivity",
+                    "LinkedIn posts that are clearly fake stories",
+                    "People who ghost you but watch all your stories",
+                    "Couples who post love quotes before breakup"
                 ]
             },
-            "culture": {
-                "name": "Indian Society & Culture",
+            "work": {
+                "name": "Corporate & Work Life",
                 "examples": [
-                    "Traditional Indian parents vs modern kids",
-                    "Festival celebrations in metro cities vs villages",
-                    "Arranged marriage in digital age",
-                    "Regional language vs English preference",
-                    "Indian food culture vs fast food adoption"
-                ]
-            },
-            "tech": {
-                "name": "Technology & AI",
-                "examples": [
-                    "ChatGPT helping with homework",
-                    "Instagram reality vs actual life",
-                    "Online shopping vs physical store experience",
-                    "Smartphone addiction and real conversations",
-                    "Video call meetings and technical difficulties"
+                    "HR posting work-life balance while scheduling weekend meetings",
+                    "Companies calling employees family then firing during recession",
+                    "Bosses who reply to emails at 11 PM expecting immediate response",
+                    "Job descriptions requiring 5 years experience for entry level",
+                    "People who pretend to be busy in office but scroll Instagram"
                 ]
             },
             "relationships": {
-                "name": "Relationships & Dating",
+                "name": "Modern Dating & Relationships", 
                 "examples": [
-                    "Modern dating apps vs traditional meetings",
-                    "Long distance relationships in digital age",
-                    "Social media affecting real relationships",
-                    "Friendship in online vs offline world",
-                    "Dating expectations vs reality in 2024"
-                ]
-            },
-            "career": {
-                "name": "Education & Career",
-                "examples": [
-                    "College placement season stress",
-                    "Skill development vs degree importance",
-                    "Internship expectations vs reality",
-                    "Work from home vs office culture",
-                    "Student loan burden and career choices"
-                ]
-            },
-            "finance": {
-                "name": "Finance & Economy",
-                "examples": [
-                    "Salary expectations vs actual paycheck",
-                    "Inflation affecting daily life choices",
-                    "Investment advice vs actual market reality",
-                    "EMI culture and financial planning",
-                    "Savings goals vs online shopping temptations"
+                    "People who say they want genuine connection but judge by followers",
+                    "Dating app bios that say looking for something serious",
+                    "Couples who break up over text after 2 year relationship",
+                    "People who play hard to get then complain about being single",
+                    "Guys who call themselves sigma males but live with parents"
                 ]
             },
             "lifestyle": {
-                "name": "Health & Lifestyle",
+                "name": "Lifestyle & Habits",
                 "examples": [
-                    "Fitness influencer advice vs gym reality",
-                    "Diet plans vs food delivery apps",
-                    "Mental health awareness vs societal stigma",
-                    "Work-life balance in modern times",
-                    "Health consciousness vs junk food addiction"
+                    "People who buy expensive skincare but sleep at 3 AM",
+                    "Fitness influencers promoting unhealthy diet culture",
+                    "People who preach minimalism but buy everything on sale",
+                    "Health freaks who drink protein shakes but smoke cigarettes",
+                    "People who budget for investment but spend on Starbucks daily"
+                ]
+            },
+            "family": {
+                "name": "Desi Family Drama",
+                "examples": [
+                    "Parents who say money doesn't matter then ask about salary",
+                    "Relatives who judge your career choices but ask for favors",
+                    "Family WhatsApp groups spreading fake news",
+                    "Aunties who give relationship advice but have toxic marriages",
+                    "Parents who want independent kids but control everything"
+                ]
+            },
+            "education": {
+                "name": "Education System Roasts",
+                "examples": [
+                    "Teachers who say marks don't matter then rank students",
+                    "Colleges promoting practical learning with theoretical exams",
+                    "Online classes where only teacher talks to themselves",
+                    "Students who complain about exams but never study",
+                    "Engineering colleges promising 100% placement with 30% salary"
+                ]
+            },
+            "trends": {
+                "name": "Current Trends & Viral Culture",
+                "examples": [
+                    "Crypto bros who lost money but still give financial advice",
+                    "People who jump on every viral trend for attention",
+                    "NFT enthusiasts explaining digital ownership to confused parents",
+                    "Instagram reels copying exact same TikTok trends",
+                    "People who become experts after watching one YouTube video"
                 ]
             }
         }
