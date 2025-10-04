@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dynamic Meme Generator Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive styles for Dynamicmeme component */
+@media (max-width: 768px) {
+  .dynamic-meme-main-content {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .dynamic-meme-header h1 {
+    font-size: 2rem !important;
+  }
+  
+  .dynamic-meme-category-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .dynamic-meme-btn-group {
+    flex-direction: column !important;
+  }
+}
+
+/* Hover effects */
+.dynamic-meme-category-btn:hover {
+  border-color: #667eea !important;
+  background: #f7fafc !important;
+}
+
+.dynamic-meme-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.dynamic-meme-example-item:hover {
+  background: #edf2f7 !important;
+  border-color: #667eea !important;
+}
+
+/* Focus styles */
+.dynamic-meme-input:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}

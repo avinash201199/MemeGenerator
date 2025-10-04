@@ -1,0 +1,6 @@
+python-dotenv
+groq
+pillow
+requests
+flask
+flask-cors
