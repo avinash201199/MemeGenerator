@@ -1,6 +1,7 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTheme } from "../ThemeContext";
+// eslint-disable-next-line no-unused-vars
 import "../index.css"
 
 const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
@@ -8,6 +9,7 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
     const location = useLocation();
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const isHomePage = location.pathname === "/";
+    const { isDarkTheme, toggleTheme } = useTheme();
 
     const handleSearchChange = (event) => {
         if (setSearchQuery) {
@@ -64,6 +66,17 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
                             History
                         </Link>
                     </li>
+                    
+                    {/* Theme Toggle Button */}
+                    <li>
+                        <button 
+                            className="theme-toggle bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            onClick={toggleTheme}
+                        >
+                            {isDarkTheme ? 'Light Mode' : 'Dark Mode'}
+                        </button>
+                    </li>
+                    
                     <li>
                         <button
                             className="goback bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
