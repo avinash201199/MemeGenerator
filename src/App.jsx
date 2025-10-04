@@ -10,17 +10,16 @@ import Dynamicmeme from "./components/Dynamicmeme";
 
 const App = () => {
     return (
-        
-        <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/history" element={<History />} />
-            <Route path="/dynamic" element={<Dynamicmeme />} />
+        <ThemeProvider>
+            <Routes>
+                <Route exact path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/history" element={<History />} />
+                <Route path="/dynamic" element={<Dynamicmeme />} />
 
-            {/* Define other routes here */}
-        </Routes>
-       
-        
+                {/* Define other routes here */}
+            </Routes>
+        </ThemeProvider>
     );
 };
 
