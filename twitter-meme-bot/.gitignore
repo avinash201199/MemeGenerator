@@ -1,0 +1,6 @@
+memes/
+__pycache__/
+logs/
+venv/
+*.pyc
+.env

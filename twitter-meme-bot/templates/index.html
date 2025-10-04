@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 Dynamic Meme Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .output-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 500px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .category-btn {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .category-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .meme-display {
+            text-align: center;
+        }
+
+        .meme-placeholder {
+            border: 3px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 60px 20px;
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+
+        .meme-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .meme-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .meme-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .meme-info h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .meme-text {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 5px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .examples-list {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .example-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .example-item:hover {
+            background: #edf2f7;
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-laugh-squint"></i> Dynamic Meme Generator</h1>
+            <p>Create hilarious memes on ANY topic with AI-powered text generation!</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> Create Your Meme</h2>
+                
+                <div class="form-group">
+                    <label for="topicInput"><i class="fas fa-lightbulb"></i> Meme Topic</label>
+                    <input type="text" id="topicInput" placeholder="Enter your meme topic (e.g., 'AI vs Human Intelligence')" maxlength="200">
+                </div>
+
+                <div class="form-group">
+                    <label for="contextInput"><i class="fas fa-tags"></i> Context (Optional)</label>
+                    <input type="text" id="contextInput" placeholder="Add context for better results (e.g., 'technology and society')" maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-th-large"></i> Or Choose from Categories</label>
+                    <div class="category-grid" id="categoryGrid">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                    <div class="examples-list" id="examplesList">
+                        <!-- Examples will be shown here -->
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="generateBtn">
+                        <i class="fas fa-magic"></i> Generate Meme
+                    </button>
+                    <button class="btn btn-secondary" id="randomBtn">
+                        <i class="fas fa-random"></i> Surprise Me!
+                    </button>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-image"></i> Your Meme</h2>
+                
+                <div class="meme-display">
+                    <div class="meme-placeholder" id="memePlaceholder">
+                        <i class="fas fa-image fa-3x"></i>
+                        <p>Your generated meme will appear here</p>
+                    </div>
+                    
+                    <div class="loading" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <p>Generating your awesome meme...</p>
+                    </div>
+                    
+                    <div id="memeResult" style="display: none;">
+                        <div class="meme-container">
+                            <img id="memeImage" class="meme-image" alt="Generated Meme">
+                        </div>
+                        
+                        <div class="meme-info">
+                            <h3><i class="fas fa-info-circle"></i> Meme Details</h3>
+                            <div class="meme-text">
+                                <strong>Top Text:</strong> <span id="topText"></span>
+                            </div>
+                            <div class="meme-text">
+                                <strong>Bottom Text:</strong> <span id="bottomText"></span>
+                            </div>
+                            <div class="meme-text">
+                                <strong>Topic:</strong> <span id="memeTopic"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn" id="downloadBtn">
+                                <i class="fas fa-download"></i> Download Meme
+                            </button>
+                            <button class="btn btn-secondary" id="generateAnotherBtn">
+                                <i class="fas fa-redo"></i> Generate Another
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><i class="fas fa-heart"></i> Made with AI-powered creativity | Share your memes and spread the laughter!</p>
+        </div>
+    </div>
+
+    <script>
+        let categories = {};
+        let currentMemeFilename = null;
+
+        // Load categories on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCategories();
+            setupEventListeners();
+        });
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                
+                if (data.success) {
+                    categories = data.categories;
+                    renderCategories();
+                } else {
+                    showError('Failed to load categories');
+                }
+            } catch (error) {
+                showError('Error loading categories: ' + error.message);
+            }
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoryGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(categories).forEach(key => {
+                const category = categories[key];
+                const btn = document.createElement('div');
+                btn.className = 'category-btn';
+                btn.textContent = category.name;
+                btn.onclick = () => selectCategory(key);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectCategory(categoryKey) {
+            // Clear previous selections
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Select current category
+            event.target.classList.add('selected');
+            
+            // Show examples
+            showExamples(categoryKey);
+        }
+
+        function showExamples(categoryKey) {
+            const category = categories[categoryKey];
+            const examplesList = document.getElementById('examplesList');
+            
+            examplesList.innerHTML = `
+                <h4><i class="fas fa-list"></i> Example topics for ${category.name}:</h4>
+            `;
+            
+            category.examples.forEach(example => {
+                const item = document.createElement('div');
+                item.className = 'example-item';
+                item.textContent = example;
+                item.onclick = () => useExample(example, category.name.toLowerCase());
+                examplesList.appendChild(item);
+            });
+            
+            examplesList.style.display = 'block';
+        }
+
+        function useExample(topic, context) {
+            document.getElementById('topicInput').value = topic;
+            document.getElementById('contextInput').value = context;
+            document.getElementById('examplesList').style.display = 'none';
+        }
+
+        function setupEventListeners() {
+            document.getElementById('generateBtn').onclick = generateMeme;
+            document.getElementById('randomBtn').onclick = generateRandomMeme;
+            document.getElementById('downloadBtn').onclick = downloadMeme;
+            document.getElementById('generateAnotherBtn').onclick = generateAnother;
+            
+            // Allow Enter key to generate meme
+            document.getElementById('topicInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    generateMeme();
+                }
+            });
+        }
+
+        async function generateMeme() {
+            const topic = document.getElementById('topicInput').value.trim();
+            const context = document.getElementById('contextInput').value.trim();
+            
+            if (!topic) {
+                showError('Please enter a topic for your meme');
+                return;
+            }
+            
+            showLoading(true);
+            hideMessages();
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: topic,
+                        context: context
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMeme(data);
+                    showSuccess('Meme generated successfully!');
+                } else {
+                    showError(data.error || 'Failed to generate meme');
+                }
+            } catch (error) {
+                showError('Error generating meme: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function generateRandomMeme() {
+            showLoading(true);
+            hideMessages();
+            
+            try {
+                const response = await fetch('/api/random', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMeme(data);
+                    document.getElementById('topicInput').value = data.topic;
+                    document.getElementById('contextInput').value = data.context || '';
+                    showSuccess(`Random meme generated from ${data.category}!`);
+                } else {
+                    showError(data.error || 'Failed to generate random meme');
+                }
+            } catch (error) {
+                showError('Error generating random meme: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayMeme(data) {
+            currentMemeFilename = data.filename;
+            
+            document.getElementById('memePlaceholder').style.display = 'none';
+            document.getElementById('memeResult').style.display = 'block';
+            
+            document.getElementById('memeImage').src = `/api/view/${data.filename}`;
+            document.getElementById('topText').textContent = data.top_text;
+            document.getElementById('bottomText').textContent = data.bottom_text;
+            document.getElementById('memeTopic').textContent = data.topic;
+        }
+
+        function downloadMeme() {
+            if (currentMemeFilename) {
+                window.open(`/api/download/${currentMemeFilename}`, '_blank');
+            }
+        }
+
+        function generateAnother() {
+            document.getElementById('memeResult').style.display = 'none';
+            document.getElementById('memePlaceholder').style.display = 'block';
+            document.getElementById('topicInput').value = '';
+            document.getElementById('contextInput').value = '';
+            document.getElementById('examplesList').style.display = 'none';
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            hideMessages();
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+            document.getElementById('generateBtn').disabled = show;
+            document.getElementById('randomBtn').disabled = show;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
