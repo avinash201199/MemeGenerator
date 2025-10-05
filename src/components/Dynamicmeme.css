@@ -1,0 +1,119 @@
+/* Dynamic Meme Generator Responsive Styles */
+
+/* Main content responsive grid */
+.dynamic-meme-main-content {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
+  gap: 30px !important;
+  align-items: stretch !important; /* Changed from start to stretch for equal heights */
+}
+
+/* Ensure sections have equal height */
+.dynamic-meme-main-content > div {
+  height: 100% !important;
+  min-height: 500px !important;
+}
+
+/* Category grid responsive */
+.dynamic-meme-category-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  gap: 10px !important;
+}
+
+/* Button group responsive */
+.dynamic-meme-btn-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+  justify-content: center !important;
+}
+
+/* Input styling */
+.dynamic-meme-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Button responsive */
+.dynamic-meme-btn {
+  min-width: 120px !important;
+  flex: 1 1 auto !important;
+}
+
+/* Category button responsive */
+.dynamic-meme-category-btn {
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Example item responsive */
+.dynamic-meme-example-item:hover {
+  background-color: #f0f0f0 !important;
+  transform: translateX(5px) !important;
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+  .dynamic-meme-main-content {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  .dynamic-meme-category-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  }
+  
+  .dynamic-meme-btn-group {
+    flex-direction: column !important;
+  }
+  
+  .dynamic-meme-btn {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
+
+/* Tablet specific styles */
+@media (max-width: 1024px) {
+  .dynamic-meme-main-content {
+    grid-template-columns: 1fr !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+  .dynamic-meme-category-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .dynamic-meme-category-btn {
+    min-height: 50px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Animation for category buttons */
+.dynamic-meme-category-btn {
+  transition: all 0.3s ease !important;
+}
+
+.dynamic-meme-category-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Animation for buttons */
+.dynamic-meme-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* Example item animation */
+.dynamic-meme-example-item {
+  transition: all 0.3s ease !important;
+}
