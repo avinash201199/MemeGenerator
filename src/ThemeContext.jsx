@@ -1,4 +1,3 @@
-// ThemeContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -15,19 +14,24 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
 
   useEffect(() => {
-    // Check if user has a theme preference in localStorage
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsDarkTheme(savedTheme === 'dark');
-    }
+    const prefersDark = savedTheme ? savedTheme === 'dark' : true;
+    setIsDarkTheme(prefersDark);
   }, []);
 
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.body.classList.add('dark-theme');
+      document.body.classList.remove('light-theme');
+    } else {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+    }
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+  }, [isDarkTheme]); // Re-run this effect whenever isDarkTheme changes
+
   const toggleTheme = () => {
-    setIsDarkTheme(prev => {
-      const newTheme = !prev;
-      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-      return newTheme;
-    });
+    setIsDarkTheme(prev => !prev);
   };
 
   const value = {
@@ -37,9 +41,7 @@ export const ThemeProvider = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={value}>
-      <div className={isDarkTheme ? 'dark-theme' : 'light-theme'}>
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 };
