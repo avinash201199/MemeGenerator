@@ -6,90 +6,60 @@ import React, { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 
 const Temp = ({ temp, setMeme }) => {
-  const row1 = useRef(null);
-  const row2 = useRef(null);
-  const row3 = useRef(null);
+  const containerRef = useRef(null);
 
   useLayoutEffect(() => {
-    const ctx1 = gsap.context(() => {
-      animateRow(row1.current, "right");
-    }, row1.current);
-
-    const ctx2 = gsap.context(() => {
-      animateRow(row2.current, "left");
-    }, row2.current);
-
-    const ctx3 = gsap.context(() => {
-      animateRow(row3.current, "bottom");
-    }, row3.current);
+    const ctx = gsap.context(() => {
+      gsap.from(containerRef.current.children, {
+        opacity: 0,
+        duration: 1,
+        ease: "power4.out",
+        stagger: {
+          amount: 0.3,
+          each: 0.1,
+        },
+        y: 50,
+        scale: 0.9,
+      });
+    }, containerRef.current);
 
     return () => {
-      ctx1.revert();
-      ctx2.revert();
-      ctx3.revert();
+      ctx.revert();
     };
   }, [temp]);
 
-  const animateRow = (rowRef, direction) => {
-    gsap.from(rowRef.children, {
-      opacity: 0,
-      duration: 1,
-      ease: "power4.out",
-      stagger: {
-        amount: 0.2,
-        each: 0.1,
-      },
-      x: direction === "right" ? 100 : direction === "left" ? -100 : 0,
-      y: direction === "bottom" ? 100 : 0,
-    });
-  };
-
   return (
-    <div className="Templates">
-      {/* Row 1 */}
-      <div className="row" ref={row1}>
-        {temp.slice(0, 3).map((temps, ) => (
+    <div className="Templates p-4 mb-24">
+      <div 
+        className="grid grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center max-w-7xl mx-auto"
+        ref={containerRef}
+      >
+        {temp.map((temps) => (
           <div
             key={temps.id}
-            className="template"
+            className="template cursor-pointer flex flex-col items-center justify-center p-3 transition-transform duration-200 hover:scale-105"
             onClick={() => setMeme(temps)}
+            style={{ width: '220px', height: '260px' }}
           >
             <div
-              style={{ backgroundImage: `url(${temps.url})` }}
-              className="meme"
-            ></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Row 2 */}
-      <div className="row" ref={row2}>
-        {temp.slice(3, 6).map((temps) => (
-          <div
-            key={temps.id}
-            className="template"
-            onClick={() => setMeme(temps)}
-          >
-            <div
-              style={{ backgroundImage: `url(${temps.url})` }}
-              className="meme"
-            ></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Row 3 */}
-      <div className="row" ref={row3}>
-        {temp.slice(6, 9).map((temps) => (
-          <div
-            key={temps.id}
-            className="template"
-            onClick={() => setMeme(temps)}
-          >
-            <div
-              style={{ backgroundImage: `url(${temps.url})` }}
-              className="meme"
-            ></div>
+              style={{ 
+                backgroundImage: `url(${temps.url})`, 
+                width: '200px', 
+                height: '200px', 
+                backgroundSize: 'cover', 
+                backgroundPosition: 'center', 
+                borderRadius: '20px', 
+                border: '4px solid #ff2e63', 
+                boxShadow: '0 4px 18px rgba(255,46,99,0.15), 0 0 0 2px #08d9d6',
+                minHeight: '200px',
+                minWidth: '200px'
+              }}
+              className="meme flex items-center justify-center relative flex-shrink-0"
+            >
+            </div>
+            <div className="mt-3 text-center text-sm font-bold text-pink-600 dark:text-cyan-300 truncate w-full px-2" title={temps.name}>
+              {temps.name}
+            </div>
           </div>
         ))}
       </div>

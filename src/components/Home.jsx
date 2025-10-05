@@ -12,7 +12,8 @@ const Home = () => {
   const [meme, setMeme] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(9); // Number of memes to display per page
+  
+  const [itemsPerPage] = useState(18); // Fixed 18 items per page
 
   
 

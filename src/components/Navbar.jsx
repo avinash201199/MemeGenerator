@@ -7,6 +7,7 @@ import "../index.css"
 const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
     const isHomePage = location.pathname === "/";
     const { isDarkTheme, toggleTheme } = useTheme();
@@ -17,69 +18,107 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
         }
     };
 
+    const getActiveLinkStyle = (path) => (
+        location.pathname === path
+            ? {
+                color: '#1E90FF',
+                textDecoration: 'underline',
+                textDecorationColor: '#1E90FF',
+                textUnderlineOffset: '4px',
+                fontWeight: 'bold'
+            }
+            : {}
+    );
+
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
+
     return (
-        <nav className="navbar bg-black text-white flex justify-between items-center px-4 sm:px-10 py-2 shadow-md sticky top-0 z-10 rounded-full border-1 border-black border-opacity-70">
-            {/* Left side: Logo and Navigation Links */}
-            <div className="flex items-center space-x-6">
-                <div className="logo font-bold text-xl sm:text-2xl">Meme Generator</div>
-                
-                <ul className="nav-links list-none flex items-center space-x-4 sm:space-x-8">
-                    <li>
+                <nav className={`navbar shadow-lg sticky top-0 z-50 border-b transition-colors duration-300 ${isDarkTheme ? 'bg-black text-white border-gray-800' : 'bg-white text-black border-gray-200'}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Left side: Logo */}
+                    <div className="flex items-center">
                         <Link 
                             to="/" 
-                            onClick={() => setMeme && setMeme(null)} 
-                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
+                            onClick={() => setMeme && setMeme(null)}
+                            className={`logo font-bold text-xl sm:text-2xl bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:from-blue-300 hover:to-purple-400 transition-all duration-300`}
                         >
-                            Home
+                            Meme Generator
                         </Link>
-                    </li>
-                    <li>
-                        <Link 
-                            to="/" 
-                            onClick={() => setMeme && setMeme(null)} 
-                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
-                        >
-                            Memes
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/dynamic"
-                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
-                        >
-                            Dynamic Meme
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/about"
-                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
-                        >
-                            About
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/history"
-                            className="text-white hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base"
-                        >
-                            History
-                        </Link>
-                    </li>
-                    
-                    {/* Theme Toggle Button */}
-                    <li>
+                    </div>
+
+                    {/* Center: Desktop Navigation Links */}
+                    <div className="hidden md:block">
+                        <div className="ml-10 flex items-baseline space-x-8">
+                            <Link 
+                                to="/" 
+                                onClick={() => setMeme && setMeme(null)} 
+                                style={getActiveLinkStyle("/")}
+                                className={`${isDarkTheme ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium`}
+                            >
+                                Home
+                            </Link>
+                            
+                            <Link
+                                to="/dynamic"
+                                style={getActiveLinkStyle("/dynamic")}
+                                className={`${isDarkTheme ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium`}
+                            >
+                                Dynamic Meme
+                            </Link>
+                            
+                            <Link
+                                to="/about"
+                                style={getActiveLinkStyle("/about")}
+                                className={`${isDarkTheme ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium`}
+                            >
+                                About
+                            </Link>
+                            
+                            <Link
+                                to="/history"
+                                style={getActiveLinkStyle("/history")}
+                                className={`${isDarkTheme ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium`}
+                            >
+                                History
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Right side: Search, Theme Toggle, Go Back Button */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        {/* Search Bar - Only show on home page */}
+                        {isHomePage && (
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Search Memes..."
+                                    value={searchQuery || ""}
+                                    onChange={handleSearchChange}
+                                    className={`px-4 py-2 pl-10 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 text-sm w-48 lg:w-64 transition-all duration-200 ${
+                                        isDarkTheme 
+                                            ? 'bg-gray-800 text-white border-gray-600 focus:border-blue-400' 
+                                            : 'bg-gray-100 text-gray-900 border-gray-300 focus:border-blue-500'
+                                    }`}
+                                />
+                                <svg className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        )}
+
+                        {/* Theme Toggle Button */}
                         <button 
-                            className="theme-toggle bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
                             onClick={toggleTheme}
                         >
-                            {isDarkTheme ? 'Light Mode' : 'Dark Mode'}
+                            {isDarkTheme ? '☀️' : '🌙'}
                         </button>
-                    </li>
-                    
-                    <li>
+                        
                         <button
-                            className="goback bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-xs sm:text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -89,57 +128,138 @@ const Navbar = ({setMeme, searchQuery, setSearchQuery}) => {
                         >
                             ← Go Back
                         </button>
-                    </li>
-                </ul>
-            </div>
+                    </div>
 
-            {/* Right side: Search Bar and GitHub Link */}
-            <div className="flex items-center space-x-6">
-                {/* Search Bar - Only show on home page */}
-                {isHomePage && (
-                    <>
-                        {/* Desktop Search */}
-                        <div className="hidden md:block">
-                            <input
-                                type="text"
-                                placeholder="Search Memes..."
-                                value={searchQuery || ""}
-                                onChange={handleSearchChange}
-                                className="bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-400 focus:outline-none text-sm w-48 lg:w-64"
-                            />
-                        </div>
-                        
+                    {/* Mobile menu button */}
+                    <div className="md:hidden flex items-center space-x-2">
                         {/* Mobile Search Toggle */}
+                        {isHomePage && (
+                            <button
+                                className={`${isDarkTheme ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200 p-2`}
+                                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </button>
+                        )}
+                        
+                        {/* Hamburger Menu Button */}
                         <button
-                            className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
-                            onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset transition-all duration-200 ${
+                                isDarkTheme 
+                                    ? 'text-gray-300 hover:text-white hover:bg-gray-700 focus:ring-white' 
+                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:ring-gray-500'
+                            }`}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                            </svg>
+                            <span className="sr-only">Open main menu</span>
+                            {!isMobileMenuOpen ? (
+                                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            ) : (
+                                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            )}
                         </button>
-                    </>
-                )}
-
-                {/* GitHub Link */}
-                <a href="https://github.com/avinash201199/MemeGenerator" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512">
-                        <path d="M256,32C132.3,32,32,134.9,32,261.7c0,101.5,64.2,187.5,153.2,217.9a17.56,17.56,0,0,0,3.8.4c8.3,0,11.5-6.1,11.5-11.4,0-5.5-.2-19.9-.3-39.1a102.4,102.4,0,0,1-22.6,2.7c-43.1,0-52.9-33.5-52.9-33.5-10.2-26.5-24.9-33.6-24.9-33.6-19.5-13.7-.1-14.1,1.4-14.1h.1c22.5,2,34.3,23.8,34.3,23.8,11.2,19.6,26.2,25.1,39.6,25.1a63,63,0,0,0,25.6-6c2-14.8,7.8-24.9,14.2-30.7-49.7-5.8-102-25.5-102-113.5,0-25.1,8.7-45.6,23-61.6-2.3-5.8-10-29.2,2.2-60.8a18.64,18.64,0,0,1,5-.5c8.1,0,26.4,3.1,56.6,24.1a208.21,208.21,0,0,1,112.2,0c30.2-21,48.5-24.1,56.6-24.1a18.64,18.64,0,0,1,5,.5c12.2,31.6,4.5,55,2.2,60.8,14.3,16.1,23,36.6,23,61.6,0,88.2-52.4,107.6-102.3,113.3,8,7.1,15.2,21.1,15.2,42.5,0,30.7-.3,55.5-.3,63,0,5.4,3.1,11.5,11.4,11.5a19.35,19.35,0,0,0,4-.4C415.9,449.2,480,363.1,480,261.7,480,134.9,379.7,32,256,32Z" fill="currentColor"></path>
-                    </svg>
-                </a>
+                    </div>
+                </div>
             </div>
 
             {/* Mobile Search Bar (Dropdown) */}
             {isHomePage && isMobileSearchOpen && (
-                <div className="absolute top-full left-0 right-0 bg-black border-t border-gray-700 p-4 md:hidden">
-                    <input
-                        type="text"
-                        placeholder="Search Memes..."
-                        value={searchQuery || ""}
-                        onChange={handleSearchChange}
-                        className="bg-gray-800 text-white px-4 py-2 rounded-full border border-gray-600 focus:border-blue-400 focus:outline-none text-sm w-full"
-                    />
+                <div className={`md:hidden border-t px-4 py-3 ${isDarkTheme ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-300'}`}>
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search Memes..."
+                            value={searchQuery || ""}
+                            onChange={handleSearchChange}
+                            className={`px-4 py-2 pl-10 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 text-sm w-full transition-all duration-200 ${
+                                isDarkTheme 
+                                    ? 'bg-gray-800 text-white border-gray-600 focus:border-blue-400' 
+                                    : 'bg-white text-gray-900 border-gray-300 focus:border-blue-500'
+                            }`}
+                        />
+                        <svg className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+            )}
+
+            {/* Mobile Navigation Menu */}
+            {isMobileMenuOpen && (
+                <div className={`md:hidden border-t ${isDarkTheme ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'}`}>
+                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <Link
+                            to="/"
+                            onClick={() => {
+                                setMeme && setMeme(null);
+                                closeMobileMenu();
+                            }}
+                            style={getActiveLinkStyle("/")}
+                            className={`${isDarkTheme ? 'text-white hover:text-blue-400 hover:bg-gray-700' : 'text-gray-900 hover:text-blue-600 hover:bg-gray-100'} block px-3 py-2 rounded-md text-base font-medium transition-all duration-200`}
+                        >
+                            Home
+                        </Link>
+                        
+                        <Link
+                            to="/dynamic"
+                            onClick={closeMobileMenu}
+                            style={getActiveLinkStyle("/dynamic")}
+                            className={`${isDarkTheme ? 'text-white hover:text-blue-400 hover:bg-gray-700' : 'text-gray-900 hover:text-blue-600 hover:bg-gray-100'} block px-3 py-2 rounded-md text-base font-medium transition-all duration-200`}
+                        >
+                            Dynamic Meme
+                        </Link>
+                        
+                        <Link
+                            to="/about"
+                            onClick={closeMobileMenu}
+                            style={getActiveLinkStyle("/about")}
+                            className={`${isDarkTheme ? 'text-white hover:text-blue-400 hover:bg-gray-700' : 'text-gray-900 hover:text-blue-600 hover:bg-gray-100'} block px-3 py-2 rounded-md text-base font-medium transition-all duration-200`}
+                        >
+                            About
+                        </Link>
+                        
+                        <Link
+                            to="/history"
+                            onClick={closeMobileMenu}
+                            style={getActiveLinkStyle("/history")}
+                            className={`${isDarkTheme ? 'text-white hover:text-blue-400 hover:bg-gray-700' : 'text-gray-900 hover:text-blue-600 hover:bg-gray-100'} block px-3 py-2 rounded-md text-base font-medium transition-all duration-200`}
+                        >
+                            History
+                        </Link>
+                    </div>
+                    
+                    {/* Mobile Action Buttons */}
+                    <div className={`px-4 py-3 border-t space-y-3 ${isDarkTheme ? 'border-gray-700' : 'border-gray-300'}`}>
+                        <button 
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            onClick={() => {
+                                toggleTheme();
+                                closeMobileMenu();
+                            }}
+                        >
+                            {isDarkTheme ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                        </button>
+                        
+                        <button
+                            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-none rounded-full px-4 py-2 text-sm cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setMeme && setMeme(null);
+                                navigate("/");
+                                closeMobileMenu();
+                            }}
+                        >
+                            ← Go Back
+                        </button>
+                    </div>
                 </div>
             )}
         </nav>

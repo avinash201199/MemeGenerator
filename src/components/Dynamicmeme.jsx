@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
+import Navbar from './Navbar';
+import Footer from './Footer';
+import './Dynamicmeme.css';
 const Dynamicmeme = () => {
   const [categories, setCategories] = useState({});
   const [topicInput, setTopicInput] = useState('');
@@ -24,7 +26,7 @@ const Dynamicmeme = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/categories`);
       const data = await response.json();
-      
+
       if (data.success) {
         setCategories(data.categories);
       } else {
@@ -51,10 +53,10 @@ const Dynamicmeme = () => {
       showError('Please enter a topic for your meme');
       return;
     }
-    
+
     setIsLoading(true);
     hideMessages();
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/generate`, {
         method: 'POST',
@@ -66,9 +68,9 @@ const Dynamicmeme = () => {
           context: contextInput
         })
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         displayMeme(data);
         showSuccess('Meme generated successfully!');
@@ -85,14 +87,14 @@ const Dynamicmeme = () => {
   const generateRandomMeme = async () => {
     setIsLoading(true);
     hideMessages();
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/random`, {
         method: 'POST'
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         displayMeme(data);
         setTopicInput(data.topic);
@@ -161,11 +163,12 @@ const Dynamicmeme = () => {
     },
     body: {
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
       minHeight: '100vh',
       color: '#333',
       margin: 0,
-      padding: 0
+      padding: '0 0 2rem 0',
+      position: 'relative'
     },
     header: {
       textAlign: 'center',
@@ -183,22 +186,31 @@ const Dynamicmeme = () => {
     },
     mainContent: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
       gap: '30px',
-      alignItems: 'start'
+      alignItems: 'start',
+      '@media (max-width: 768px)': {
+        gridTemplateColumns: '1fr',
+        gap: '20px'
+      }
     },
     inputSection: {
       background: 'white',
       borderRadius: '20px',
       padding: '30px',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+      boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+      minHeight: '500px',
+      display: 'flex',
+      flexDirection: 'column'
     },
     outputSection: {
       background: 'white',
       borderRadius: '20px',
       padding: '30px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-      minHeight: '500px'
+      minHeight: '500px',
+      display: 'flex',
+      flexDirection: 'column'
     },
     sectionTitle: {
       fontSize: '1.5rem',
@@ -355,7 +367,8 @@ const Dynamicmeme = () => {
     }
   };
 
-  return (
+  return (<>
+  <Navbar />
     <div style={styles.body}>
       <div style={styles.container}>
         <div style={styles.header}>
@@ -367,13 +380,13 @@ const Dynamicmeme = () => {
           </p>
         </div>
 
-        <div style={styles.mainContent} className="dynamic-meme-main-content">
+        <div style={styles.mainContent} className="dynamic-meme-main-content grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Input Section */}
-          <div style={styles.inputSection}>
+          <div style={styles.inputSection} className="order-2 lg:order-1">
             <h2 style={styles.sectionTitle}>
               <i className="fas fa-edit"></i> Create Your Meme
             </h2>
-            
+
             <div style={styles.formGroup}>
               <label style={styles.label}>
                 <i className="fas fa-lightbulb"></i> Meme Topic
@@ -427,7 +440,7 @@ const Dynamicmeme = () => {
                   );
                 })}
               </div>
-              
+
               {showExamples && selectedCategory && (
                 <div style={styles.examplesList}>
                   <h4>
@@ -478,7 +491,7 @@ const Dynamicmeme = () => {
                 {errorMessage}
               </div>
             )}
-            
+
             {successMessage && (
               <div style={styles.successMessage}>
                 {successMessage}
@@ -487,11 +500,11 @@ const Dynamicmeme = () => {
           </div>
 
           {/* Output Section */}
-          <div style={styles.outputSection}>
+          <div style={styles.outputSection} className="order-1 lg:order-2">
             <h2 style={styles.sectionTitle}>
               <i className="fas fa-image"></i> Your Meme
             </h2>
-            
+
             <div style={styles.memeDisplay}>
               {!memeData && !isLoading && (
                 <div style={styles.memePlaceholder}>
@@ -499,14 +512,14 @@ const Dynamicmeme = () => {
                   <p>Your generated meme will appear here</p>
                 </div>
               )}
-              
+
               {isLoading && (
                 <div style={styles.loading}>
                   <div style={styles.spinner}></div>
                   <p>Generating your awesome meme...</p>
                 </div>
               )}
-              
+
               {memeData && !isLoading && (
                 <div>
                   <div>
@@ -516,13 +529,13 @@ const Dynamicmeme = () => {
                       alt="Generated Meme"
                     />
                   </div>
-                  
+
                   <div style={styles.btnGroup} className="dynamic-meme-btn-group">
                     <button style={styles.btn} className="dynamic-meme-btn" onClick={downloadMeme}>
                       <i className="fas fa-download"></i> Download Meme
                     </button>
                     <button
-                      style={{...styles.btn, ...styles.btnSecondary}}
+                      style={{ ...styles.btn, ...styles.btnSecondary }}
                       className="dynamic-meme-btn"
                       onClick={generateAnother}
                     >
@@ -537,6 +550,8 @@ const Dynamicmeme = () => {
 
       </div>
     </div>
+    <Footer />
+  </>
   );
 };
 
