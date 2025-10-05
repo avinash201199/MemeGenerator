@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
-import memesMeta from "./memesMeta"; // <-- import captions
+import memesMeta from "./memesMeta";
 
 const Temp = ({ temp, setMeme }) => {
   const row1 = useRef(null);
@@ -33,47 +33,46 @@ const Temp = ({ temp, setMeme }) => {
       opacity: 0,
       duration: 1,
       ease: "power4.out",
-      stagger: { amount: 0.2, each: 0.1 },
+      stagger: {
+        amount: 0.2,
+        each: 0.1,
+      },
       x: direction === "right" ? 100 : direction === "left" ? -100 : 0,
       y: direction === "bottom" ? 100 : 0,
     });
   };
 
-  const renderTemplate = (temps) => {
-    const captions = memesMeta[temps.name]?.captions || [];
-    const previewText = captions.join(", ");
-
-    return (
+  const renderTemplate = (temps) => (
+    <div
+      key={temps.id}
+      className="template"
+      onClick={() => setMeme(temps)}
+    >
       <div
-        key={temps.id}
-        className="template relative cursor-pointer"
-        onClick={() => setMeme(temps)}
-      >
-        <div
-          style={{ backgroundImage: `url(${temps.url})` }}
-          className="meme"
-        ></div>
+        style={{ backgroundImage: `url(${temps.url})` }}
+        className="meme"
+      ></div>
 
-        {/* Hover overlay */}
-        {previewText && (
-          <div className="hover-caption absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 text-center opacity-0 transition-opacity duration-200 pointer-events-none">
-            {previewText}
-          </div>
-        )}
+      {/* Hover caption overlay */}
+      <div className="hover-caption">
+        {memesMeta[temps.name]?.captions?.join(", ")}
       </div>
-    );
-  };
+    </div>
+  );
 
   return (
     <div className="Templates">
+      {/* Row 1 */}
       <div className="row" ref={row1}>
         {temp.slice(0, 3).map(renderTemplate)}
       </div>
 
+      {/* Row 2 */}
       <div className="row" ref={row2}>
         {temp.slice(3, 6).map(renderTemplate)}
       </div>
 
+      {/* Row 3 */}
       <div className="row" ref={row3}>
         {temp.slice(6, 9).map(renderTemplate)}
       </div>
