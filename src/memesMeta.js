@@ -1,19 +1,30 @@
 // src/memesMeta.js
-
 const memesMeta = {
   "Distracted Boyfriend": {
-    captions: ["Looking at other options", "Funny relationship meme"]
-  },
-  "Two Buttons": {
-    captions: ["Difficult choices", "Decision making meme"]
+    description: "Man distracted by something",
+    keywords: ["boyfriend", "distracted"],
+    captions: ["Me vs my responsibilities", "The new phone vs old phone"]
   },
   "Drake Hotline Bling": {
-    captions: ["Reject / Accept", "Drake preference meme"]
+    description: "Drake showing preference",
+    keywords: ["Drake", "hotline bling"],
+    captions: ["Not this", "Yes this"]
   },
-  "Old Man Yells at Cloud": {
-    captions: ["Angry old man", "Complaining meme"]
+  "Two Buttons": {
+    description: "Person choosing between two options",
+    keywords: ["buttons", "choice"],
+    captions: ["Option 1", "Option 2"]
   },
-  // Add more meme captions as needed
+  "Change My Mind": {
+    description: "Man at table with sign",
+    keywords: ["table", "sign", "change my mind"],
+    captions: ["Change my mind about coding", "Coffee vs Tea"]
+  },
+  "Expanding Brain": {
+    description: "Increasingly enlightened brain levels",
+    keywords: ["brain", "expanding"],
+    captions: ["Level 1", "Level 2", "Level 3", "Level 4"]
+  }
 };
 
 export default memesMeta;

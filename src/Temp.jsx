@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
-import memesMeta from "../memesMeta"; // <-- import captions
+import memesMeta from "./memesMeta"; // <-- import captions
 
 const Temp = ({ temp, setMeme }) => {
   const row1 = useRef(null);
