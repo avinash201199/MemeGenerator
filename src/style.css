@@ -11,19 +11,22 @@
 
   /* COLORS - DARK THEME (default) */
   --color-background: #000000ec;
+  --color-background-navbar: #000000ec;
   --color-primary: #6fb7d7;
   --color-secondary: #8bf710ec;
   --color-tertiary: #0C356A;
   --color-text: #fff;
+  --color-navbar-shadow-inset: rgba(63, 64, 65, 0.363);
+  --color-navbar-shadow-glow: rgba(124, 215, 221, 0.22); 
 
   /* Light theme variables */
-  --color-background-light: #ffffff;
+  --color-background-light: white;
   --color-text-light: #000000;
   --color-primary-light: #2563eb;
-  --color-secondary-light: #dc2626;
-  --color-tertiary-light: #1e40af;
-
-  /* ====== */
+  --color-secondary-light: black;
+  --color-tertiary-light: #4a8cf7;
+  --color-navbar-shadow-inset-light: rgba(0, 0, 0, 0.1);
+  --color-navbar-shadow-glow-light: rgba(37, 99, 235, 0.4);
 
   /* FONTS */
   --font-family-body: "Oxanium", cursive;
@@ -54,6 +57,8 @@
   --color-primary: var(--color-primary-light);
   --color-secondary: var(--color-secondary-light);
   --color-tertiary: var(--color-tertiary-light);
+  --color-navbar-shadow-inset: var(--color-navbar-shadow-inset-light);
+  --color-navbar-shadow-glow: var(--color-navbar-shadow-glow-light);
 }
 
 * {
@@ -85,7 +90,7 @@ h2 {
 
 /* Navbar container - FIXED: Using CSS variables */
 .navbar {
-  background-color: var(--color-background);
+  background-color: var(--color-background-navbar-light);
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
@@ -95,8 +100,8 @@ h2 {
   border-bottom-right-radius: 50px;
   align-items: center;
   padding: 20px 40px;
-  box-shadow: inset rgba(63, 64, 65, 0.363) -10px -14px 16px, 
-              rgba(124, 215, 221, 0.22) 1px -2px 20px 20px;
+ box-shadow: inset var(--color-navbar-shadow-inset) -10px -14px 16px, 
+              var(--color-navbar-shadow-glow) 1px -2px 20px 20px;
   color: var(--color-text);
   position: sticky;
   top: 0;
@@ -104,7 +109,7 @@ h2 {
   margin-bottom: 40px;
   margin-top: 10px;
   width: 90%;
-  margin-left: 5%;
+  margin-left: 3%;
   transition: all 0.3s ease;
 }
 
@@ -293,9 +298,9 @@ input:focus {
   align-items: center;
   justify-content: center;
   width: 60px;
-  height: 20px;
-  background: var(--color-tertiary);
-  color: var(--color-secondary);
+  height: 65px;
+  background: #1159cf;
+  color: white;
   cursor: pointer;
 }
 
@@ -377,7 +382,7 @@ input:focus {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 20px; /* Consistent spacing */
+  gap: 0px; /* Consistent spacing */
 }
 
 .nav-links li {
@@ -387,7 +392,7 @@ input:focus {
 /* Specific spacing for larger screens */
 @media screen and (min-width: 769px) {
   .nav-links {
-    gap: 30px;
+    gap: 0px;
   }
 }
 
