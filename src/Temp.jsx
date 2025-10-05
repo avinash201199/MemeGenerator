@@ -53,7 +53,7 @@ const Temp = ({ temp, setMeme }) => {
         className="meme"
       ></div>
 
-      {/* Hover caption overlay */}
+      {/* Caption overlay */}
       <div className="hover-caption">
         {memesMeta[temps.name]?.captions?.join(", ")}
       </div>
@@ -62,17 +62,14 @@ const Temp = ({ temp, setMeme }) => {
 
   return (
     <div className="Templates">
-      {/* Row 1 */}
       <div className="row" ref={row1}>
         {temp.slice(0, 3).map(renderTemplate)}
       </div>
 
-      {/* Row 2 */}
       <div className="row" ref={row2}>
         {temp.slice(3, 6).map(renderTemplate)}
       </div>
 
-      {/* Row 3 */}
       <div className="row" ref={row3}>
         {temp.slice(6, 9).map(renderTemplate)}
       </div>
