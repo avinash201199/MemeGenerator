@@ -507,4 +507,15 @@ input:focus {
     max-width: 300px; 
     height: auto; 
   }
+
+    /* Hover caption overlay for memes */
+  .template {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .template:hover .hover-caption {
+    opacity: 1;
+  }
+
 }
