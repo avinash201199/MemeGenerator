@@ -12,7 +12,7 @@ const App = () => {
     return (
         <ThemeProvider>
             <Routes>
-                <Route exact path="/" element={<Home />} />
+				<Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/dynamic" element={<Dynamicmeme />} />
