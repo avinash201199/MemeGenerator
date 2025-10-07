@@ -12,10 +12,10 @@ const Home = () => {
   const [meme, setMeme] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const [itemsPerPage] = useState(18); // Fixed 18 items per page
 
-  
+
 
   useEffect(() => {
     fetch("https://api.imgflip.com/get_memes")
@@ -57,7 +57,7 @@ const Home = () => {
     const totalPages = Math.ceil(filteredMemes.length / itemsPerPage);
     const pages = [];
     const maxVisiblePages = 7;
-    
+
     if (totalPages <= maxVisiblePages) {
       // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
@@ -82,14 +82,14 @@ const Home = () => {
         pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
       }
     }
-    
+
     return pages;
   };
 
   return (
     <div className="App min-h-screen flex flex-col">
-      <Navbar 
-        setMeme={setMeme} 
+      <Navbar
+        setMeme={setMeme}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
@@ -106,7 +106,7 @@ const Home = () => {
               >
                 Previous
               </button>
-              
+
               {renderPagination().map((page, index) => (
                 <React.Fragment key={`page-${index}-${page}`}>
                   {page === '...' ? (
@@ -114,8 +114,8 @@ const Home = () => {
                   ) : (
                     <button
                       className={`px-4 py-2 min-w-[44px] border rounded-lg cursor-pointer transition-all duration-300 font-bold text-sm ${
-                        currentPage === page 
-                          ? 'active bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-white border-blue-400 shadow-lg shadow-blue-500/60 transform scale-110' 
+                        currentPage === page
+                          ? 'active bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-white border-blue-400 shadow-lg shadow-blue-500/60 transform scale-110'
                           : 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white hover:border-gray-500 hover:scale-105'
                       }`}
                       onClick={() => paginate(page)}
@@ -129,7 +129,7 @@ const Home = () => {
                   )}
                 </React.Fragment>
               ))}
-              
+
               <button
                 className="bg-gray-800 text-gray-300 px-4 py-2 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 onClick={nextPage}
