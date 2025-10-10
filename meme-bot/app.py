@@ -204,14 +204,14 @@ def internal_error(error):
 
 if __name__ == '__main__':
     # Initialize the meme generator on startup
-    print("🚀 Starting Meme Generator Web App...")
+    print(" Starting Meme Generator Web App...")
     
     if initialize_generator():
-        print("✅ Meme generator initialized successfully!")
+        print(" Meme generator initialized successfully!")
     else:
-        print("❌ Failed to initialize meme generator. Check your environment setup.")
+        print(" Failed to initialize meme generator. Check your environment setup.")
     
-    print("🌐 Starting Flask server...")
-    print("📱 Open your browser and go to: http://localhost:5000")
+    print(" Starting Flask server...")
+    print(" Open your browser and go to: http://localhost:5000")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
