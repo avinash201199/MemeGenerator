@@ -5,10 +5,7 @@ const Meme = ({ meme, setMeme }) => {
 
     const [form, setForm] = useState({
         template_id: meme.id,
-        username: "RituGupta",
-        password: "Ritu@123",
         boxes: [],
-
     });
 
     const [memeGenerated, setMemeGenerated] = useState(false);
@@ -30,54 +27,43 @@ const Meme = ({ meme, setMeme }) => {
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
     };
 
-    const generatememe = (e) => {
+    const generatememe = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
         setShowError(false);
-        
-        let url = `https://api.imgflip.com/caption_image?template_id=${form.template_id}&username=${form.username}&password=${form.password}`;
-        form.boxes.map((box, index) => {
-            return (url += (`&boxes[${index}][text]=${box.text}`));
-        });
-        console.log(url)
-        fetch(url).then((res) => res.json())
-            .then((data) => {
-                setIsLoading(false);
-                if (data.success === true) {
-                    setMeme({ ...meme, url: data.data.url })
-                    setMemeGenerated(true);
-                    setShowSuccessNote(true);
-                    saveMemeToHistory(data.data);
-                    
-                    // Hide success note after 4 seconds
-                    setTimeout(() => {
-                        setShowSuccessNote(false);
-                    }, 4000);
-                } else {
-                    // Handle API error
-                    setError(data.error_message || 'Failed to generate meme. Please try again.');
-                    setShowError(true);
-                    
-                    // Hide error after 2 seconds
-                    setTimeout(() => {
-                        setShowError(false);
-                        setError('');
-                    }, 2000);
-                }
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.error('Error:', error);
-                setError('Network error. Please check your connection and try again.');
-                setShowError(true);
-                
-                // Hide error after 2 seconds
-                setTimeout(() => {
-                    setShowError(false);
-                    setError('');
-                }, 2000);
+
+        try {
+            // POST to our secure serverless proxy
+            const resp = await fetch('/api/caption', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    template_id: form.template_id,
+                    boxes: (form.boxes || []).map((b) => ({ text: b?.text ?? '' })),
+                })
             });
+            const data = await resp.json();
+
+            setIsLoading(false);
+            if (data?.success && data?.data?.url) {
+                setMeme({ ...meme, url: data.data.url });
+                setMemeGenerated(true);
+                setShowSuccessNote(true);
+                saveMemeToHistory(data.data);
+                setTimeout(() => setShowSuccessNote(false), 4000);
+            } else {
+                setError(data?.error || 'Failed to generate meme. Please try again.');
+                setShowError(true);
+                setTimeout(() => { setShowError(false); setError(''); }, 2000);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            setIsLoading(false);
+            setError('Network error. Please check your connection and try again.');
+            setShowError(true);
+            setTimeout(() => { setShowError(false); setError(''); }, 2000);
+        }
     }
     function save() {
         var xhr = new XMLHttpRequest();
