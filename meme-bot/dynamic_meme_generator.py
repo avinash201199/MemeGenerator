@@ -11,7 +11,7 @@ import random
 def display_welcome():
     """Display welcome message and instructions."""
     print("\n" + "="*60)
-    print("🎭 DYNAMIC MEME GENERATOR 🎭")
+    print(" DYNAMIC MEME GENERATOR ")
     print("="*60)
     print("Generate hilarious memes on ANY topic!")
     print("From youth problems to world events, technology to relationships!")
@@ -105,7 +105,7 @@ def get_topic_categories():
 def display_categories():
     """Display all available topic categories."""
     categories = get_topic_categories()
-    print("\n📱 Available Topic Categories:")
+    print("\n Available Topic Categories:")
     print("-" * 40)
     
     for key, category in categories.items():
@@ -129,10 +129,10 @@ def get_user_choice():
             elif choice == "0":
                 return "0", {"name": "Random Selection", "examples": []}
             else:
-                print("❌ Invalid choice! Please select a number between 0-9.")
+                print(" Invalid choice! Please select a number between 0-9.")
                 
         except KeyboardInterrupt:
-            print("\n\nGoodbye! 👋")
+            print("\n\nGoodbye! ")
             return None, None
 
 def get_topic_from_category(category_data):
@@ -144,8 +144,8 @@ def get_topic_from_category(category_data):
     examples = category_data["examples"]
     
     if category_name == "Custom Topic":
-        topic = input("\n💭 Enter your custom meme topic: ").strip()
-        context = input("📝 Enter additional context (optional): ").strip()
+        topic = input("\n Enter your custom meme topic: ").strip()
+        context = input(" Enter additional context (optional): ").strip()
         return topic if topic else "Random daily life", context if context else None
     
     elif category_name == "Random Selection":
@@ -179,11 +179,11 @@ def get_topic_from_category(category_data):
                     return custom_topic if custom_topic else examples[0], context
             
             # If invalid input, return first example
-            print("⚠️ Invalid selection, using first example topic.")
+            print(" Invalid selection, using first example topic.")
             return examples[0], category_name.lower()
             
         except (ValueError, IndexError):
-            print("⚠️ Invalid input, using first example topic.")
+            print(" Invalid input, using first example topic.")
             return examples[0], category_name.lower()
 
 def generate_meme_interactive():
@@ -192,7 +192,7 @@ def generate_meme_interactive():
     
     try:
         generator = MemeGeneratorClean()
-        print("✅ Meme generator initialized successfully!")
+        print(" Meme generator initialized successfully!")
         
         while True:
             display_categories()
@@ -205,34 +205,34 @@ def generate_meme_interactive():
             if not topic:
                 continue
                 
-            print(f"\n🎨 Generating meme for: '{topic}'")
+            print(f"\n Generating meme for: '{topic}'")
             if context:
-                print(f"📝 Context: {context}")
+                print(f" Context: {context}")
             
-            print("\n⏳ Creating your meme... (this may take a few seconds)")
+            print("\n Creating your meme... (this may take a few seconds)")
             
             filename = generator.create_meme(topic, context)
             
             if filename:
-                print("\n🎉 SUCCESS! Your meme has been generated!")
-                print(f"📁 Saved as: {filename}")
-                print("✨ Check the 'memes' folder to view your creation!")
+                print("\n SUCCESS! Your meme has been generated!")
+                print(f" Saved as: {filename}")
+                print(" Check the 'memes' folder to view your creation!")
             else:
-                print("\n❌ Oops! Failed to generate meme. Please try again.")
+                print("\n Oops! Failed to generate meme. Please try again.")
             
             # Ask if user wants to generate another meme
             try:
-                another = input("\n🔄 Generate another meme? (y/n): ").strip().lower()
+                another = input("\n Generate another meme? (y/n): ").strip().lower()
                 if another not in ['y', 'yes']:
                     break
             except KeyboardInterrupt:
                 break
                 
-        print("\n👋 Thanks for using the Dynamic Meme Generator!")
-        print("🎭 Keep creating and sharing awesome memes!")
+        print("\n Thanks for using the Dynamic Meme Generator!")
+        print(" Keep creating and sharing awesome memes!")
         
     except Exception as e:
-        print(f"\n❌ Error initializing meme generator: {e}")
+        print(f"\n Error initializing meme generator: {e}")
         print("Please check your environment setup and try again.")
 
 if __name__ == "__main__":
