@@ -623,5 +623,16 @@ class MemeGeneratorClean:
                     "Instagram reels copying exact same TikTok trends",
                     "People who become experts after watching one YouTube video"
                 ]
-            }
+            },
+            "programmer_life": {
+                "name": "Life of a Programmer",
+                "examples": [
+                    "When code works on your computer but not on anyone else’s ",
+                    "Googling your own error for the 5th time today ",
+                    "Fixing one bug and creating five new ones ",
+                    "Writing ‘temporary’ code that stays forever ",
+                    "When console.log() becomes your best friend "
+  ]
+}
+
         }
