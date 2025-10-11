@@ -14,8 +14,8 @@ const Dynamicmeme = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // API base URL
-  const API_BASE_URL = 'http://localhost:5000';
+  // API base URL (configure via Vite env)
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   // Load categories on component mount
   useEffect(() => {

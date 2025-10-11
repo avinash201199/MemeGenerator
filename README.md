@@ -62,6 +62,59 @@ git commit -m <your message>
 git push
 ```
 
+## Secure Imgflip caption API (new)
+
+To avoid exposing Imgflip credentials in the client, the app now uses a serverless function at `/api/caption`.
+
+- Copy `.env.example` to `.env.local` (for local dev) and set these variables:
+
+```
+IMGFLIP_USERNAME=your_username
+IMGFLIP_PASSWORD=your_password
+```
+
+- On Vercel, set the same values in Project Settings → Environment Variables.
+
+Local dev:
+
+```
+npm run dev
+```
+
+Deploy on Vercel as usual; the function lives at `api/caption.js` and will be auto-deployed.
+
+The frontend `src/Meme.jsx` now posts to `/api/caption` with `template_id` and `boxes` and does not include credentials in the browser.
+
+## Dynamic AI Meme Generator backend
+
+The AI meme generator page (`/dynamic`) talks to a Python Flask backend in `meme-bot/`.
+
+Configure the frontend API base URL:
+
+```
+# .env.local
+VITE_API_BASE_URL=https://your-flask-backend.example.com
+```
+
+Local dev for backend:
+
+```
+cd meme-bot
+pip install -r requirements.txt
+setx GROQ_API_KEY "your_groq_key"  # Windows PowerShell: set for current user
+python app.py
+```
+
+Then in another terminal:
+
+```
+VITE_API_BASE_URL=http://localhost:5000 npm run dev
+```
+
+Deploy ideas for the backend:
+- Render/Fly.io/Railway (free/low-cost) or any VPS.
+- Ensure the service exposes `/api/categories`, `/api/generate`, `/api/random`, `/api/view/:filename`, `/api/download/:filename`.
+
 ## Contributing
 
 Contributions are always welcome!
