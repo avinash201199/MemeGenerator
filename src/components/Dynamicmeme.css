@@ -1,27 +1,30 @@
-/* Dynamic Meme Generator Responsive Styles */
+/* ===========================================================
+   ⚡ Dynamic Meme Generator – Responsive & Interactive Styles
+   Author: Divjot Singh Arora
+   =========================================================== */
 
-/* Main content responsive grid */
+/* ---------- 🧩 Main Content Layout ---------- */
 .dynamic-meme-main-content {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
   gap: 30px !important;
-  align-items: stretch !important; /* Changed from start to stretch for equal heights */
+  align-items: stretch !important;
 }
 
-/* Ensure sections have equal height */
+/* Ensure equal section heights */
 .dynamic-meme-main-content > div {
   height: 100% !important;
   min-height: 500px !important;
 }
 
-/* Category grid responsive */
+/* ---------- 🗂️ Category Grid ---------- */
 .dynamic-meme-category-grid {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
   gap: 10px !important;
 }
 
-/* Button group responsive */
+/* ---------- 🎛️ Button Groups ---------- */
 .dynamic-meme-btn-group {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -29,54 +32,89 @@
   justify-content: center !important;
 }
 
-/* Input styling */
+/* ---------- ✏️ Inputs ---------- */
 .dynamic-meme-input {
   width: 100% !important;
   box-sizing: border-box !important;
+  border-radius: 8px !important;
+  transition: all 0.25s ease-in-out !important;
 }
 
-/* Button responsive */
+/* ---------- 🔘 Buttons ---------- */
 .dynamic-meme-btn {
   min-width: 120px !important;
   flex: 1 1 auto !important;
+  border-radius: 10px !important;
+  transition: all 0.3s ease !important;
 }
 
-/* Category button responsive */
+/* Hover animations for buttons */
+.dynamic-meme-btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* Disabled button styling */
+.dynamic-meme-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ---------- 🧱 Category Buttons ---------- */
 .dynamic-meme-category-btn {
   min-height: 40px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
 }
 
-/* Example item responsive */
+.dynamic-meme-category-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-color: #667eea !important;
+  background-color: #f7fafc !important;
+}
+
+/* ---------- 🧩 Example Items ---------- */
+.dynamic-meme-example-item {
+  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+}
+
 .dynamic-meme-example-item:hover {
   background-color: #f0f0f0 !important;
   transform: translateX(5px) !important;
+  border-color: #667eea !important;
 }
 
-/* Mobile specific styles */
+/* ---------- 📱 Responsive Breakpoints ---------- */
+
+/* Mobile (≤768px) */
 @media (max-width: 768px) {
   .dynamic-meme-main-content {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
   }
-  
+
   .dynamic-meme-category-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
   }
-  
+
   .dynamic-meme-btn-group {
     flex-direction: column !important;
   }
-  
+
   .dynamic-meme-btn {
     width: 100% !important;
     min-width: unset !important;
   }
 }
 
-/* Tablet specific styles */
+/* Tablet (≤1024px) */
 @media (max-width: 1024px) {
   .dynamic-meme-main-content {
     grid-template-columns: 1fr !important;
@@ -85,35 +123,14 @@
   }
 }
 
-/* Small mobile styles */
+/* Small Mobile (≤480px) */
 @media (max-width: 480px) {
   .dynamic-meme-category-grid {
     grid-template-columns: 1fr !important;
   }
-  
+
   .dynamic-meme-category-btn {
     min-height: 50px !important;
     font-size: 16px !important;
   }
-}
-
-/* Animation for category buttons */
-.dynamic-meme-category-btn {
-  transition: all 0.3s ease !important;
-}
-
-.dynamic-meme-category-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Animation for buttons */
-.dynamic-meme-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
-}
-
-/* Example item animation */
-.dynamic-meme-example-item {
-  transition: all 0.3s ease !important;
 }
