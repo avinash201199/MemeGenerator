@@ -35,6 +35,7 @@ const Footer = () => {
                             href="https://github.com/avinash201199/MemeGenerator" 
                             target="_blank" 
                             rel="noopener noreferrer"
+                            aria-label="Contribute on GitHub"
                             className="flex items-center space-x-2 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-all duration-300 hover:scale-105 group"
                         >
                             <svg className="w-6 h-6 text-gray-300 group-hover:text-yellow-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,11 +48,43 @@ const Footer = () => {
                     </div>
                 </div>
                 
+                {/* Pages section above footer */}
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider">Quick Links</h4>
+                        <ul className="mt-3 space-y-2 text-sm">
+                            <li>
+                                <a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a>
+                            </li>
+                            <li>
+                                <a href="/dynamic" className="text-gray-300 hover:text-white transition-colors">Dynamic</a>
+                            </li>
+                            <li>
+                                <a href="/about" className="text-gray-300 hover:text-white transition-colors">About</a>
+                            </li>
+                            <li>
+                                <a href="/history" className="text-gray-300 hover:text-white transition-colors">History</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {/* Resources */}
+                    <div>
+                        <h4 className="text-sm font-semibold text-white uppercase tracking-wider">Resources</h4>
+                        <ul className="mt-3 space-y-2 text-sm">
+                            <li><a href="https://github.com/avinash201199/MemeGenerator" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">Contribute</a></li>
+                            <li><a href="https://github.com/avinash201199/MemeGenerator/issues" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">Issues</a></li>
+                            <li><a href="https://hacktoberfest.com/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">HacktoberFest</a></li>
+                            <li><a href="#" className="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+
                 {/* Bottom border */}
                 <div className="mt-8 pt-6 border-t border-gray-700">
                     <div className="text-center">
                         <p className="text-gray-400 text-xs">
-                            Built with ❤️ for HacktoberFest 2025 | Made with React & Tailwind CSS
+                            Built with ❤️ for HacktoberFest {currentYear} | Made with React & Tailwind CSS
                         </p>
                     </div>
                 </div>
