@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../ThemeContext";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { FaSearch, FaTimes, FaGithub } from "react-icons/fa";
 import "../index.css";
 
 const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
@@ -153,6 +153,18 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                                     <FaSearch className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} />
                                 </div>
                             )}
+                            <a
+                                href="https://github.com/avinash201199/MemeGenerator"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`p-2 rounded-full transition-all duration-300 ${isDarkTheme 
+                                    ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
+                                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                                aria-label="View source on GitHub"
+                            >
+                                <FaGithub className="w-6 h-6" />
+                            </a>
+
                             <button
                                 onClick={toggleTheme}
                                 className={`p-2 rounded-full ${isDarkTheme ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
@@ -182,6 +194,17 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
 
                         {/* Mobile menu button */}
                         <div className="md:hidden flex items-center space-x-3">
+                        <a
+                            href="https://github.com/avinash201199/MemeGenerator"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`p-2 rounded-full ${isDarkTheme 
+                                ? 'text-gray-300 hover:bg-gray-800' 
+                                : 'text-gray-700 hover:bg-gray-100'}`}
+                            aria-label="View source on GitHub"
+                        >
+                            <FaGithub className="w-5 h-5" />
+                        </a>
                             {isHomePage && (
                                 <button 
                                     onClick={toggleMobileSearch}
