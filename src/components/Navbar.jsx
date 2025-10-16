@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../ThemeContext";
 import { FaSearch, FaTimes, FaGithub } from "react-icons/fa";
 import "../index.css";
-
+import { useNavigate } from "react-router-dom";
 const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
     const searchInputRef = useRef(null);
     const location = useLocation();
@@ -12,7 +12,7 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const isHomePage = location.pathname === "/";
     const { isDarkTheme, toggleTheme } = useTheme();
-
+    const navigate = useNavigate();
     // Handle scroll effect for navbar and scroll-to-top button
     useEffect(() => {
         const handleScroll = () => {
@@ -46,7 +46,13 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
         setIsMobileMenuOpen(false);
         setIsMobileSearchOpen(false);
     };
+    //Handle navigation for back button
+    const handleBackClick= () => {
+        setMeme && setMeme(null);
 
+        //naviagate to home page
+        navigate("/");
+    }
     // Handle navigation and close mobile menu
     const handleNavigation = (path) => {
         if (path === "/") {
@@ -172,18 +178,15 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                             >
                                 {isDarkTheme ? '☀️' : '🌙'}
                             </button>
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    handleNavigation("/");
-                                }}
+                           <button
+                                onClick={handleBackClick}
                                 className={`group relative overflow-hidden px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300 hover:scale-105 ${
-                                    isDarkTheme
-                                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/30'
-                                        : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-blue-500/30'
-                                }`}
+                                isDarkTheme
+                                         ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-purple-500/30'
+                                         : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg shadow-blue-500/30'
+                                 }`}
                                 aria-label="Back to Home"
-                            >
+                                >
                                 <span className="relative z-10 flex items-center space-x-2">
                                     <span>←</span>
                                     <span>Back</span>
