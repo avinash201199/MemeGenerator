@@ -1,5 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import {
+    shareToTwitter,
+    shareToFacebook,
+    shareToReddit,
+    shareToInstagram,
+    shareToWhatsApp,
+    copyToClipboard,
+    downloadMeme
+} from "./utils/socialShare";
 
 const Meme = ({ meme, setMeme }) => {
 
@@ -65,63 +74,6 @@ const Meme = ({ meme, setMeme }) => {
             setTimeout(() => { setShowError(false); setError(''); }, 2000);
         }
     }
-    function save() {
-        var xhr = new XMLHttpRequest();
-        var url = meme.url;
-        xhr.open("GET", url, true);
-        xhr.responseType = "blob";
-        xhr.onload = function () {
-            var urlCreator = window.URL || window.webkitURL;
-            var imageUrl = urlCreator.createObjectURL(this.response);
-            var tag = document.createElement('a');
-            tag.href = imageUrl;
-            tag.download = "meme";
-            document.body.appendChild(tag);
-            tag.click();
-            document.body.removeChild(tag);
-        }
-        xhr.send();
-    }
-
-    const shareToTwitter = () => {
-        const text = "Check out this meme I made!";
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(meme.url)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToFacebook = () => {
-        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(meme.url)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToReddit = () => {
-        const title = "Check out this meme I made!";
-        const url = `https://reddit.com/submit?url=${encodeURIComponent(meme.url)}&title=${encodeURIComponent(title)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToInstagram = () => {
-        // Instagram doesn't support direct URL sharing, so we'll copy the image URL
-        navigator.clipboard.writeText(meme.url).then(() => {
-            alert("Meme URL copied! You can now paste it in Instagram or download the image to share as a story/post.");
-        }).catch(() => {
-            alert("Failed to copy URL. Please manually copy the meme URL to share on Instagram.");
-        });
-    };
-
-    const shareToWhatsApp = () => {
-        const text = "Check out this meme I made! " + meme.url;
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
-    };
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(meme.url).then(() => {
-            alert("Meme URL copied to clipboard!");
-        }).catch(() => {
-            alert("Failed to copy URL");
-        });
-    };
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900">
             <form onSubmit={generatememe} className="w-full max-w-6xl">
@@ -204,7 +156,7 @@ const Meme = ({ meme, setMeme }) => {
                     <button 
                         type="button"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
-                        onClick={save}
+                        onClick={() => downloadMeme(meme.url, "meme")}
                     >
                         💾 Save
                     </button>
@@ -232,37 +184,37 @@ const Meme = ({ meme, setMeme }) => {
                     <div className="flex flex-wrap gap-3 justify-center">
                         <button
                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={shareToTwitter}
+                            onClick={() => shareToTwitter(meme.url)}
                         >
                             � Twitter
                         </button>
                         <button
                             className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={shareToFacebook}
+                            onClick={() => shareToFacebook(meme.url)}
                         >
                             📘 Facebook
                         </button>
                         <button
                             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={shareToReddit}
+                            onClick={() => shareToReddit(meme.url)}
                         >
                             🔥 Reddit
                         </button>
                         <button
                             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={shareToInstagram}
+                            onClick={() => shareToInstagram(meme.url)}
                         >
                             📷 Instagram
                         </button>
                         <button
                             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={shareToWhatsApp}
+                            onClick={() => shareToWhatsApp(meme.url)}
                         >
                             💬 WhatsApp
                         </button>
                         <button
                             className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={copyToClipboard}
+                            onClick={() => copyToClipboard(meme.url)}
                         >
                             📋 Copy Link
                         </button>
