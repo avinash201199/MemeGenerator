@@ -7,9 +7,12 @@ import "../index.css";
 
 const About = () => {
   const [showButton, setShowButton] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+
       if (window.scrollY > 300) {
         setShowButton(true);
       } else {
@@ -38,7 +41,10 @@ const About = () => {
 
         <div className="container bg-transparent flex flex-col items-center justify-center gap-12 px-6 m-12 mx-auto mx about-us md:flex-row ">
           {/* Image Section - Left */}
-          <div className="flex justify-center md:w-1/2 bg-transparent">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+          <div
+            className="flex justify-center md:w-1/2 bg-transparent fixed transform z-10"
+            style={{ top: `${scrollPosition + 100}px`, left: "0%" }}
+          >
             <img 
               className="transition-transform border border-white duration-300 ease-in-out shadow-xl w-80 md:w-96 rounded-full hover:scale-105"
               src="https://imgs.search.brave.com/nPN8L2uSoOYMROzi5KKfKHm-r3b64jY5QBGPGXqFXDE/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZW1l/LWdlbmVyYXRvci5j/b20vd3AtY29udGVu/dC91cGxvYWRzLzIw/MjAvMDkvVHJpZ2dl/cmVkLVJlZC1FeWVz/LU1lbWUtR2VuZXJh/dG9yLTE1MHgxNTAu/anBn"
@@ -47,7 +53,7 @@ const About = () => {
           </div>
 
           {/* Text Section - Right */}
-          <div className="space-y-6 md:w-1/2 ">
+          <div className="space-y-6 md:w-1/2 ml-auto">
             <p className="leading-relaxed text-white-800 light:text-gray-800 text-5xl">
               Welcome to our <span className="font-semibold text-pink-400">Meme Generator</span>! 
               We’re passionate about creating and sharing memes that bring joy and laughter. 
