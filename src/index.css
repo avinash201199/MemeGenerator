@@ -13,8 +13,36 @@
   100% { transform: rotate(360deg); }
 }
 
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .animate-spin-slow {
   animation: spin 2s linear infinite;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in;
 }
 
 /* ---------- 📱 Responsive Layouts ---------- */

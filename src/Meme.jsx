@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import { useToast } from "./contexts/ToastContext";
 
 const Meme = ({ meme, setMeme }) => {
+    const toast = useToast();
 
     const [form, setForm] = useState({
         template_id: meme.id,
@@ -103,9 +105,9 @@ const Meme = ({ meme, setMeme }) => {
     const shareToInstagram = () => {
         // Instagram doesn't support direct URL sharing, so we'll copy the image URL
         navigator.clipboard.writeText(meme.url).then(() => {
-            alert("Meme URL copied! You can now paste it in Instagram or download the image to share as a story/post.");
+            toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
         }).catch(() => {
-            alert("Failed to copy URL. Please manually copy the meme URL to share on Instagram.");
+            toast.error("Failed to copy URL. Please try again.");
         });
     };
 
@@ -117,9 +119,9 @@ const Meme = ({ meme, setMeme }) => {
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(meme.url).then(() => {
-            alert("Meme URL copied to clipboard!");
+            toast.success("Meme URL copied to clipboard!");
         }).catch(() => {
-            alert("Failed to copy URL");
+            toast.error("Failed to copy URL");
         });
     };
     return (
