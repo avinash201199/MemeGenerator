@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import {
+    shareToTwitter,
+    shareToFacebook,
+    shareToReddit,
+    shareToInstagram,
+    shareToWhatsApp,
+    copyToClipboard,
+    downloadMeme
+} from '../utils/socialShare';
 const History = () => { 
     const [savedMemes, setSavedMemes] = useState([]);
 
@@ -8,63 +17,6 @@ const History = () => {
         const memeHistory = JSON.parse(localStorage.getItem('memeHistory') || '[]');
         setSavedMemes(memeHistory);
     }, []);
-
-    const downloadMeme = (memeUrl, memeId) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", memeUrl, true);
-        xhr.responseType = "blob";
-        xhr.onload = function () {
-            const urlCreator = window.URL || window.webkitURL;
-            const imageUrl = urlCreator.createObjectURL(this.response);
-            const tag = document.createElement('a');
-            tag.href = imageUrl;
-            tag.download = `meme_${memeId}`;
-            document.body.appendChild(tag);
-            tag.click();
-            document.body.removeChild(tag);
-        }
-        xhr.send();
-    };
-
-    const shareToTwitter = (memeUrl) => {
-        const text = "Check out this meme I made!";
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(memeUrl)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToFacebook = (memeUrl) => {
-        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(memeUrl)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToReddit = (memeUrl) => {
-        const title = "Check out this meme I made!";
-        const url = `https://reddit.com/submit?url=${encodeURIComponent(memeUrl)}&title=${encodeURIComponent(title)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToInstagram = (memeUrl) => {
-        // Instagram doesn't support direct URL sharing, so we'll copy the image URL
-        navigator.clipboard.writeText(memeUrl).then(() => {
-            alert("Meme URL copied! You can now paste it in Instagram or download the image to share as a story/post.");
-        }).catch(() => {
-            alert("Failed to copy URL. Please manually copy the meme URL to share on Instagram.");
-        });
-    };
-
-    const shareToWhatsApp = (memeUrl) => {
-        const text = "Check out this meme I made! " + memeUrl;
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
-    };
-
-    const copyToClipboard = (memeUrl) => {
-        navigator.clipboard.writeText(memeUrl).then(() => {
-            alert("Meme URL copied to clipboard!");
-        }).catch(() => {
-            alert("Failed to copy URL");
-        });
-    };
 
     const clearHistory = () => {
         if (window.confirm('Are you sure you want to clear all meme history?')) {
@@ -207,7 +159,7 @@ const History = () => {
                                 gap: '10px'
                             }}>
                                 <button
-                                    onClick={() => downloadMeme(meme.url, meme.id)}
+                                    onClick={() => downloadMeme(meme.url, `meme_${meme.id}`)}
                                     style={{
                                         backgroundColor: '#4299e1',
                                         color: 'white',
