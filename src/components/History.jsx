@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { useToast } from '../contexts/ToastContext';
+import {
+    shareToTwitter,
+    shareToFacebook,
+    shareToReddit,
+    shareToWhatsApp,
+    downloadMeme
+} from '../utils/socialShare';
 
 const History = () => {
     const toast = useToast(); 
@@ -12,53 +19,12 @@ const History = () => {
         setSavedMemes(memeHistory);
     }, []);
 
-    const downloadMeme = (memeUrl, memeId) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", memeUrl, true);
-        xhr.responseType = "blob";
-        xhr.onload = function () {
-            const urlCreator = window.URL || window.webkitURL;
-            const imageUrl = urlCreator.createObjectURL(this.response);
-            const tag = document.createElement('a');
-            tag.href = imageUrl;
-            tag.download = `meme_${memeId}`;
-            document.body.appendChild(tag);
-            tag.click();
-            document.body.removeChild(tag);
-        }
-        xhr.send();
-    };
-
-    const shareToTwitter = (memeUrl) => {
-        const text = "Check out this meme I made!";
-        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(memeUrl)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToFacebook = (memeUrl) => {
-        const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(memeUrl)}`;
-        window.open(url, '_blank');
-    };
-
-    const shareToReddit = (memeUrl) => {
-        const title = "Check out this meme I made!";
-        const url = `https://reddit.com/submit?url=${encodeURIComponent(memeUrl)}&title=${encodeURIComponent(title)}`;
-        window.open(url, '_blank');
-    };
-
     const shareToInstagram = (memeUrl) => {
-        // Instagram doesn't support direct URL sharing, so we'll copy the image URL
         navigator.clipboard.writeText(memeUrl).then(() => {
             toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
         }).catch(() => {
             toast.error("Failed to copy URL. Please try again.");
         });
-    };
-
-    const shareToWhatsApp = (memeUrl) => {
-        const text = "Check out this meme I made! " + memeUrl;
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
     };
 
     const copyToClipboard = (memeUrl) => {
@@ -211,7 +177,7 @@ const History = () => {
                                 gap: '10px'
                             }}>
                                 <button
-                                    onClick={() => downloadMeme(meme.url, meme.id)}
+                                    onClick={() => downloadMeme(meme.url, `meme_${meme.id}`)}
                                     style={{
                                         backgroundColor: '#4299e1',
                                         color: 'white',
@@ -226,7 +192,7 @@ const History = () => {
                                     onMouseEnter={(e) => e.target.style.backgroundColor = '#3182ce'}
                                     onMouseLeave={(e) => e.target.style.backgroundColor = '#4299e1'}
                                 >
-                                    � Download
+                                    💾 Download
                                 </button>
 
                                 <button
