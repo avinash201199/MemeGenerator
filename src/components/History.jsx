@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { useToast } from '../contexts/ToastContext';
 import {
     shareToTwitter,
     shareToFacebook,
     shareToReddit,
-    shareToInstagram,
     shareToWhatsApp,
-    copyToClipboard,
     downloadMeme
 } from '../utils/socialShare';
-const History = () => { 
+
+const History = () => {
+    const toast = useToast(); 
     const [savedMemes, setSavedMemes] = useState([]);
 
     useEffect(() => {
@@ -18,10 +19,27 @@ const History = () => {
         setSavedMemes(memeHistory);
     }, []);
 
+    const shareToInstagram = (memeUrl) => {
+        navigator.clipboard.writeText(memeUrl).then(() => {
+            toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
+        }).catch(() => {
+            toast.error("Failed to copy URL. Please try again.");
+        });
+    };
+
+    const copyToClipboard = (memeUrl) => {
+        navigator.clipboard.writeText(memeUrl).then(() => {
+            toast.success("Meme URL copied to clipboard!");
+        }).catch(() => {
+            toast.error("Failed to copy URL");
+        });
+    };
+
     const clearHistory = () => {
         if (window.confirm('Are you sure you want to clear all meme history?')) {
             localStorage.removeItem('memeHistory');
             setSavedMemes([]);
+            toast.info('Meme history cleared successfully!');
         }
     };
 
@@ -174,7 +192,7 @@ const History = () => {
                                     onMouseEnter={(e) => e.target.style.backgroundColor = '#3182ce'}
                                     onMouseLeave={(e) => e.target.style.backgroundColor = '#4299e1'}
                                 >
-                                    � Download
+                                    💾 Download
                                 </button>
 
                                 <button

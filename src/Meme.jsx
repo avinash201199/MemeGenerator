@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import { useToast } from "./contexts/ToastContext";
 import {
     shareToTwitter,
     shareToFacebook,
     shareToReddit,
-    shareToInstagram,
     shareToWhatsApp,
-    copyToClipboard,
     downloadMeme
 } from "./utils/socialShare";
 
 const Meme = ({ meme, setMeme }) => {
+    const toast = useToast();
 
     const [form, setForm] = useState({
         template_id: meme.id,
@@ -74,6 +74,23 @@ const Meme = ({ meme, setMeme }) => {
             setTimeout(() => { setShowError(false); setError(''); }, 2000);
         }
     }
+
+    const shareToInstagram = () => {
+        navigator.clipboard.writeText(meme.url).then(() => {
+            toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
+        }).catch(() => {
+            toast.error("Failed to copy URL. Please try again.");
+        });
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(meme.url).then(() => {
+            toast.success("Meme URL copied to clipboard!");
+        }).catch(() => {
+            toast.error("Failed to copy URL");
+        });
+    };
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900">
             <form onSubmit={generatememe} className="w-full max-w-6xl">
@@ -186,7 +203,7 @@ const Meme = ({ meme, setMeme }) => {
                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
                             onClick={() => shareToTwitter(meme.url)}
                         >
-                            � Twitter
+                            🐦 Twitter
                         </button>
                         <button
                             className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
