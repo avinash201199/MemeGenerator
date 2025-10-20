@@ -91,6 +91,11 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                                     <span className="font-extrabold text-xl sm:text-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                                         Meme Generator
                                     </span>
+                                    <img
+                                        src="./favicon/icons8-doge-16.png"
+                                        alt="Logo Icon"
+                                        className="inline-block w-6 h-6 ml-2 relative top-[-5px]"
+                                    />
                                 </div>
                             </div>
                         </Link>
@@ -240,4 +245,4 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
     );
 };
 
-export default Navbar
+export default Navbar;
