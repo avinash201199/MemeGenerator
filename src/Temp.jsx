@@ -46,6 +46,7 @@ const Temp = ({ temp, setMeme }) => {
     <div
       key={temps.id}
       className="template"
+      style={{ paddingTop: "80px" }}
       onClick={() => setMeme(temps)}
     >
       <div
