@@ -163,9 +163,10 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                                 href="https://github.com/avinash201199/MemeGenerator"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`p-2 rounded-full transition-all duration-300 ${isDarkTheme 
-                                    ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                                className={`p-2 rounded-full transition-all duration-300 ${
+                                    isDarkTheme 
+                                        ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
+                                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
                                 aria-label="View source on GitHub"
                             >
                                 <FaGithub className="w-6 h-6" />
@@ -237,6 +238,63 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                             </button>
                         </div>
                     </div>
+                    {/* Mobile Dropdown Menu */}
+                        {isMobileMenuOpen && (
+                        <div
+                            className={`md:hidden px-4 pb-4 space-y-2 ${
+                                isDarkTheme
+                                    ? "bg-gray-900 border-t border-gray-800"
+                                    : "bg-white border-t border-gray-200"
+                            }`}
+                        >
+                            {[
+                                { path: "/", label: "Home" },
+                                { path: "/dynamic", label: "Dynamic" },
+                                { path: "/about", label: "About" },
+                                { path: "/history", label: "History" },
+                            ].map(({ path, label }) => (
+                                <Link
+                                    key={path}
+                                    to={path}
+                                    onClick={() => handleNavigation(path)}
+                                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                                        location.pathname === path
+                                            ? isDarkTheme
+                                                ? "bg-gray-800 text-blue-400"
+                                                : "bg-blue-100 text-blue-600"
+                                            : isDarkTheme
+                                                ? "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                                : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    }`}
+                                >
+                                    {label}
+                                </Link>
+                            ))}
+
+                            <div className="flex justify-between items-center pt-3 border-t border-gray-300 dark:border-gray-700">
+                                <button
+                                    onClick={toggleTheme}
+                                    className={`p-2 rounded-full ${
+                                        isDarkTheme
+                                            ? "text-yellow-400 hover:bg-gray-800"
+                                            : "text-gray-700 hover:bg-gray-100"
+                                    }`}
+                                >
+                                    {isDarkTheme ? "☀️" : "🌙"}
+                                </button>
+                                <button
+                                    onClick={handleBackClick}
+                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                                        isDarkTheme
+                                            ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                                            : "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                                    }`}
+                                >
+                                    ← Back
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </nav>
         </>
