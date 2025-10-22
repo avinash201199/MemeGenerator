@@ -50,9 +50,14 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
     const handleBackClick= () => {
         setMeme && setMeme(null);
 
-        //naviagate to home page
-        navigate("/");
-    }
+        //go back in history if possible, otherwise go to Home
+        if(window.history.length > 1){
+            navigate(-1);
+        }
+        else{
+            navigate("/");
+        }
+    };
     // Handle navigation and close mobile menu
     const handleNavigation = (path) => {
         if (path === "/") {
