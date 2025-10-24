@@ -1,7 +1,59 @@
 /**
  * Social Media Share Utilities
  * Reusable functions for sharing memes across various social platforms
+ * Includes compression and file size tracking features
  */
+
+/**
+ * Format file size in human-readable format
+ * @param {number} bytes - Size in bytes
+ * @returns {string} - Formatted size string
+ */
+export const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+};
+
+/**
+ * Get file size from blob or URL
+ * @param {Blob|string} fileOrUrl - File blob or URL
+ * @returns {Promise<number>} - File size in bytes
+ */
+export const getFileSize = async (fileOrUrl) => {
+  try {
+    if (fileOrUrl instanceof Blob) {
+      return fileOrUrl.size;
+    } else if (typeof fileOrUrl === 'string') {
+      const response = await fetch(fileOrUrl, { method: 'HEAD' });
+      const size = response.headers.get('content-length');
+      return size ? parseInt(size) : null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting file size:', error);
+    return null;
+  }
+};
+
+/**
+ * Get compression recommendations based on file size
+ * @param {number} sizeInBytes - File size in bytes
+ * @returns {object} - Compression recommendations
+ */
+export const getCompressionRecommendation = (sizeInBytes) => {
+  const sizeInMB = sizeInBytes / (1024 * 1024);
+  
+  if (sizeInMB < 1) {
+    return { quality: 'high', label: 'Already Optimized', recommendation: 'No compression needed' };
+  } else if (sizeInMB < 3) {
+    return { quality: 'medium', label: 'Balanced', recommendation: 'Medium compression recommended' };
+  } else {
+    return { quality: 'low', label: 'Optimized', recommendation: 'High compression recommended' };
+  }
+};
 
 /**
  * Share meme to Twitter/X
@@ -77,15 +129,27 @@ export const copyToClipboard = async (memeUrl) => {
 };
 
 /**
- * Download meme image
+ * Download meme image with optional compression info display
  * @param {string} memeUrl - URL of the meme image
  * @param {string|number} filename - Filename for the downloaded meme (default: "meme")
+ * @param {object} compressionInfo - Optional compression information to display
  */
-export const downloadMeme = (memeUrl, filename = "meme") => {
+export const downloadMeme = (memeUrl, filename = "meme", compressionInfo = null) => {
   const xhr = new XMLHttpRequest();
   xhr.open("GET", memeUrl, true);
   xhr.responseType = "blob";
   xhr.onload = function () {
+    const fileSize = this.response.size;
+    const formattedSize = formatFileSize(fileSize);
+    
+    // Log compression info if available
+    if (compressionInfo) {
+      console.log(`Downloading: ${filename}`);
+      console.log(`File Size: ${formattedSize}`);
+      console.log(`Compression Ratio: ${compressionInfo.compressionRatio}%`);
+      console.log(`Format: ${compressionInfo.format}`);
+    }
+    
     const urlCreator = window.URL || window.webkitURL;
     const imageUrl = urlCreator.createObjectURL(this.response);
     const tag = document.createElement('a');
@@ -114,7 +178,10 @@ export const socialShareUtils = {
   shareToInstagram,
   shareToWhatsApp,
   copyToClipboard,
-  downloadMeme
+  downloadMeme,
+  formatFileSize,
+  getFileSize,
+  getCompressionRecommendation
 };
 
 export default socialShareUtils;

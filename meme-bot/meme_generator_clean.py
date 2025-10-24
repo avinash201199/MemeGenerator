@@ -4,8 +4,14 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 from io import BytesIO
 from datetime import datetime
-from groq import Groq
 from dotenv import load_dotenv
+from image_compressor import ImageCompressor
+
+# pylint: disable=import-error
+try:
+    from groq import Groq
+except ImportError:
+    Groq = None
 
 class MemeGeneratorClean:
     """
@@ -340,13 +346,15 @@ class MemeGeneratorClean:
             stroke_fill="black"
         )
 
-    def create_meme(self, topic, custom_context=None):
+    def create_meme(self, topic, custom_context=None, compression_quality='medium', return_formats=['jpeg']):
         """
-        Create a meme by combining template and generated text.
+        Create a meme by combining template and generated text with optional compression.
         
         Args:
             topic (str): Topic for the meme
             custom_context (str, optional): Additional context for the meme
+            compression_quality (str): Quality level ('high', 'medium', 'low'). Default: 'medium'
+            return_formats (list): List of formats to generate ('jpeg', 'webp', 'png'). Default: ['jpeg']
             
         Returns:
             dict: Contains success status, filename/error message, and metadata
@@ -408,10 +416,29 @@ class MemeGeneratorClean:
                 self._draw_text_with_outline(draw, line, x_position, y_position, font, stroke_width)
                 y_position += line_height
 
-            # Save the meme
+            # Save uncompressed version temporarily for processing
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{self.output_dir}/meme_{topic.split()[0].replace(' ', '_')}_{timestamp}.png"
-            img.save(filename)
+            base_filename = f"meme_{topic.split()[0].replace(' ', '_')}_{timestamp}"
+            temp_path = os.path.join(self.output_dir, f"{base_filename}_temp.png")
+            img.save(temp_path)
+            
+            # Apply compression and save in requested formats
+            compression_results = ImageCompressor.compress_and_save_multiple_formats(
+                temp_path,
+                self.output_dir,
+                base_filename,
+                quality_level=compression_quality,
+                formats=return_formats
+            )
+            
+            # Clean up temporary file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            
+            # Get the primary output filename (use first format)
+            primary_format = return_formats[0] if return_formats else 'jpeg'
+            primary_result = compression_results.get(primary_format, {})
+            filename = primary_result.get('output_path', None)
             
             return {
                 "success": True,
@@ -420,7 +447,18 @@ class MemeGeneratorClean:
                 "bottom_text": bottom_text,
                 "topic": topic,
                 "context": custom_context,
-                "timestamp": timestamp
+                "timestamp": timestamp,
+                "compression_quality": compression_quality,
+                "compression_info": {
+                    fmt: {
+                        'size_kb': result.get('compressed_size_kb'),
+                        'size_readable': result.get('compressed_size_readable'),
+                        'compression_ratio': result.get('compression_ratio'),
+                        'path': result.get('output_path')
+                    }
+                    for fmt, result in compression_results.items()
+                    if result.get('success')
+                }
             }
 
         except Exception as e:
@@ -430,9 +468,9 @@ class MemeGeneratorClean:
                 "filename": None
             }
 
-    def create_meme_with_custom_text(self, topic, top_text, bottom_text, custom_context=None, template_url=None, template_id=None):
+    def create_meme_with_custom_text(self, topic, top_text, bottom_text, custom_context=None, template_url=None, template_id=None, compression_quality='medium', return_formats=['jpeg']):
         """
-        Create a meme with custom user-provided text.
+        Create a meme with custom user-provided text with optional compression.
         
         Args:
             topic (str): Topic for the meme (used for filename)
@@ -441,6 +479,8 @@ class MemeGeneratorClean:
             custom_context (str, optional): Additional context
             template_url (str, optional): Specific template URL to use
             template_id (str, optional): Specific template ID to use
+            compression_quality (str): Quality level ('high', 'medium', 'low'). Default: 'medium'
+            return_formats (list): List of formats to generate ('jpeg', 'webp', 'png'). Default: ['jpeg']
             
         Returns:
             dict: Contains success status, filename/error message, and metadata
@@ -519,10 +559,29 @@ class MemeGeneratorClean:
                 self._draw_text_with_outline(draw, line, x_position, y_position, font, stroke_width)
                 y_position += line_height
 
-            # Save the meme
+            # Save uncompressed version temporarily for processing
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{self.output_dir}/meme_{topic.split()[0].replace(' ', '_')}_{timestamp}.png"
-            img.save(filename)
+            base_filename = f"meme_{topic.split()[0].replace(' ', '_')}_{timestamp}"
+            temp_path = os.path.join(self.output_dir, f"{base_filename}_temp.png")
+            img.save(temp_path)
+            
+            # Apply compression and save in requested formats
+            compression_results = ImageCompressor.compress_and_save_multiple_formats(
+                temp_path,
+                self.output_dir,
+                base_filename,
+                quality_level=compression_quality,
+                formats=return_formats
+            )
+            
+            # Clean up temporary file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            
+            # Get the primary output filename (use first format)
+            primary_format = return_formats[0] if return_formats else 'jpeg'
+            primary_result = compression_results.get(primary_format, {})
+            filename = primary_result.get('output_path', None)
             
             return {
                 "success": True,
@@ -531,7 +590,18 @@ class MemeGeneratorClean:
                 "bottom_text": bottom_text,
                 "topic": topic,
                 "context": custom_context,
-                "timestamp": timestamp
+                "timestamp": timestamp,
+                "compression_quality": compression_quality,
+                "compression_info": {
+                    fmt: {
+                        'size_kb': result.get('compressed_size_kb'),
+                        'size_readable': result.get('compressed_size_readable'),
+                        'compression_ratio': result.get('compression_ratio'),
+                        'path': result.get('output_path')
+                    }
+                    for fmt, result in compression_results.items()
+                    if result.get('success')
+                }
             }
 
         except Exception as e:

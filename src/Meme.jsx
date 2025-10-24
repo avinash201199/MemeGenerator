@@ -6,7 +6,9 @@ import {
     shareToFacebook,
     shareToReddit,
     shareToWhatsApp,
-    downloadMeme
+    downloadMeme,
+    formatFileSize,
+    getCompressionRecommendation
 } from "./utils/socialShare";
 
 const Meme = ({ meme, setMeme }) => {
@@ -22,6 +24,9 @@ const Meme = ({ meme, setMeme }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [showError, setShowError] = useState(false);
+    const [compressionQuality, setCompressionQuality] = useState('medium');
+    const [showCompressionOptions, setShowCompressionOptions] = useState(false);
+    const [compressionInfo, setCompressionInfo] = useState(null);
 
     const saveMemeToHistory = (memeData) => {
         const savedMemes = JSON.parse(localStorage.getItem('memeHistory') || '[]');
@@ -30,7 +35,8 @@ const Meme = ({ meme, setMeme }) => {
             url: memeData.url,
             template_name: meme.name || 'Unknown Template',
             texts: form.boxes.map(box => box.text || ''),
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            compressionQuality: compressionQuality
         };
         savedMemes.unshift(newMeme);
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
@@ -43,13 +49,15 @@ const Meme = ({ meme, setMeme }) => {
         setShowError(false);
 
         try {
-            // POST to our secure serverless proxy
+            // POST to our secure serverless proxy with compression settings
             const resp = await fetch('/api/caption', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     template_id: form.template_id,
                     boxes: (form.boxes || []).map((b) => ({ text: b?.text ?? '' })),
+                    compressionQuality: compressionQuality,
+                    format: 'jpeg'
                 })
             });
             const data = await resp.json();
@@ -59,6 +67,7 @@ const Meme = ({ meme, setMeme }) => {
                 setMeme({ ...meme, url: data.data.url });
                 setMemeGenerated(true);
                 setShowSuccessNote(true);
+                setCompressionInfo(data?.data?.compressionInfo);
                 saveMemeToHistory(data.data);
                 setTimeout(() => setShowSuccessNote(false), 4000);
             } else {
@@ -91,6 +100,15 @@ const Meme = ({ meme, setMeme }) => {
         });
     };
 
+    const getQualityDescription = (quality) => {
+        const descriptions = {
+            high: { color: 'text-green-400', bg: 'bg-green-900/30', label: 'High Quality (Best for viewing)' },
+            medium: { color: 'text-blue-400', bg: 'bg-blue-900/30', label: 'Medium (Best balance)' },
+            low: { color: 'text-orange-400', bg: 'bg-orange-900/30', label: 'Low (Best for sharing)' }
+        };
+        return descriptions[quality] || descriptions.medium;
+    };
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900">
             <form onSubmit={generatememe} className="w-full max-w-6xl">
@@ -106,7 +124,7 @@ const Meme = ({ meme, setMeme }) => {
                         />
                     </div>
 
-                    {/* Right Section - Caption Inputs */}
+                    {/* Right Section - Caption Inputs & Compression Settings */}
                     <div className="flex-1 flex flex-col items-center justify-center space-y-4">
                         <h3 className="text-white text-xl font-bold mb-4">Add Your Captions</h3>
                         <div className="space-y-3 w-full max-w-md">
@@ -125,6 +143,43 @@ const Meme = ({ meme, setMeme }) => {
                                 />
                             ))}
                         </div>
+
+                        {/* Compression Quality Selector */}
+                        <button
+                            type="button"
+                            onClick={() => setShowCompressionOptions(!showCompressionOptions)}
+                            className="mt-4 w-full max-w-md px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium text-sm"
+                        >
+                            ⚙️ Compression: {compressionQuality.charAt(0).toUpperCase() + compressionQuality.slice(1)}
+                        </button>
+
+                        {showCompressionOptions && (
+                            <div className="w-full max-w-md bg-gray-800 rounded-lg p-4 border-2 border-purple-500">
+                                <p className="text-white text-sm font-semibold mb-3">Choose compression quality:</p>
+                                <div className="space-y-2">
+                                    {['high', 'medium', 'low'].map((quality) => {
+                                        const desc = getQualityDescription(quality);
+                                        const sizeReduction = quality === 'high' ? '~10-20%' : quality === 'medium' ? '~40-50%' : '~60-70%';
+                                        return (
+                                            <label key={quality} className={`flex items-center p-2 rounded cursor-pointer ${desc.bg} hover:opacity-80 transition-opacity`}>
+                                                <input
+                                                    type="radio"
+                                                    name="compression"
+                                                    value={quality}
+                                                    checked={compressionQuality === quality}
+                                                    onChange={(e) => setCompressionQuality(e.target.value)}
+                                                    className="mr-3"
+                                                />
+                                                <div className="flex-1">
+                                                    <p className={`text-sm font-semibold ${desc.color}`}>{desc.label}</p>
+                                                    <p className="text-xs text-gray-300">File size reduction: {sizeReduction}</p>
+                                                </div>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -173,10 +228,11 @@ const Meme = ({ meme, setMeme }) => {
                     <button 
                         type="button"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
-                        onClick={() => downloadMeme(meme.url, "meme")}
+                        onClick={() => downloadMeme(meme.url, "meme", compressionInfo)}
                     >
                         💾 Save
                     </button>
+                    
                     
                     {/* Success Note */}
                     {showSuccessNote && (
