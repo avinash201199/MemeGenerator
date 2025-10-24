@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './Dynamicmeme.css';
+import AnalyticsTracker from '../utils/analyticsTracker';
 const Dynamicmeme = () => {
   const [categories, setCategories] = useState({});
   const [topicInput, setTopicInput] = useState('');
@@ -13,6 +14,8 @@ const Dynamicmeme = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [compressionQuality, setCompressionQuality] = useState('medium');
+  const [showCompressionOptions, setShowCompressionOptions] = useState(false);
 
   // API base URL (configure via Vite env)
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
@@ -65,7 +68,9 @@ const Dynamicmeme = () => {
         },
         body: JSON.stringify({
           topic: topicInput,
-          context: contextInput
+          context: contextInput,
+          compressionQuality: compressionQuality,
+          returnFormats: ['jpeg', 'webp']
         })
       });
 
@@ -73,7 +78,15 @@ const Dynamicmeme = () => {
 
       if (data.success) {
         displayMeme(data);
-        showSuccess('Meme generated successfully!');
+        const sizeInfo = data.compressionInfo?.jpeg ? ` (${data.compressionInfo.jpeg.size_readable})` : '';
+        showSuccess(`Meme generated successfully!${sizeInfo}`);
+        
+        // Track meme generation
+        AnalyticsTracker.trackMemeGeneration(
+          topicInput,
+          'AI-Generated',
+          compressionQuality
+        );
       } else {
         showError(data.error || 'Failed to generate meme');
       }
@@ -90,7 +103,14 @@ const Dynamicmeme = () => {
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/random`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          compressionQuality: compressionQuality,
+          returnFormats: ['jpeg', 'webp']
+        })
       });
 
       const data = await response.json();
@@ -99,7 +119,15 @@ const Dynamicmeme = () => {
         displayMeme(data);
         setTopicInput(data.topic);
         setContextInput(data.context || '');
-        showSuccess(`Random meme generated from ${data.category}!`);
+        const sizeInfo = data.compressionInfo?.jpeg ? ` (${data.compressionInfo.jpeg.size_readable})` : '';
+        showSuccess(`Random meme generated from ${data.category}!${sizeInfo}`);
+        
+        // Track random meme generation
+        AnalyticsTracker.trackMemeGeneration(
+          data.topic,
+          'AI-Generated (Random)',
+          compressionQuality
+        );
       } else {
         showError(data.error || 'Failed to generate random meme');
       }
@@ -117,6 +145,7 @@ const Dynamicmeme = () => {
 
   const downloadMeme = () => {
     if (currentMemeFilename) {
+      const filename = `meme_${Date.now()}.jpg`;
       window.open(`${API_BASE_URL}/api/download/${currentMemeFilename}`, '_blank');
     }
   };
@@ -416,6 +445,62 @@ const Dynamicmeme = () => {
                 value={contextInput}
                 onChange={(e) => setContextInput(e.target.value)}
               />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>
+                <i className="fas fa-compress"></i> Compression Quality
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowCompressionOptions(!showCompressionOptions)}
+                style={{
+                  ...styles.input,
+                  background: compressionQuality === 'high' ? '#c3dafe' : compressionQuality === 'medium' ? '#bee3f8' : '#feebc8',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+                className="dynamic-meme-compression-btn"
+              >
+                📊 {compressionQuality.charAt(0).toUpperCase() + compressionQuality.slice(1)} Quality
+              </button>
+              {showCompressionOptions && (
+                <div style={{...styles.examplesList, marginTop: '10px'}}>
+                  <div style={{marginBottom: '10px', fontWeight: '600', color: '#4a5568'}}>Select compression level:</div>
+                  {['high', 'medium', 'low'].map((quality) => {
+                    const descriptions = {
+                      high: '10-20% smaller (Best viewing)',
+                      medium: '40-50% smaller (Balanced)',
+                      low: '60-70% smaller (Best for sharing)'
+                    };
+                    return (
+                      <label
+                        key={quality}
+                        style={{
+                          ...styles.exampleItem,
+                          background: compressionQuality === quality ? '#bee3f8' : 'white',
+                          fontWeight: compressionQuality === quality ? '700' : '400',
+                          borderColor: compressionQuality === quality ? '#4299e1' : '#e2e8f0'
+                        }}
+                        className="dynamic-meme-quality-option"
+                      >
+                        <input
+                          type="radio"
+                          name="compression"
+                          value={quality}
+                          checked={compressionQuality === quality}
+                          onChange={(e) => setCompressionQuality(e.target.value)}
+                          style={{ marginRight: '8px', cursor: 'pointer' }}
+                        />
+                        <span>{quality.charAt(0).toUpperCase() + quality.slice(1)}</span>
+                        <span style={{ fontSize: '0.85em', color: '#718096', marginLeft: '8px' }}>
+                          {descriptions[quality]}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div style={styles.formGroup}>

@@ -6,8 +6,11 @@ import {
     shareToFacebook,
     shareToReddit,
     shareToWhatsApp,
-    downloadMeme
+    downloadMeme,
+    formatFileSize,
+    getCompressionRecommendation
 } from "./utils/socialShare";
+import AnalyticsTracker from "./utils/analyticsTracker";
 
 const Meme = ({ meme, setMeme }) => {
     const toast = useToast();
@@ -22,6 +25,9 @@ const Meme = ({ meme, setMeme }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [showError, setShowError] = useState(false);
+    const [compressionQuality, setCompressionQuality] = useState('medium');
+    const [showCompressionOptions, setShowCompressionOptions] = useState(false);
+    const [compressionInfo, setCompressionInfo] = useState(null);
 
     const saveMemeToHistory = (memeData) => {
         const savedMemes = JSON.parse(localStorage.getItem('memeHistory') || '[]');
@@ -30,10 +36,18 @@ const Meme = ({ meme, setMeme }) => {
             url: memeData.url,
             template_name: meme.name || 'Unknown Template',
             texts: form.boxes.map(box => box.text || ''),
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            compressionQuality: compressionQuality
         };
         savedMemes.unshift(newMeme);
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
+
+        // Track meme generation
+        AnalyticsTracker.trackMemeGeneration(
+            form.boxes[0]?.text || 'Generated Meme',
+            meme.name || 'Unknown',
+            compressionQuality
+        );
     };
 
     const generatememe = async (e) => {
@@ -43,13 +57,15 @@ const Meme = ({ meme, setMeme }) => {
         setShowError(false);
 
         try {
-            // POST to our secure serverless proxy
+            // POST to our secure serverless proxy with compression settings
             const resp = await fetch('/api/caption', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     template_id: form.template_id,
                     boxes: (form.boxes || []).map((b) => ({ text: b?.text ?? '' })),
+                    compressionQuality: compressionQuality,
+                    format: 'jpeg'
                 })
             });
             const data = await resp.json();
@@ -59,6 +75,7 @@ const Meme = ({ meme, setMeme }) => {
                 setMeme({ ...meme, url: data.data.url });
                 setMemeGenerated(true);
                 setShowSuccessNote(true);
+                setCompressionInfo(data?.data?.compressionInfo);
                 saveMemeToHistory(data.data);
                 setTimeout(() => setShowSuccessNote(false), 4000);
             } else {
@@ -78,6 +95,7 @@ const Meme = ({ meme, setMeme }) => {
     const shareToInstagram = () => {
         navigator.clipboard.writeText(meme.url).then(() => {
             toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
+            AnalyticsTracker.trackShare('instagram');
         }).catch(() => {
             toast.error("Failed to copy URL. Please try again.");
         });
@@ -89,6 +107,20 @@ const Meme = ({ meme, setMeme }) => {
         }).catch(() => {
             toast.error("Failed to copy URL");
         });
+    };
+
+    const trackAndShare = (platform, shareFunction) => {
+        AnalyticsTracker.trackShare(platform);
+        return shareFunction();
+    };
+
+    const getQualityDescription = (quality) => {
+        const descriptions = {
+            high: { color: 'text-green-400', bg: 'bg-green-900/30', label: 'High Quality (Best for viewing)' },
+            medium: { color: 'text-blue-400', bg: 'bg-blue-900/30', label: 'Medium (Best balance)' },
+            low: { color: 'text-orange-400', bg: 'bg-orange-900/30', label: 'Low (Best for sharing)' }
+        };
+        return descriptions[quality] || descriptions.medium;
     };
 
     return (
@@ -106,7 +138,7 @@ const Meme = ({ meme, setMeme }) => {
                         />
                     </div>
 
-                    {/* Right Section - Caption Inputs */}
+                    {/* Right Section - Caption Inputs & Compression Settings */}
                     <div className="flex-1 flex flex-col items-center justify-center space-y-4">
                         <h3 className="text-white text-xl font-bold mb-4">Add Your Captions</h3>
                         <div className="space-y-3 w-full max-w-md">
@@ -125,6 +157,43 @@ const Meme = ({ meme, setMeme }) => {
                                 />
                             ))}
                         </div>
+
+                        {/* Compression Quality Selector */}
+                        <button
+                            type="button"
+                            onClick={() => setShowCompressionOptions(!showCompressionOptions)}
+                            className="mt-4 w-full max-w-md px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium text-sm"
+                        >
+                            ⚙️ Compression: {compressionQuality.charAt(0).toUpperCase() + compressionQuality.slice(1)}
+                        </button>
+
+                        {showCompressionOptions && (
+                            <div className="w-full max-w-md bg-gray-800 rounded-lg p-4 border-2 border-purple-500">
+                                <p className="text-white text-sm font-semibold mb-3">Choose compression quality:</p>
+                                <div className="space-y-2">
+                                    {['high', 'medium', 'low'].map((quality) => {
+                                        const desc = getQualityDescription(quality);
+                                        const sizeReduction = quality === 'high' ? '~10-20%' : quality === 'medium' ? '~40-50%' : '~60-70%';
+                                        return (
+                                            <label key={quality} className={`flex items-center p-2 rounded cursor-pointer ${desc.bg} hover:opacity-80 transition-opacity`}>
+                                                <input
+                                                    type="radio"
+                                                    name="compression"
+                                                    value={quality}
+                                                    checked={compressionQuality === quality}
+                                                    onChange={(e) => setCompressionQuality(e.target.value)}
+                                                    className="mr-3"
+                                                />
+                                                <div className="flex-1">
+                                                    <p className={`text-sm font-semibold ${desc.color}`}>{desc.label}</p>
+                                                    <p className="text-xs text-gray-300">File size reduction: {sizeReduction}</p>
+                                                </div>
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -173,10 +242,11 @@ const Meme = ({ meme, setMeme }) => {
                     <button 
                         type="button"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
-                        onClick={() => downloadMeme(meme.url, "meme")}
+                        onClick={() => downloadMeme(meme.url, "meme", compressionInfo)}
                     >
                         💾 Save
                     </button>
+                    
                     
                     {/* Success Note */}
                     {showSuccessNote && (
@@ -201,31 +271,31 @@ const Meme = ({ meme, setMeme }) => {
                     <div className="flex flex-wrap gap-3 justify-center">
                         <button
                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToTwitter(meme.url)}
+                            onClick={() => trackAndShare('twitter', () => shareToTwitter(meme.url))}
                         >
                             🐦 Twitter
                         </button>
                         <button
                             className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToFacebook(meme.url)}
+                            onClick={() => trackAndShare('facebook', () => shareToFacebook(meme.url))}
                         >
                             📘 Facebook
                         </button>
                         <button
                             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToReddit(meme.url)}
+                            onClick={() => trackAndShare('reddit', () => shareToReddit(meme.url))}
                         >
                             🔥 Reddit
                         </button>
                         <button
                             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToInstagram(meme.url)}
+                            onClick={() => trackAndShare('instagram', () => shareToInstagram())}
                         >
                             📷 Instagram
                         </button>
                         <button
                             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToWhatsApp(meme.url)}
+                            onClick={() => trackAndShare('whatsapp', () => shareToWhatsApp(meme.url))}
                         >
                             💬 WhatsApp
                         </button>

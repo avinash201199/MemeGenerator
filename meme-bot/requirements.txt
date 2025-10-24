@@ -1,6 +1,7 @@
 python-dotenv
 groq
-pillow
+pillow>=10.0.0
 requests
 flask
 flask-cors
+Pillow[webp]>=10.0.0
