@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './Dynamicmeme.css';
+import AnalyticsTracker from '../utils/analyticsTracker';
 const Dynamicmeme = () => {
   const [categories, setCategories] = useState({});
   const [topicInput, setTopicInput] = useState('');
@@ -79,6 +80,13 @@ const Dynamicmeme = () => {
         displayMeme(data);
         const sizeInfo = data.compressionInfo?.jpeg ? ` (${data.compressionInfo.jpeg.size_readable})` : '';
         showSuccess(`Meme generated successfully!${sizeInfo}`);
+        
+        // Track meme generation
+        AnalyticsTracker.trackMemeGeneration(
+          topicInput,
+          'AI-Generated',
+          compressionQuality
+        );
       } else {
         showError(data.error || 'Failed to generate meme');
       }
@@ -113,6 +121,13 @@ const Dynamicmeme = () => {
         setContextInput(data.context || '');
         const sizeInfo = data.compressionInfo?.jpeg ? ` (${data.compressionInfo.jpeg.size_readable})` : '';
         showSuccess(`Random meme generated from ${data.category}!${sizeInfo}`);
+        
+        // Track random meme generation
+        AnalyticsTracker.trackMemeGeneration(
+          data.topic,
+          'AI-Generated (Random)',
+          compressionQuality
+        );
       } else {
         showError(data.error || 'Failed to generate random meme');
       }

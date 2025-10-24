@@ -10,6 +10,7 @@ import {
     formatFileSize,
     getCompressionRecommendation
 } from "./utils/socialShare";
+import AnalyticsTracker from "./utils/analyticsTracker";
 
 const Meme = ({ meme, setMeme }) => {
     const toast = useToast();
@@ -40,6 +41,13 @@ const Meme = ({ meme, setMeme }) => {
         };
         savedMemes.unshift(newMeme);
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
+
+        // Track meme generation
+        AnalyticsTracker.trackMemeGeneration(
+            form.boxes[0]?.text || 'Generated Meme',
+            meme.name || 'Unknown',
+            compressionQuality
+        );
     };
 
     const generatememe = async (e) => {
@@ -87,6 +95,7 @@ const Meme = ({ meme, setMeme }) => {
     const shareToInstagram = () => {
         navigator.clipboard.writeText(meme.url).then(() => {
             toast.success("Meme URL copied! Paste it in Instagram or download to share as story/post.", 4000);
+            AnalyticsTracker.trackShare('instagram');
         }).catch(() => {
             toast.error("Failed to copy URL. Please try again.");
         });
@@ -98,6 +107,11 @@ const Meme = ({ meme, setMeme }) => {
         }).catch(() => {
             toast.error("Failed to copy URL");
         });
+    };
+
+    const trackAndShare = (platform, shareFunction) => {
+        AnalyticsTracker.trackShare(platform);
+        return shareFunction();
     };
 
     const getQualityDescription = (quality) => {
@@ -257,31 +271,31 @@ const Meme = ({ meme, setMeme }) => {
                     <div className="flex flex-wrap gap-3 justify-center">
                         <button
                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToTwitter(meme.url)}
+                            onClick={() => trackAndShare('twitter', () => shareToTwitter(meme.url))}
                         >
                             🐦 Twitter
                         </button>
                         <button
                             className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToFacebook(meme.url)}
+                            onClick={() => trackAndShare('facebook', () => shareToFacebook(meme.url))}
                         >
                             📘 Facebook
                         </button>
                         <button
                             className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToReddit(meme.url)}
+                            onClick={() => trackAndShare('reddit', () => shareToReddit(meme.url))}
                         >
                             🔥 Reddit
                         </button>
                         <button
                             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToInstagram(meme.url)}
+                            onClick={() => trackAndShare('instagram', () => shareToInstagram())}
                         >
                             📷 Instagram
                         </button>
                         <button
                             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-                            onClick={() => shareToWhatsApp(meme.url)}
+                            onClick={() => trackAndShare('whatsapp', () => shareToWhatsApp(meme.url))}
                         >
                             💬 WhatsApp
                         </button>

@@ -9,14 +9,19 @@ import {
     shareToWhatsApp,
     downloadMeme
 } from '../utils/socialShare';
+import AnalyticsTracker from '../utils/analyticsTracker';
+import { GenerationTrendChart, PlatformPieChart } from './ChartComponents';
 
 const History = () => {
     const toast = useToast(); 
     const [savedMemes, setSavedMemes] = useState([]);
+    const [showAnalytics, setShowAnalytics] = useState(false);
+    const [stats, setStats] = useState(null);
 
     useEffect(() => {
         const memeHistory = JSON.parse(localStorage.getItem('memeHistory') || '[]');
         setSavedMemes(memeHistory);
+        setStats(AnalyticsTracker.getSummaryStats());
     }, []);
 
     const shareToInstagram = (memeUrl) => {
@@ -46,6 +51,10 @@ const History = () => {
     const formatDate = (isoString) => {
         const date = new Date(isoString);
         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const toggleAnalytics = () => {
+        setShowAnalytics(!showAnalytics);
     };
 
     if (savedMemes.length === 0) {
@@ -79,21 +88,104 @@ const History = () => {
                 gap: '10px'
             }}>
                 <h2 style={{ color: 'white', margin: 0 }}>Meme History ({savedMemes.length})</h2>
-                <button
-                    onClick={clearHistory}
-                    style={{
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 20px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontSize: '14px'
-                    }}
-                >
-                    Clear History
-                </button>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <button
+                        onClick={toggleAnalytics}
+                        style={{
+                            backgroundColor: '#8b5cf6',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#7c3aed'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = '#8b5cf6'}
+                    >
+                        {showAnalytics ? '📊 Hide Analytics' : '📊 View Analytics'}
+                    </button>
+                    <button
+                        onClick={clearHistory}
+                        style={{
+                            backgroundColor: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                        }}
+                    >
+                        Clear History
+                    </button>
+                </div>
             </div>
+
+            {/* Analytics Dashboard Section */}
+            {showAnalytics && stats && (
+                <div style={{
+                    backgroundColor: 'rgba(30, 30, 30, 0.8)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    marginBottom: '30px',
+                    border: '2px solid #8b5cf6',
+                    backdropFilter: 'blur(10px)'
+                }}>
+                    <h3 style={{ color: 'white', marginTop: 0, marginBottom: '20px' }}>📈 Your Statistics</h3>
+                    
+                    {/* Summary Stats */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '15px',
+                        marginBottom: '25px'
+                    }}>
+                        <StatBox label="Total Generated" value={stats.totalGenerated} icon="🎨" />
+                        <StatBox label="Total Shares" value={stats.totalShares} icon="📤" />
+                        <StatBox label="Top Platform" value={stats.topPlatform ? stats.topPlatform.charAt(0).toUpperCase() + stats.topPlatform.slice(1) : 'N/A'} icon="🚀" />
+                        <StatBox label="Popular Topics" value={stats.popularTopics.length} icon="🔥" />
+                    </div>
+
+                    {/* Charts */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+                        gap: '20px',
+                        marginTop: '25px'
+                    }}>
+                        <div style={{ backgroundColor: '#1a1a1a', borderRadius: '8px', padding: '15px' }}>
+                            <GenerationTrendChart />
+                        </div>
+                        <div style={{ backgroundColor: '#1a1a1a', borderRadius: '8px', padding: '15px' }}>
+                            <PlatformPieChart />
+                        </div>
+                    </div>
+
+                    {/* Popular Topics */}
+                    {stats.popularTopics.length > 0 && (
+                        <div style={{ marginTop: '25px' }}>
+                            <h4 style={{ color: '#fbbf24', marginBottom: '15px' }}>🔥 Popular Topics</h4>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                {stats.popularTopics.slice(0, 5).map((topic, idx) => (
+                                    <div key={idx} style={{
+                                        backgroundColor: '#333',
+                                        color: '#fbbf24',
+                                        padding: '8px 16px',
+                                        borderRadius: '20px',
+                                        fontSize: '13px',
+                                        fontWeight: '600'
+                                    }}>
+                                        {topic.topic} <span style={{ opacity: 0.7 }}>({topic.count})</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
 
             <div style={{
                 display: 'grid',
@@ -386,5 +478,24 @@ const History = () => {
 
     );
 };
+
+/**
+ * Stat Box Component for displaying individual statistics
+ */
+function StatBox({ label, value, icon }) {
+    return (
+        <div style={{
+            backgroundColor: '#2d2d2d',
+            borderRadius: '8px',
+            padding: '15px',
+            border: '1px solid #444',
+            textAlign: 'center'
+        }}>
+            <div style={{ fontSize: '24px', marginBottom: '8px' }}>{icon}</div>
+            <p style={{ color: '#999', fontSize: '12px', margin: '0 0 5px 0', textTransform: 'uppercase' }}>{label}</p>
+            <p style={{ color: '#fbbf24', fontSize: '20px', margin: 0, fontWeight: 'bold' }}>{value}</p>
+        </div>
+    );
+}
 
 export default History;
