@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Export Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #5a67d8;
+        }
+        .test-result {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { border-color: #48bb78; background: #f0fff4; }
+        .error { border-color: #f56565; background: #fff5f5; }
+        .test-image {
+            max-width: 200px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enhanced Export Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Image</h2>
+        <img id="testImage" class="test-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Test Image">
+        <p>Using a simple 1x1 pixel test image for functionality testing.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Filename Generation Tests</h2>
+        <button class="test-button" onclick="testBasicFilenameGeneration()">Test Basic Filename Generation</button>
+        <button class="test-button" onclick="testIntelligentFilenameGeneration()">Test Intelligent Filename Generation</button>
+        <button class="test-button" onclick="testFilenameValidation()">Test Filename Validation</button>
+        <button class="test-button" onclick="testMultipleFilenames()">Test Multiple Filenames</button>
+        <div id="filenameResults" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Download Mechanism Tests</h2>
+        <button class="test-button" onclick="testBrowserCompatibility()">Test Browser Compatibility</button>
+        <button class="test-button" onclick="testDownloadPNG()">Test PNG Download</button>
+        <button class="test-button" onclick="testDownloadJPEG()">Test JPEG Download</button>
+        <button class="test-button" onclick="testDownloadWebP()">Test WebP Download</button>
+        <div id="downloadResults" class="test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Error Handling Tests</h2>
+        <button class="test-button" onclick="testInvalidImage()">Test Invalid Image</button>
+        <button class="test-button" onclick="testInvalidFormat()">Test Invalid Format</button>
+        <button class="test-button" onclick="testInvalidFilename()">Test Invalid Filename</button>
+        <div id="errorResults" class="test-result"></div>
+    </div>
+
+    <script type="module">
+        // Import the ExportProcessor
+        import ExportProcessor from './ExportProcessor.js';
+
+        // Make ExportProcessor available globally for testing
+        window.ExportProcessor = ExportProcessor;
+
+        // Test functions
+        window.testBasicFilenameGeneration = function() {
+            const results = [];
+            
+            try {
+                // Test basic filename generation
+                const pngFilename = ExportProcessor.generateFilename('png');
+                results.push(`PNG filename: ${pngFilename}`);
+                
+                const jpegFilename = ExportProcessor.generateFilename('jpeg');
+                results.push(`JPEG filename: ${jpegFilename}`);
+                
+                const webpFilename = ExportProcessor.generateFilename('webp');
+                results.push(`WebP filename: ${webpFilename}`);
+                
+                // Test with custom timestamp
+                const customDate = new Date('2024-01-01T12:00:00');
+                const customFilename = ExportProcessor.generateFilename('png', customDate);
+                results.push(`Custom timestamp: ${customFilename}`);
+                
+                // Test with options
+                const qualityFilename = ExportProcessor.generateFilename('jpeg', null, {
+                    includeQuality: true,
+                    quality: 75,
+                    prefix: 'test'
+                });
+                results.push(`With quality: ${qualityFilename}`);
+                
+                document.getElementById('filenameResults').textContent = results.join('\n');
+                document.getElementById('filenameResults').className = 'test-result success';
+                
+            } catch (error) {
+                document.getElementById('filenameResults').textContent = `Error: ${error.message}`;
+                document.getElementById('filenameResults').className = 'test-result error';
+            }
+        };
+
+        window.testIntelligentFilenameGeneration = function() {
+            const results = [];
+            
+            try {
+                // Test intelligent filename generation
+                const memeData1 = {
+                    topText: 'Hello World',
+                    bottomText: 'This is a test',
+                    templateName: 'Drake Pointing'
+                };
+                const intelligent1 = ExportProcessor.generateIntelligentFilename('png', memeData1);
+                results.push(`With template: ${intelligent1}`);
+                
+                const memeData2 = {
+                    topText: 'When you finally',
+                    bottomText: 'Fix the bug'
+                };
+                const intelligent2 = ExportProcessor.generateIntelligentFilename('jpeg', memeData2, {
+                    includeQuality: true,
+                    quality: 90
+                });
+                results.push(`With text only: ${intelligent2}`);
+                
+                const memeData3 = {};
+                const intelligent3 = ExportProcessor.generateIntelligentFilename('webp', memeData3);
+                results.push(`Empty data fallback: ${intelligent3}`);
+                
+                document.getElementById('filenameResults').textContent = results.join('\n');
+                document.getElementById('filenameResults').className = 'test-result success';
+                
+            } catch (error) {
+                document.getElementById('filenameResults').textContent = `Error: ${error.message}`;
+                document.getElementById('filenameResults').className = 'test-result error';
+            }
+        };
+
+        window.testFilenameValidation = function() {
+            const results = [];
+            
+            try {
+                // Test filename validation
+                const validFilename = 'meme_2024-01-01_12-00-00.png';
+                const validation1 = ExportProcessor.validateFilename(validFilename);
+                results.push(`Valid filename: ${JSON.stringify(validation1, null, 2)}`);
+                
+                const invalidFilename = 'meme<>:"/\\|?*.png';
+                const validation2 = ExportProcessor.validateFilename(invalidFilename);
+                results.push(`Invalid filename: ${JSON.stringify(validation2, null, 2)}`);
+                
+                const longFilename = 'a'.repeat(300) + '.png';
+                const validation3 = ExportProcessor.validateFilename(longFilename);
+                results.push(`Long filename: ${JSON.stringify(validation3, null, 2)}`);
+                
+                document.getElementById('filenameResults').textContent = results.join('\n');
+                document.getElementById('filenameResults').className = 'test-result success';
+                
+            } catch (error) {
+                document.getElementById('filenameResults').textContent = `Error: ${error.message}`;
+                document.getElementById('filenameResults').className = 'test-result error';
+            }
+        };
+
+        window.testMultipleFilenames = function() {
+            const results = [];
+            
+            try {
+                // Test multiple filename generation
+                const filenames = ExportProcessor.generateMultipleFilenames('png', 3, {
+                    prefix: 'batch'
+                });
+                results.push(`Multiple filenames: ${JSON.stringify(filenames, null, 2)}`);
+                
+                document.getElementById('filenameResults').textContent = results.join('\n');
+                document.getElementById('filenameResults').className = 'test-result success';
+                
+            } catch (error) {
+                document.getElementById('filenameResults').textContent = `Error: ${error.message}`;
+                document.getElementById('filenameResults').className = 'test-result error';
+            }
+        };
+
+        window.testBrowserCompatibility = function() {
+            try {
+                const compatibility = ExportProcessor.checkBrowserCompatibility();
+                document.getElementById('downloadResults').textContent = JSON.stringify(compatibility, null, 2);
+                document.getElementById('downloadResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('downloadResults').textContent = `Error: ${error.message}`;
+                document.getElementById('downloadResults').className = 'test-result error';
+            }
+        };
+
+        window.testDownloadPNG = async function() {
+            try {
+                const testImage = document.getElementById('testImage');
+                const result = await ExportProcessor.exportMeme(testImage, 'png', 100);
+                document.getElementById('downloadResults').textContent = `PNG Export Result: ${JSON.stringify(result, null, 2)}`;
+                document.getElementById('downloadResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('downloadResults').textContent = `Error: ${error.message}`;
+                document.getElementById('downloadResults').className = 'test-result error';
+            }
+        };
+
+        window.testDownloadJPEG = async function() {
+            try {
+                const testImage = document.getElementById('testImage');
+                const result = await ExportProcessor.exportMeme(testImage, 'jpeg', 80);
+                document.getElementById('downloadResults').textContent = `JPEG Export Result: ${JSON.stringify(result, null, 2)}`;
+                document.getElementById('downloadResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('downloadResults').textContent = `Error: ${error.message}`;
+                document.getElementById('downloadResults').className = 'test-result error';
+            }
+        };
+
+        window.testDownloadWebP = async function() {
+            try {
+                const testImage = document.getElementById('testImage');
+                const result = await ExportProcessor.exportMeme(testImage, 'webp', 80);
+                document.getElementById('downloadResults').textContent = `WebP Export Result: ${JSON.stringify(result, null, 2)}`;
+                document.getElementById('downloadResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('downloadResults').textContent = `Error: ${error.message}`;
+                document.getElementById('downloadResults').className = 'test-result error';
+            }
+        };
+
+        window.testInvalidImage = async function() {
+            try {
+                const result = await ExportProcessor.exportMeme(null, 'png', 100);
+                document.getElementById('errorResults').textContent = `Invalid Image Result: ${JSON.stringify(result, null, 2)}`;
+                document.getElementById('errorResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('errorResults').textContent = `Expected Error: ${error.message}`;
+                document.getElementById('errorResults').className = 'test-result success';
+            }
+        };
+
+        window.testInvalidFormat = async function() {
+            try {
+                const testImage = document.getElementById('testImage');
+                const result = await ExportProcessor.exportMeme(testImage, 'invalid', 100);
+                document.getElementById('errorResults').textContent = `Invalid Format Result: ${JSON.stringify(result, null, 2)}`;
+                document.getElementById('errorResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('errorResults').textContent = `Expected Error: ${error.message}`;
+                document.getElementById('errorResults').className = 'test-result success';
+            }
+        };
+
+        window.testInvalidFilename = function() {
+            try {
+                const sanitized = ExportProcessor.sanitizeFilename('invalid<>:"/\\|?*filename.png');
+                document.getElementById('errorResults').textContent = `Sanitized filename: ${sanitized}`;
+                document.getElementById('errorResults').className = 'test-result success';
+            } catch (error) {
+                document.getElementById('errorResults').textContent = `Error: ${error.message}`;
+                document.getElementById('errorResults').className = 'test-result error';
+            }
+        };
+
+        // Auto-run browser compatibility test on load
+        window.addEventListener('load', function() {
+            testBrowserCompatibility();
+        });
+    </script>
+</body>
+</html>

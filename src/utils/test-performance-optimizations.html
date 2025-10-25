@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Optimizations Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-card {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Performance Optimizations Test Suite</h1>
+    <p>This page tests the performance optimizations implemented for the advanced export options.</p>
+
+    <div class="test-section">
+        <h2>Canvas Caching Test</h2>
+        <p>Tests canvas conversion caching and memory management.</p>
+        <button class="test-button" onclick="testCanvasCaching()">Test Canvas Caching</button>
+        <button class="test-button" onclick="testCacheCleanup()">Test Cache Cleanup</button>
+        <button class="test-button" onclick="getCacheStats()">Get Cache Stats</button>
+        <div id="canvas-results" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Debounced File Size Estimation</h2>
+        <p>Tests debounced calculations and caching for file size estimation.</p>
+        <button class="test-button" onclick="testDebouncedEstimation()">Test Debounced Estimation</button>
+        <button class="test-button" onclick="testEstimationCaching()">Test Estimation Caching</button>
+        <div id="estimation-results" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Memory Management</h2>
+        <p>Tests blob URL management and memory cleanup.</p>
+        <button class="test-button" onclick="testBlobUrlManagement()">Test Blob URL Management</button>
+        <button class="test-button" onclick="testMemoryCleanup()">Test Memory Cleanup</button>
+        <button class="test-button" onclick="getBlobUrlStats()">Get Blob URL Stats</button>
+        <div id="memory-results" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Performance Monitoring</h2>
+        <p>Tests the performance monitoring and optimization system.</p>
+        <button class="test-button" onclick="initializePerformanceMonitoring()">Initialize Monitoring</button>
+        <button class="test-button" onclick="runPerformanceTest()">Run Performance Test</button>
+        <button class="test-button" onclick="getPerformanceStats()">Get Performance Stats</button>
+        <button class="test-button" onclick="exportPerformanceData()">Export Performance Data</button>
+        <div id="performance-results" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Real-time Performance Stats</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="memory-usage">--</div>
+                <div class="stat-label">Memory Usage (MB)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="cache-entries">--</div>
+                <div class="stat-label">Cache Entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="blob-urls">--</div>
+                <div class="stat-label">Active Blob URLs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="operations-count">--</div>
+                <div class="stat-label">Tracked Operations</div>
+            </div>
+        </div>
+        <div>
+            <div class="stat-label">Memory Utilization</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="memory-progress" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the utilities -->
+    <script type="module">
+        import CanvasConverter from './CanvasConverter.js';
+        import ExportProcessor from './ExportProcessor.js';
+        import PerformanceOptimizer from './PerformanceOptimizer.js';
+
+        // Make utilities available globally for testing
+        window.CanvasConverter = CanvasConverter;
+        window.ExportProcessor = ExportProcessor;
+        window.PerformanceOptimizer = PerformanceOptimizer;
+
+        // Test functions
+        window.testCanvasCaching = async function() {
+            const results = document.getElementById('canvas-results');
+            results.textContent = 'Testing canvas caching...\n';
+
+            try {
+                // Create test image
+                const testImage = new Image();
+                testImage.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+                
+                await new Promise(resolve => {
+                    testImage.onload = resolve;
+                });
+
+                // Test multiple conversions of the same image
+                const startTime = performance.now();
+                
+                const canvas1 = await CanvasConverter.imageToCanvas(testImage, { useCache: true });
+                const time1 = performance.now() - startTime;
+                
+                const canvas2 = await CanvasConverter.imageToCanvas(testImage, { useCache: true });
+                const time2 = performance.now() - startTime - time1;
+                
+                const canvas3 = await CanvasConverter.imageToCanvas(testImage, { useCache: true });
+                const time3 = performance.now() - startTime - time1 - time2;
+
+                results.textContent += `✓ First conversion: ${time1.toFixed(2)}ms\n`;
+                results.textContent += `✓ Second conversion (cached): ${time2.toFixed(2)}ms\n`;
+                results.textContent += `✓ Third conversion (cached): ${time3.toFixed(2)}ms\n`;
+                
+                if (time2 < time1 * 0.5 && time3 < time1 * 0.5) {
+                    results.textContent += '✓ Caching is working effectively!\n';
+                    results.className = 'results success';
+                } else {
+                    results.textContent += '⚠ Caching may not be working as expected\n';
+                    results.className = 'results warning';
+                }
+
+            } catch (error) {
+                results.textContent += `✗ Error: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.testCacheCleanup = function() {
+            const results = document.getElementById('canvas-results');
+            
+            try {
+                const cleaned = CanvasConverter.cleanupExpiredCache(true);
+                results.textContent += `✓ Cleaned up ${cleaned} cache entries\n`;
+                results.className = 'results success';
+            } catch (error) {
+                results.textContent += `✗ Cleanup error: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.getCacheStats = function() {
+            const results = document.getElementById('canvas-results');
+            
+            try {
+                const stats = CanvasConverter.getCacheStats();
+                results.textContent = `Cache Statistics:\n`;
+                results.textContent += `Total Entries: ${stats.totalEntries}\n`;
+                results.textContent += `Memory Usage: ${Math.round(stats.memoryUsage / 1024 / 1024 * 100) / 100} MB\n`;
+                results.textContent += `Memory Utilization: ${Math.round(stats.memoryUtilization * 100) / 100}%\n`;
+                results.textContent += `Active Canvases: ${stats.activeCanvases}\n`;
+                results.className = 'results info';
+            } catch (error) {
+                results.textContent = `✗ Error getting stats: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.testDebouncedEstimation = function() {
+            const results = document.getElementById('estimation-results');
+            results.textContent = 'Testing debounced file size estimation...\n';
+
+            // This would typically be tested with the React component
+            // For now, we'll simulate the debouncing behavior
+            let callCount = 0;
+            const debouncedFunction = debounce(() => {
+                callCount++;
+                results.textContent += `Debounced function called: ${callCount}\n`;
+            }, 300);
+
+            // Rapid calls should be debounced
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => debouncedFunction(), i * 50);
+            }
+
+            setTimeout(() => {
+                if (callCount === 1) {
+                    results.textContent += '✓ Debouncing is working correctly!\n';
+                    results.className = 'results success';
+                } else {
+                    results.textContent += `⚠ Expected 1 call, got ${callCount}\n`;
+                    results.className = 'results warning';
+                }
+            }, 2000);
+        };
+
+        window.testBlobUrlManagement = async function() {
+            const results = document.getElementById('memory-results');
+            results.textContent = 'Testing blob URL management...\n';
+
+            try {
+                // Create test blobs
+                const testBlobs = [];
+                for (let i = 0; i < 5; i++) {
+                    const blob = new Blob([`Test data ${i}`], { type: 'text/plain' });
+                    testBlobs.push(blob);
+                }
+
+                // Create managed blob URLs
+                const urls = [];
+                for (const blob of testBlobs) {
+                    const url = ExportProcessor.createManagedBlobUrl(blob, 5000);
+                    urls.push(url);
+                }
+
+                results.textContent += `✓ Created ${urls.length} managed blob URLs\n`;
+
+                // Get stats
+                const stats = ExportProcessor.getBlobUrlInfo();
+                results.textContent += `✓ Active URLs: ${stats.count}\n`;
+                results.textContent += `✓ Total size: ${Math.round(stats.totalSize / 1024 * 100) / 100} KB\n`;
+
+                // Test cleanup
+                setTimeout(() => {
+                    const cleaned = ExportProcessor.cleanupExpiredBlobUrls();
+                    results.textContent += `✓ Cleaned up ${cleaned} expired URLs\n`;
+                    results.className = 'results success';
+                }, 6000);
+
+            } catch (error) {
+                results.textContent += `✗ Error: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.getBlobUrlStats = function() {
+            const results = document.getElementById('memory-results');
+            
+            try {
+                const stats = ExportProcessor.getBlobUrlInfo();
+                results.textContent = `Blob URL Statistics:\n`;
+                results.textContent += `Active URLs: ${stats.count}\n`;
+                results.textContent += `Total Size: ${Math.round(stats.totalSize / 1024 * 100) / 100} KB\n`;
+                results.textContent += `Memory Utilization: ${Math.round(stats.memoryUtilization * 100) / 100}%\n`;
+                results.textContent += `Max URLs: ${stats.maxBlobUrls}\n`;
+                results.className = 'results info';
+            } catch (error) {
+                results.textContent = `✗ Error getting stats: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.initializePerformanceMonitoring = function() {
+            const results = document.getElementById('performance-results');
+            
+            try {
+                PerformanceOptimizer.initializeMonitoring({
+                    interval: 2000,
+                    trackMemory: true,
+                    trackTiming: true
+                });
+                
+                results.textContent = '✓ Performance monitoring initialized\n';
+                results.className = 'results success';
+                
+                // Start updating real-time stats
+                updateRealTimeStats();
+            } catch (error) {
+                results.textContent = `✗ Error: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.runPerformanceTest = async function() {
+            const results = document.getElementById('performance-results');
+            results.textContent = 'Running performance test...\n';
+
+            try {
+                // Test various operations with performance tracking
+                const testOperations = [
+                    () => new Promise(resolve => setTimeout(resolve, 100)),
+                    () => new Promise(resolve => setTimeout(resolve, 200)),
+                    () => new Promise(resolve => setTimeout(resolve, 50))
+                ];
+
+                for (let i = 0; i < testOperations.length; i++) {
+                    await PerformanceOptimizer.trackOperation(`test_operation_${i}`, testOperations[i], { testIndex: i });
+                }
+
+                results.textContent += '✓ Performance test completed\n';
+                results.className = 'results success';
+            } catch (error) {
+                results.textContent += `✗ Error: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.getPerformanceStats = function() {
+            const results = document.getElementById('performance-results');
+            
+            try {
+                const stats = PerformanceOptimizer.getPerformanceStats();
+                results.textContent = `Performance Statistics:\n`;
+                results.textContent += `Monitoring: ${stats.monitoring}\n`;
+                results.textContent += `Memory Snapshots: ${stats.memorySnapshots}\n`;
+                results.textContent += `Current Memory: ${Math.round(stats.currentMemory.used / 1024 / 1024 * 100) / 100} MB\n`;
+                
+                if (stats.memoryTrend) {
+                    results.textContent += `Memory Trend: ${stats.memoryTrend.trend}\n`;
+                    results.textContent += `Memory Utilization: ${Math.round(stats.memoryTrend.currentUtilization * 100) / 100}%\n`;
+                }
+                
+                results.textContent += `\nOperation Metrics:\n`;
+                for (const [operation, metrics] of Object.entries(stats.operationMetrics)) {
+                    results.textContent += `  ${operation}: ${Math.round(metrics.averageDuration)}ms avg, ${Math.round(metrics.successRate)}% success\n`;
+                }
+                
+                if (stats.recommendations.length > 0) {
+                    results.textContent += `\nRecommendations:\n`;
+                    stats.recommendations.forEach(rec => {
+                        results.textContent += `  • ${rec}\n`;
+                    });
+                }
+                
+                results.className = 'results info';
+            } catch (error) {
+                results.textContent = `✗ Error getting stats: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        window.exportPerformanceData = function() {
+            const results = document.getElementById('performance-results');
+            
+            try {
+                const data = PerformanceOptimizer.exportPerformanceData();
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `performance-data-${Date.now()}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                
+                results.textContent = '✓ Performance data exported\n';
+                results.className = 'results success';
+            } catch (error) {
+                results.textContent = `✗ Error exporting data: ${error.message}\n`;
+                results.className = 'results error';
+            }
+        };
+
+        // Real-time stats update
+        function updateRealTimeStats() {
+            try {
+                // Update memory usage
+                if (performance.memory) {
+                    const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024 * 100) / 100;
+                    document.getElementById('memory-usage').textContent = memoryMB;
+                    
+                    const utilization = (performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit) * 100;
+                    document.getElementById('memory-progress').style.width = `${Math.min(100, utilization)}%`;
+                }
+
+                // Update cache entries
+                try {
+                    const cacheStats = CanvasConverter.getCacheStats();
+                    document.getElementById('cache-entries').textContent = cacheStats.totalEntries;
+                } catch (e) {
+                    document.getElementById('cache-entries').textContent = '--';
+                }
+
+                // Update blob URLs
+                try {
+                    const blobStats = ExportProcessor.getBlobUrlInfo();
+                    document.getElementById('blob-urls').textContent = blobStats.count;
+                } catch (e) {
+                    document.getElementById('blob-urls').textContent = '--';
+                }
+
+                // Update operations count
+                try {
+                    const perfStats = PerformanceOptimizer.getPerformanceStats();
+                    const operationCount = Object.keys(perfStats.operationMetrics).length;
+                    document.getElementById('operations-count').textContent = operationCount;
+                } catch (e) {
+                    document.getElementById('operations-count').textContent = '--';
+                }
+
+            } catch (error) {
+                console.warn('Error updating real-time stats:', error);
+            }
+
+            // Update every 2 seconds
+            setTimeout(updateRealTimeStats, 2000);
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Start real-time stats when page loads
+        setTimeout(updateRealTimeStats, 1000);
+    </script>
+</body>
+</html>

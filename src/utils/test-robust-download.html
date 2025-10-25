@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Robust Download Mechanism</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Robust Download Mechanism</h1>
+    
+    <div class="test-section">
+        <h2>Basic Download Tests</h2>
+        <button class="test-button" onclick="testBasicDownload()">Test Basic Download</button>
+        <button class="test-button" onclick="testLargeFileDownload()">Test Large File Download</button>
+        <button class="test-button" onclick="testMultipleDownloads()">Test Multiple Downloads</button>
+        <div id="basic-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Error Handling Tests</h2>
+        <button class="test-button" onclick="testErrorHandling()">Test Error Handling</button>
+        <button class="test-button" onclick="testRecoveryMechanism()">Test Recovery Mechanism</button>
+        <div id="error-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Blob URL Management Tests</h2>
+        <button class="test-button" onclick="testBlobUrlManagement()">Test Blob URL Management</button>
+        <button class="test-button" onclick="testBlobUrlCleanup()">Test Blob URL Cleanup</button>
+        <button class="test-button" onclick="getBlobUrlInfo()">Get Blob URL Info</button>
+        <div id="blob-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Browser Compatibility Tests</h2>
+        <button class="test-button" onclick="testBrowserCompatibility()">Test Browser Compatibility</button>
+        <button class="test-button" onclick="testDownloadFunctionality()">Test Download Functionality</button>
+        <div id="compatibility-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Diagnostic Tests</h2>
+        <button class="test-button" onclick="testDiagnostics()">Test Error Diagnostics</button>
+        <button class="test-button" onclick="getBrowserInfo()">Get Browser Info</button>
+        <div id="diagnostic-results"></div>
+    </div>
+
+    <div class="log" id="log"></div>
+
+    <script type="module">
+        import ExportProcessor from './ExportProcessor.js';
+        import CanvasConverter from './CanvasConverter.js';
+
+        // Initialize blob URL cleanup
+        ExportProcessor.initializeBlobUrlCleanup();
+
+        // Logging function
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            logElement.textContent += logEntry;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+
+        // Helper function to create test blob
+        function createTestBlob(size = 1024, type = 'text/plain') {
+            const content = 'Test content '.repeat(Math.ceil(size / 13));
+            return new Blob([content.substring(0, size)], { type });
+        }
+
+        // Helper function to create test image blob
+        async function createTestImageBlob() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw a simple test image
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(0, 0, 400, 300);
+            ctx.fillStyle = '#fff';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Test Download Image', 200, 150);
+            
+            return new Promise(resolve => {
+                canvas.toBlob(resolve, 'image/png');
+            });
+        }
+
+        // Helper function to display results
+        function displayResult(containerId, result, type = 'info') {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = typeof result === 'object' ? 
+                `<pre>${JSON.stringify(result, null, 2)}</pre>` : 
+                result;
+            container.appendChild(resultDiv);
+        }
+
+        // Test functions
+        window.testBasicDownload = async function() {
+            log('Testing basic download...');
+            try {
+                const blob = await createTestImageBlob();
+                const success = await ExportProcessor.downloadBlob(blob, 'test-basic-download.png');
+                displayResult('basic-results', `Basic download: ${success ? 'SUCCESS' : 'FAILED'}`, success ? 'success' : 'error');
+                log(`Basic download result: ${success}`);
+            } catch (error) {
+                displayResult('basic-results', `Basic download error: ${error.message}`, 'error');
+                log(`Basic download error: ${error.message}`);
+            }
+        };
+
+        window.testLargeFileDownload = async function() {
+            log('Testing large file download...');
+            try {
+                const largeBlob = createTestBlob(5 * 1024 * 1024, 'application/octet-stream'); // 5MB
+                const success = await ExportProcessor.downloadBlob(largeBlob, 'test-large-file.bin');
+                displayResult('basic-results', `Large file download: ${success ? 'SUCCESS' : 'FAILED'}`, success ? 'success' : 'error');
+                log(`Large file download result: ${success}`);
+            } catch (error) {
+                displayResult('basic-results', `Large file download error: ${error.message}`, 'error');
+                log(`Large file download error: ${error.message}`);
+            }
+        };
+
+        window.testMultipleDownloads = async function() {
+            log('Testing multiple downloads...');
+            try {
+                const downloads = [];
+                for (let i = 0; i < 3; i++) {
+                    const blob = await createTestImageBlob();
+                    downloads.push({ blob, filename: `test-multiple-${i + 1}.png` });
+                }
+                
+                const results = await ExportProcessor.downloadMultipleBlobs(downloads);
+                const successCount = results.filter(r => r.success).length;
+                displayResult('basic-results', `Multiple downloads: ${successCount}/${results.length} successful`, 
+                    successCount === results.length ? 'success' : 'error');
+                log(`Multiple downloads: ${successCount}/${results.length} successful`);
+            } catch (error) {
+                displayResult('basic-results', `Multiple downloads error: ${error.message}`, 'error');
+                log(`Multiple downloads error: ${error.message}`);
+            }
+        };
+
+        window.testErrorHandling = async function() {
+            log('Testing error handling...');
+            try {
+                // Test with invalid blob
+                await ExportProcessor.downloadBlob(null, 'invalid-test.txt');
+                displayResult('error-results', 'Error handling: FAILED (should have thrown error)', 'error');
+            } catch (error) {
+                displayResult('error-results', `Error handling: SUCCESS (correctly caught: ${error.message})`, 'success');
+                log(`Error handling test passed: ${error.message}`);
+            }
+        };
+
+        window.testRecoveryMechanism = async function() {
+            log('Testing recovery mechanism...');
+            try {
+                const blob = await createTestImageBlob();
+                const fakeError = new Error('Simulated download failure');
+                
+                const recovery = await ExportProcessor.recoverFailedDownload(blob, 'recovery-test.png', fakeError);
+                displayResult('error-results', recovery, recovery.success ? 'success' : 'error');
+                log(`Recovery mechanism result: ${recovery.success}`);
+            } catch (error) {
+                displayResult('error-results', `Recovery mechanism error: ${error.message}`, 'error');
+                log(`Recovery mechanism error: ${error.message}`);
+            }
+        };
+
+        window.testBlobUrlManagement = async function() {
+            log('Testing blob URL management...');
+            try {
+                const blob = await createTestImageBlob();
+                const url = ExportProcessor.createManagedBlobUrl(blob, 5000);
+                
+                log(`Created managed blob URL: ${url}`);
+                
+                // Test URL info
+                const info = ExportProcessor.getBlobUrlInfo();
+                displayResult('blob-results', `Managed URLs: ${info.count}, Total size: ${info.totalSize} bytes`, 'info');
+                
+                // Test cleanup
+                setTimeout(() => {
+                    const revoked = ExportProcessor.revokeManagedBlobUrl(url);
+                    log(`Revoked URL: ${revoked}`);
+                    
+                    const infoAfter = ExportProcessor.getBlobUrlInfo();
+                    displayResult('blob-results', `After cleanup - URLs: ${infoAfter.count}`, 'info');
+                }, 1000);
+                
+            } catch (error) {
+                displayResult('blob-results', `Blob URL management error: ${error.message}`, 'error');
+                log(`Blob URL management error: ${error.message}`);
+            }
+        };
+
+        window.testBlobUrlCleanup = async function() {
+            log('Testing blob URL cleanup...');
+            try {
+                // Create several URLs
+                const blob = await createTestImageBlob();
+                for (let i = 0; i < 5; i++) {
+                    ExportProcessor.createManagedBlobUrl(blob, 1000); // Short TTL
+                }
+                
+                const infoBefore = ExportProcessor.getBlobUrlInfo();
+                log(`Created ${infoBefore.count} URLs`);
+                
+                // Wait and cleanup
+                setTimeout(() => {
+                    const cleaned = ExportProcessor.cleanupExpiredBlobUrls();
+                    const infoAfter = ExportProcessor.getBlobUrlInfo();
+                    
+                    displayResult('blob-results', 
+                        `Cleanup: ${cleaned} URLs cleaned, ${infoAfter.count} remaining`, 'success');
+                    log(`Cleanup completed: ${cleaned} URLs cleaned`);
+                }, 2000);
+                
+            } catch (error) {
+                displayResult('blob-results', `Blob URL cleanup error: ${error.message}`, 'error');
+                log(`Blob URL cleanup error: ${error.message}`);
+            }
+        };
+
+        window.getBlobUrlInfo = function() {
+            const info = ExportProcessor.getBlobUrlInfo();
+            displayResult('blob-results', info, 'info');
+            log(`Blob URL info: ${JSON.stringify(info, null, 2)}`);
+        };
+
+        window.testBrowserCompatibility = function() {
+            log('Testing browser compatibility...');
+            const compatibility = ExportProcessor.checkBrowserCompatibility();
+            displayResult('compatibility-results', compatibility, 'info');
+            log(`Browser compatibility: ${JSON.stringify(compatibility, null, 2)}`);
+        };
+
+        window.testDownloadFunctionality = async function() {
+            log('Testing download functionality...');
+            try {
+                const testResults = await ExportProcessor.testDownloadFunctionality();
+                displayResult('compatibility-results', testResults, testResults.overall ? 'success' : 'error');
+                log(`Download functionality test: ${JSON.stringify(testResults, null, 2)}`);
+            } catch (error) {
+                displayResult('compatibility-results', `Download functionality test error: ${error.message}`, 'error');
+                log(`Download functionality test error: ${error.message}`);
+            }
+        };
+
+        window.testDiagnostics = function() {
+            log('Testing error diagnostics...');
+            const testError = new Error('Popup blocked by browser');
+            const diagnosis = ExportProcessor.diagnoseDowloadIssue(testError, { testContext: true });
+            displayResult('diagnostic-results', diagnosis, 'info');
+            log(`Error diagnosis: ${JSON.stringify(diagnosis, null, 2)}`);
+        };
+
+        window.getBrowserInfo = function() {
+            const browserInfo = ExportProcessor.getBrowserInfo();
+            displayResult('diagnostic-results', browserInfo, 'info');
+            log(`Browser info: ${JSON.stringify(browserInfo, null, 2)}`);
+        };
+
+        // Initialize
+        log('Robust download mechanism test page loaded');
+        log('Click buttons above to test different aspects of the download system');
+    </script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import ExportOptionsPanel from './ExportOptionsPanel';
+import ErrorBoundary from './ErrorBoundary';
 import './Dynamicmeme.css';
 const Dynamicmeme = () => {
   const [categories, setCategories] = useState({});
@@ -10,6 +12,7 @@ const Dynamicmeme = () => {
   const [showExamples, setShowExamples] = useState(false);
   const [currentMemeFilename, setCurrentMemeFilename] = useState(null);
   const [memeData, setMemeData] = useState(null);
+  const [memeImageSrc, setMemeImageSrc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -113,8 +116,11 @@ const Dynamicmeme = () => {
   const displayMeme = (data) => {
     setCurrentMemeFilename(data.filename);
     setMemeData(data);
+    // Update meme image source for export system
+    setMemeImageSrc(`${API_BASE_URL}/api/view/${data.filename}`);
   };
 
+  // Legacy download function - maintained for backward compatibility as fallback option
   const downloadMeme = () => {
     if (currentMemeFilename) {
       window.open(`${API_BASE_URL}/api/download/${currentMemeFilename}`, '_blank');
@@ -123,6 +129,7 @@ const Dynamicmeme = () => {
 
   const generateAnother = () => {
     setMemeData(null);
+    setMemeImageSrc(null);
     setTopicInput('');
     setContextInput('');
     setShowExamples(false);
@@ -284,6 +291,11 @@ const Dynamicmeme = () => {
       display: 'flex',
       gap: '15px',
       marginTop: '20px'
+    },
+    legacyDownloadSection: {
+      marginTop: '15px',
+      paddingTop: '15px',
+      borderTop: '1px solid #e2e8f0'
     },
     memeDisplay: {
       textAlign: 'center'
@@ -525,22 +537,43 @@ const Dynamicmeme = () => {
                   <div>
                     <img
                       style={styles.memeImage}
-                      src={`${API_BASE_URL}/api/view/${memeData.filename}`}
+                      src={memeImageSrc}
                       alt="Generated Meme"
+                      id="generated-meme-image"
                     />
                   </div>
 
-                  <div style={styles.btnGroup} className="dynamic-meme-btn-group">
-                    <button style={styles.btn} className="dynamic-meme-btn" onClick={downloadMeme}>
-                      <i className="fas fa-download"></i> Download Meme
-                    </button>
-                    <button
-                      style={{ ...styles.btn, ...styles.btnSecondary }}
-                      className="dynamic-meme-btn"
-                      onClick={generateAnother}
-                    >
-                      <i className="fas fa-redo"></i> Generate Another
-                    </button>
+                  {/* Advanced Export Options Panel with Error Boundary */}
+                  <ErrorBoundary>
+                    <ExportOptionsPanel
+                      memeImageSrc={memeImageSrc}
+                      isVisible={!!memeImageSrc}
+                      onExport={(format, quality) => {
+                        // Export functionality will be handled by the ExportOptionsPanel internally
+                        console.log(`Exporting meme in ${format} format with quality ${quality}`);
+                      }}
+                    />
+                  </ErrorBoundary>
+
+                  {/* Legacy download and action buttons - maintained for backward compatibility */}
+                  <div style={styles.legacyDownloadSection}>
+                    <div style={styles.btnGroup} className="dynamic-meme-btn-group">
+                      <button 
+                        style={styles.btn} 
+                        className="dynamic-meme-btn" 
+                        onClick={downloadMeme}
+                        title="Quick download using original format (fallback option)"
+                      >
+                        <i className="fas fa-download"></i> Quick Download
+                      </button>
+                      <button
+                        style={{ ...styles.btn, ...styles.btnSecondary }}
+                        className="dynamic-meme-btn"
+                        onClick={generateAnother}
+                      >
+                        <i className="fas fa-redo"></i> Generate Another
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
