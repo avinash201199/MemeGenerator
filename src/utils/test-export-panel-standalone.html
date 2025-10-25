@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Export Options - Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        
+        .test-container {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .meme-preview {
+            width: 400px;
+            height: 300px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Export Options Panel Styles */
+        .export-options-panel {
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #16213e;
+        }
+        
+        .export-options-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #e94560;
+        }
+        
+        .format-selector {
+            margin-bottom: 20px;
+        }
+        
+        .format-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .format-btn {
+            padding: 10px 20px;
+            border: 2px solid #16213e;
+            background: #1a1a2e;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .format-btn:hover {
+            background: #16213e;
+            border-color: #e94560;
+        }
+        
+        .format-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+            color: white;
+        }
+        
+        .quality-section {
+            margin-bottom: 20px;
+        }
+        
+        .quality-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #16213e;
+            outline: none;
+            margin: 10px 0;
+        }
+        
+        .quality-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e94560;
+            cursor: pointer;
+        }
+        
+        .file-size-estimator {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e94560;
+        }
+        
+        .export-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .export-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .export-button:active {
+            transform: translateY(0);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #e94560;
+        }
+        
+        .quality-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎯 Advanced Export Options - Live Demo</h1>
+        <p>This demonstrates the advanced export functionality that should appear after generating a meme.</p>
+        
+        <!-- Mock Meme Preview -->
+        <div class="meme-preview">
+            <div>
+                <div>SAMPLE MEME</div>
+                <div style="font-size: 16px; margin-top: 10px;">Generated with Advanced Export Options</div>
+            </div>
+        </div>
+        
+        <!-- Advanced Export Options Panel -->
+        <div class="export-options-panel">
+            <div class="export-options-title">📤 Advanced Export Options</div>
+            
+            <!-- Format Selector -->
+            <div class="format-selector">
+                <label class="label">Export Format</label>
+                <div class="format-buttons">
+                    <button class="format-btn active" data-format="png">PNG (Lossless)</button>
+                    <button class="format-btn" data-format="jpeg">JPEG (Compressed)</button>
+                    <button class="format-btn" data-format="webp">WebP (Modern)</button>
+                </div>
+            </div>
+            
+            <!-- Quality Slider -->
+            <div class="quality-section" id="qualitySection">
+                <label class="label">Quality Settings</label>
+                <div class="quality-display">
+                    <span>Quality:</span>
+                    <span id="qualityValue">80%</span>
+                </div>
+                <input type="range" class="quality-slider" id="qualitySlider" min="0" max="100" value="80">
+            </div>
+            
+            <!-- File Size Estimator -->
+            <div class="file-size-estimator">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><strong>Estimated File Size:</strong></span>
+                    <span id="fileSizeDisplay">~245 KB</span>
+                </div>
+                <div style="margin-top: 5px; font-size: 14px; opacity: 0.8;">
+                    Format: <span id="formatDisplay">PNG</span>
+                </div>
+            </div>
+            
+            <!-- Export Button -->
+            <button class="export-button" id="exportBtn">
+                📥 Export Meme
+            </button>
+        </div>
+        
+        <div class="test-container">
+            <h2>🔧 How It Works</h2>
+            <ul>
+                <li><strong>Format Selection:</strong> Choose PNG (lossless), JPEG (compressed), or WebP (modern)</li>
+                <li><strong>Quality Control:</strong> Adjust compression quality for JPEG/WebP formats</li>
+                <li><strong>Real-time Estimation:</strong> See file size estimates update as you change settings</li>
+                <li><strong>Smart Downloads:</strong> Intelligent filename generation with timestamps</li>
+            </ul>
+            
+            <h2>🚨 Current Issue</h2>
+            <p>The export panel isn't showing in the main app because:</p>
+            <ol>
+                <li><strong>Missing GROQ_API_KEY:</strong> The meme generation API needs this environment variable</li>
+                <li><strong>No meme generated:</strong> Export options only appear after successfully creating a meme</li>
+            </ol>
+            
+            <h2>✅ To Fix</h2>
+            <p>Set the GROQ_API_KEY environment variable and restart the Python server, then generate a meme to see the export options.</p>
+        </div>
+    </div>
+
+    <script>
+        // Interactive functionality for the demo
+        const formatBtns = document.querySelectorAll('.format-btn');
+        const qualitySection = document.getElementById('qualitySection');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+        const fileSizeDisplay = document.getElementById('fileSizeDisplay');
+        const formatDisplay = document.getElementById('formatDisplay');
+        const exportBtn = document.getElementById('exportBtn');
+        
+        let currentFormat = 'png';
+        let currentQuality = 80;
+        
+        // Format selection
+        formatBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                formatBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFormat = btn.dataset.format;
+                
+                // Show/hide quality slider based on format
+                if (currentFormat === 'png') {
+                    qualitySection.classList.add('hidden');
+                } else {
+                    qualitySection.classList.remove('hidden');
+                }
+                
+                updateDisplay();
+            });
+        });
+        
+        // Quality slider
+        qualitySlider.addEventListener('input', (e) => {
+            currentQuality = e.target.value;
+            updateDisplay();
+        });
+        
+        // Export button
+        exportBtn.addEventListener('click', () => {
+            const filename = `meme_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.${currentFormat}`;
+            alert(`🎉 Exporting meme as: ${filename}\nFormat: ${currentFormat.toUpperCase()}\nQuality: ${currentQuality}%\nEstimated Size: ${fileSizeDisplay.textContent}`);
+        });
+        
+        function updateDisplay() {
+            qualityValue.textContent = `${currentQuality}%`;
+            formatDisplay.textContent = currentFormat.toUpperCase();
+            
+            // Simulate file size calculation
+            let baseSize = 400; // KB
+            if (currentFormat === 'png') {
+                fileSizeDisplay.textContent = `~${baseSize} KB`;
+            } else if (currentFormat === 'jpeg') {
+                const size = Math.round(baseSize * (currentQuality / 100) * 0.6);
+                fileSizeDisplay.textContent = `~${size} KB`;
+            } else if (currentFormat === 'webp') {
+                const size = Math.round(baseSize * (currentQuality / 100) * 0.4);
+                fileSizeDisplay.textContent = `~${size} KB`;
+            }
+        }
+        
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Error Handling Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .test-image {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comprehensive Error Handling Test Suite</h1>
+    <p>This test suite validates the enhanced error handling capabilities for CORS, browser compatibility, and memory/performance issues.</p>
+
+    <!-- Browser Compatibility Test -->
+    <div class="test-section">
+        <h2>Browser Compatibility Analysis</h2>
+        <button class="test-button" onclick="testBrowserCompatibility()">Run Compatibility Check</button>
+        <div id="compatibility-result" class="result"></div>
+    </div>
+
+    <!-- CORS Error Handling Test -->
+    <div class="test-section">
+        <h2>CORS Error Handling</h2>
+        <p>Testing cross-origin image access and error recovery mechanisms.</p>
+        <button class="test-button" onclick="testCorsHandling()">Test CORS Errors</button>
+        <button class="test-button" onclick="testCorsRecovery()">Test CORS Recovery</button>
+        <div id="cors-result" class="result"></div>
+    </div>
+
+    <!-- Memory Error Handling Test -->
+    <div class="test-section">
+        <h2>Memory & Performance Error Handling</h2>
+        <p>Testing large image handling and memory optimization.</p>
+        <button class="test-button" onclick="testMemoryHandling()">Test Memory Limits</button>
+        <button class="test-button" onclick="testLargeImageHandling()">Test Large Images</button>
+        <div id="memory-result" class="result"></div>
+    </div>
+
+    <!-- Format Support Error Handling -->
+    <div class="test-section">
+        <h2>Format Support Error Handling</h2>
+        <p>Testing format compatibility and fallback mechanisms.</p>
+        <button class="test-button" onclick="testFormatSupport()">Test Format Support</button>
+        <button class="test-button" onclick="testFormatFallback()">Test Format Fallback</button>
+        <div id="format-result" class="result"></div>
+    </div>
+
+    <!-- Automatic Recovery Test -->
+    <div class="test-section">
+        <h2>Automatic Error Recovery</h2>
+        <p>Testing automatic recovery mechanisms for various error types.</p>
+        <button class="test-button" onclick="testAutomaticRecovery()">Test Auto Recovery</button>
+        <div id="recovery-result" class="result"></div>
+    </div>
+
+    <!-- Error Analysis Test -->
+    <div class="test-section">
+        <h2>Error Analysis & Categorization</h2>
+        <p>Testing error categorization and user-friendly messaging.</p>
+        <button class="test-button" onclick="testErrorAnalysis()">Test Error Analysis</button>
+        <div id="analysis-result" class="result"></div>
+    </div>
+
+    <!-- Test Progress -->
+    <div class="test-section">
+        <h2>Test Progress</h2>
+        <div class="progress">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div id="progress-text">Ready to run tests</div>
+    </div>
+
+    <script type="module">
+        import ErrorHandler from './ErrorHandler.js';
+        import BrowserCompatibility from './BrowserCompatibility.js';
+        import CanvasConverter from './CanvasConverter.js';
+        import ExportProcessor from './ExportProcessor.js';
+
+        let testProgress = 0;
+        const totalTests = 6;
+
+        function updateProgress(increment = 1) {
+            testProgress += increment;
+            const percentage = (testProgress / totalTests) * 100;
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = 
+                `Completed ${testProgress}/${totalTests} test suites (${Math.round(percentage)}%)`;
+        }
+
+        function displayResult(elementId, result, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `result ${type}`;
+            element.textContent = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+        }
+
+        // Browser Compatibility Test
+        window.testBrowserCompatibility = async function() {
+            try {
+                const report = await BrowserCompatibility.getCompatibilityReport();
+                
+                let resultText = 'Browser Compatibility Report:\n';
+                resultText += `Browser: ${report.browser.name} ${report.browser.version}\n`;
+                resultText += `Canvas Support: ${report.features.canvas}\n`;
+                resultText += `Blob Support: ${report.features.blob}\n`;
+                resultText += `Download Support: ${report.features.download}\n`;
+                resultText += `CORS Support: ${report.features.cors}\n`;
+                resultText += `PNG Support: ${report.formats.png}\n`;
+                resultText += `JPEG Support: ${report.formats.jpeg}\n`;
+                resultText += `WebP Support: ${report.formats.webp}\n\n`;
+                
+                if (report.criticalIssues && report.criticalIssues.length > 0) {
+                    resultText += 'Critical Issues:\n';
+                    report.criticalIssues.forEach(issue => resultText += `- ${issue}\n`);
+                    resultText += '\n';
+                }
+                
+                if (report.warnings.length > 0) {
+                    resultText += 'Warnings:\n';
+                    report.warnings.forEach(warning => resultText += `- ${warning}\n`);
+                    resultText += '\n';
+                }
+                
+                if (report.recommendations.length > 0) {
+                    resultText += 'Recommendations:\n';
+                    report.recommendations.forEach(rec => resultText += `- ${rec}\n`);
+                }
+
+                const hasIssues = (report.criticalIssues && report.criticalIssues.length > 0) || report.warnings.length > 0;
+                displayResult('compatibility-result', resultText, hasIssues ? 'warning' : 'success');
+                updateProgress();
+            } catch (error) {
+                displayResult('compatibility-result', `Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // CORS Error Handling Test
+        window.testCorsHandling = async function() {
+            try {
+                const corsUrls = [
+                    'https://httpbin.org/image/png', // Should work with CORS
+                    'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png', // Likely CORS blocked
+                    'https://example.com/nonexistent.jpg' // 404 error
+                ];
+
+                let resultText = 'CORS Error Handling Test Results:\n\n';
+
+                for (const url of corsUrls) {
+                    try {
+                        resultText += `Testing URL: ${url}\n`;
+                        const canvas = await CanvasConverter.urlToCanvas(url);
+                        resultText += `✓ Success: Canvas created (${canvas.width}x${canvas.height})\n\n`;
+                    } catch (error) {
+                        const analysis = ErrorHandler.analyzeError(error, { imageUrl: url });
+                        resultText += `✗ Error: ${error.message}\n`;
+                        resultText += `Category: ${analysis.category}\n`;
+                        resultText += `Severity: ${analysis.severity}\n`;
+                        resultText += `User Message: ${analysis.userMessage}\n`;
+                        if (analysis.suggestions.length > 0) {
+                            resultText += `Suggestions: ${analysis.suggestions.join(', ')}\n`;
+                        }
+                        resultText += '\n';
+                    }
+                }
+
+                displayResult('cors-result', resultText, 'info');
+                updateProgress();
+            } catch (error) {
+                displayResult('cors-result', `Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // CORS Recovery Test
+        window.testCorsRecovery = async function() {
+            try {
+                const corsError = new Error('Cross-origin image access denied');
+                corsError.name = 'SecurityError';
+                
+                const context = {
+                    imageUrl: 'https://example.com/test.jpg',
+                    format: 'png',
+                    quality: 80
+                };
+
+                const recovery = await ErrorHandler.attemptAutomaticRecovery(corsError, context);
+                
+                let resultText = 'CORS Recovery Test Results:\n';
+                resultText += `Recovery Attempted: ${recovery.attempted}\n`;
+                resultText += `Recovery Success: ${recovery.success}\n`;
+                resultText += `Recovery Strategy: ${recovery.strategy}\n`;
+                
+                if (recovery.newContext) {
+                    resultText += 'New Context:\n';
+                    Object.entries(recovery.newContext).forEach(([key, value]) => {
+                        resultText += `  ${key}: ${value}\n`;
+                    });
+                }
+
+                displayResult('cors-result', resultText, recovery.success ? 'success' : 'warning');
+                updateProgress();
+            } catch (error) {
+                displayResult('cors-result', `Recovery Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Memory Error Handling Test
+        window.testMemoryHandling = async function() {
+            try {
+                let resultText = 'Memory Handling Test Results:\n\n';
+
+                // Test device memory detection
+                const deviceMemory = navigator.deviceMemory || 'Unknown';
+                resultText += `Device Memory: ${deviceMemory}GB\n`;
+
+                // Test performance memory API
+                if (performance.memory) {
+                    const memInfo = performance.memory;
+                    resultText += `JS Heap Size Limit: ${Math.round(memInfo.jsHeapSizeLimit / 1024 / 1024)}MB\n`;
+                    resultText += `Used JS Heap Size: ${Math.round(memInfo.usedJSHeapSize / 1024 / 1024)}MB\n`;
+                    resultText += `Total JS Heap Size: ${Math.round(memInfo.totalJSHeapSize / 1024 / 1024)}MB\n\n`;
+                }
+
+                // Test memory error detection
+                const memoryError = new Error('Image requires too much memory: ~512MB. Maximum safe limit is 256MB for this device.');
+                const analysis = ErrorHandler.analyzeError(memoryError);
+                
+                resultText += 'Memory Error Analysis:\n';
+                resultText += `Category: ${analysis.category}\n`;
+                resultText += `Severity: ${analysis.severity}\n`;
+                resultText += `User Message: ${analysis.userMessage}\n`;
+                resultText += `Suggestions: ${analysis.suggestions.join(', ')}\n`;
+
+                displayResult('memory-result', resultText, 'info');
+                updateProgress();
+            } catch (error) {
+                displayResult('memory-result', `Memory Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Large Image Handling Test
+        window.testLargeImageHandling = async function() {
+            try {
+                let resultText = 'Large Image Handling Test Results:\n\n';
+
+                // Create a test image element with large dimensions
+                const img = new Image();
+                img.width = 8000;
+                img.height = 6000;
+
+                // Test memory safety checks
+                try {
+                    const canvas = await CanvasConverter.imageToCanvas(img);
+                    resultText += '✗ Large image was processed (this should have been blocked)\n';
+                } catch (error) {
+                    resultText += `✓ Large image correctly blocked: ${error.message}\n`;
+                    
+                    const analysis = ErrorHandler.analyzeError(error);
+                    resultText += `Error Category: ${analysis.category}\n`;
+                    resultText += `Recovery Options Available: ${analysis.suggestions.length > 0}\n`;
+                }
+
+                displayResult('memory-result', resultText, 'success');
+                updateProgress();
+            } catch (error) {
+                displayResult('memory-result', `Large Image Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Format Support Test
+        window.testFormatSupport = async function() {
+            try {
+                let resultText = 'Format Support Test Results:\n\n';
+
+                const formats = ['png', 'jpeg', 'webp'];
+                for (const format of formats) {
+                    const supported = CanvasConverter.isFormatSupported(format);
+                    resultText += `${format.toUpperCase()}: ${supported ? '✓ Supported' : '✗ Not Supported'}\n`;
+                }
+
+                resultText += '\nSupported Formats: ' + CanvasConverter.getSupportedFormats().join(', ') + '\n';
+
+                displayResult('format-result', resultText, 'info');
+                updateProgress();
+            } catch (error) {
+                displayResult('format-result', `Format Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Format Fallback Test
+        window.testFormatFallback = async function() {
+            try {
+                const formatError = new Error('WebP format not supported by your browser');
+                const context = { format: 'webp', quality: 80 };
+
+                const recovery = await ErrorHandler.attemptAutomaticRecovery(formatError, context);
+                
+                let resultText = 'Format Fallback Test Results:\n';
+                resultText += `Recovery Attempted: ${recovery.attempted}\n`;
+                resultText += `Recovery Success: ${recovery.success}\n`;
+                resultText += `Recovery Strategy: ${recovery.strategy}\n`;
+                resultText += `New Format: ${recovery.newContext?.format || 'unchanged'}\n`;
+
+                displayResult('format-result', resultText, recovery.success ? 'success' : 'warning');
+                updateProgress();
+            } catch (error) {
+                displayResult('format-result', `Fallback Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Automatic Recovery Test
+        window.testAutomaticRecovery = async function() {
+            try {
+                let resultText = 'Automatic Recovery Test Results:\n\n';
+
+                const testCases = [
+                    {
+                        name: 'CORS Error',
+                        error: new Error('Cross-origin image access denied'),
+                        context: { imageUrl: 'https://example.com/test.jpg' }
+                    },
+                    {
+                        name: 'Memory Error',
+                        error: new Error('Image requires too much memory'),
+                        context: { quality: 90, format: 'png' }
+                    },
+                    {
+                        name: 'Format Error',
+                        error: new Error('WebP format not supported'),
+                        context: { format: 'webp' }
+                    }
+                ];
+
+                for (const testCase of testCases) {
+                    testCase.error.name = testCase.name.includes('CORS') ? 'SecurityError' : 'Error';
+                    
+                    const recovery = await ErrorHandler.attemptAutomaticRecovery(testCase.error, testCase.context);
+                    
+                    resultText += `${testCase.name}:\n`;
+                    resultText += `  Attempted: ${recovery.attempted}\n`;
+                    resultText += `  Success: ${recovery.success}\n`;
+                    resultText += `  Strategy: ${recovery.strategy || 'none'}\n`;
+                    if (recovery.newContext && Object.keys(recovery.newContext).length > Object.keys(testCase.context).length) {
+                        resultText += `  Context Updated: Yes\n`;
+                    }
+                    resultText += '\n';
+                }
+
+                displayResult('recovery-result', resultText, 'info');
+                updateProgress();
+            } catch (error) {
+                displayResult('recovery-result', `Recovery Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Error Analysis Test
+        window.testErrorAnalysis = async function() {
+            try {
+                let resultText = 'Error Analysis Test Results:\n\n';
+
+                const testErrors = [
+                    { message: 'Cross-origin image access denied', name: 'SecurityError' },
+                    { message: 'Out of memory', name: 'RangeError' },
+                    { message: 'Network connection failed', name: 'NetworkError' },
+                    { message: 'WebP format not supported', name: 'Error' },
+                    { message: 'Download blocked by popup blocker', name: 'Error' }
+                ];
+
+                for (const errorData of testErrors) {
+                    const error = new Error(errorData.message);
+                    error.name = errorData.name;
+                    
+                    const analysis = ErrorHandler.analyzeError(error);
+                    
+                    resultText += `Error: "${errorData.message}"\n`;
+                    resultText += `  Category: ${analysis.category}\n`;
+                    resultText += `  Severity: ${analysis.severity}\n`;
+                    resultText += `  Can Retry: ${analysis.canRetry}\n`;
+                    resultText += `  User Action Required: ${analysis.requiresUserAction}\n`;
+                    resultText += `  Suggestions: ${analysis.suggestions.length}\n\n`;
+                }
+
+                displayResult('analysis-result', resultText, 'info');
+                updateProgress();
+            } catch (error) {
+                displayResult('analysis-result', `Analysis Test Error: ${error.message}`, 'error');
+                updateProgress();
+            }
+        };
+
+        // Reset progress on page load
+        testProgress = 0;
+        updateProgress(0);
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+/* ===========================================================
+   🎨 Export Options Panel – Responsive Design & Styling
+   Task 3.3: Add responsive design and styling
+   =========================================================== */
+
+/* ---------- 📦 Main Panel Container ---------- */
+.export-options-panel {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 1px solid #e2e8f0;
+  margin-top: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.export-options-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.export-options-header-icon {
+  font-size: 20px;
+  color: #667eea;
+  margin-right: 12px;
+}
+
+.export-options-header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0;
+}
+
+/* ---------- 🎯 Format Selector Styles ---------- */
+.format-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.format-selector-button {
+  padding: 16px 12px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.format-selector-button:hover:not(.format-selector-button-disabled):not(.format-selector-button-selected) {
+  border-color: #cbd5e0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #f7fafc;
+}
+
+.format-selector-button-selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #f7faff 0%, #edf2ff 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-1px);
+}
+
+/* ---------- 🎚️ Quality Slider Styles ---------- */
+.quality-slider-input {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, 
+    #f56565 0%, 
+    #ecc94b 25%, 
+    #ed8936 50%, 
+    #48bb78 75%, 
+    #48bb78 100%);
+  outline: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.quality-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.quality-slider-input::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* ---------- 📊 File Size Estimator Styles ---------- */
+.file-size-estimator-display {
+  padding: 12px 16px;
+  background: #f7fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* ---------- 🔘 Export Button Styles ---------- */
+.export-button {
+  color: white;
+  border: 2px solid;
+  padding: 14px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.export-button:hover:not(.export-button-disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.export-button-default {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+/* ---------- 📱 Responsive Breakpoints ---------- */
+
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .export-options-panel {
+    max-width: 800px;
+    margin: 20px auto 0;
+  }
+}
+
+/* Mobile (≤768px) */
+@media (max-width: 768px) {
+  .export-options-panel {
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 16px;
+  }
+
+  .export-options-header-title {
+    font-size: 1.25rem;
+  }
+
+  .format-selector-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .format-selector-button {
+    padding: 14px 10px;
+    min-height: 90px;
+    font-size: 13px;
+  }
+
+  .file-size-estimator-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+
+  .export-button {
+    padding: 12px 20px;
+    font-size: 15px;
+    min-height: 48px;
+    gap: 8px;
+  }
+}
+
+/* Small Mobile (≤480px) */
+@media (max-width: 480px) {
+  .export-options-panel {
+    padding: 16px;
+    border-radius: 12px;
+    margin: 16px 10px 0;
+  }
+
+  .export-options-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+
+  .export-options-header-icon {
+    font-size: 18px;
+    margin-right: 8px;
+  }
+
+  .export-options-header-title {
+    font-size: 1.125rem;
+  }
+
+  .format-selector-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .format-selector-button {
+    flex-direction: row;
+    text-align: left;
+    min-height: 60px;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .quality-slider-input::-webkit-slider-thumb {
+    height: 24px;
+    width: 24px;
+  }
+
+  .export-button {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+}
+
+/* ---------- 🎨 Visual Enhancements ---------- */
+
+/* Smooth transitions for better UX */
+.export-options-panel * {
+  transition: all 0.3s ease;
+}
+
+/* Loading and disabled states */
+.export-options-disabled {
+  position: relative;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Error message styling */
+.export-options-error {
+  background: #fed7d7;
+  color: #c53030;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+/* Placeholder styling */
+.export-options-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a0aec0;
+  font-size: 1.1rem;
+  font-style: italic;
+  border: 3px dashed #e2e8f0;
+  border-radius: 12px;
+}
+
+/* ---------- 🔧 Utility Classes ---------- */
+
+.export-options-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.file-size-estimator-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e2e8f0;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
