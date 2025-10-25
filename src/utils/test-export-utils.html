@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Utils Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #testCanvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Export Utils Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Browser Compatibility Test</h2>
+        <button onclick="testBrowserCompatibility()">Test Browser Compatibility</button>
+        <div id="compatibilityResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Canvas Converter Test</h2>
+        <canvas id="testCanvas" width="200" height="100"></canvas>
+        <br>
+        <button onclick="testCanvasConverter()">Test Canvas Converter</button>
+        <div id="canvasResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Export Processor Test</h2>
+        <button onclick="testExportProcessor()">Test Export Processor</button>
+        <div id="exportResults"></div>
+    </div>
+
+    <script type="module">
+        // Import utilities (adjust path as needed)
+        import CanvasConverter from './CanvasConverter.js';
+        import ExportProcessor from './ExportProcessor.js';
+        import BrowserCompatibility from './BrowserCompatibility.js';
+
+        // Make utilities available globally for testing
+        window.CanvasConverter = CanvasConverter;
+        window.ExportProcessor = ExportProcessor;
+        window.BrowserCompatibility = BrowserCompatibility;
+
+        // Create test image on canvas
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Draw a simple test pattern
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(0, 0, 100, 50);
+        ctx.fillStyle = '#00ff00';
+        ctx.fillRect(100, 0, 100, 50);
+        ctx.fillStyle = '#0000ff';
+        ctx.fillRect(0, 50, 100, 50);
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(100, 50, 100, 50);
+        
+        // Add text
+        ctx.fillStyle = '#000000';
+        ctx.font = '16px Arial';
+        ctx.fillText('Test Meme', 70, 75);
+
+        // Test functions
+        window.testBrowserCompatibility = async function() {
+            const resultsDiv = document.getElementById('compatibilityResults');
+            resultsDiv.innerHTML = '<div class="info">Testing browser compatibility...</div>';
+            
+            try {
+                const report = await BrowserCompatibility.getCompatibilityReport();
+                
+                let html = '<div class="success">Browser Compatibility Report:</div>';
+                html += `<div class="info">Browser: ${report.browser.name} ${report.browser.version}</div>`;
+                html += '<div class="info">Features:</div>';
+                html += `<ul>`;
+                for (const [feature, supported] of Object.entries(report.features)) {
+                    html += `<li>${feature}: ${supported ? '✅' : '❌'}</li>`;
+                }
+                html += `</ul>`;
+                html += '<div class="info">Formats:</div>';
+                html += `<ul>`;
+                for (const [format, supported] of Object.entries(report.formats)) {
+                    html += `<li>${format.toUpperCase()}: ${supported ? '✅' : '❌'}</li>`;
+                }
+                html += `</ul>`;
+                
+                if (report.warnings.length > 0) {
+                    html += '<div class="error">Warnings:</div><ul>';
+                    report.warnings.forEach(warning => {
+                        html += `<li>${warning}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+
+        window.testCanvasConverter = function() {
+            const resultsDiv = document.getElementById('canvasResults');
+            resultsDiv.innerHTML = '<div class="info">Testing canvas converter...</div>';
+            
+            try {
+                const canvas = document.getElementById('testCanvas');
+                
+                // Test format support
+                const pngSupported = CanvasConverter.isFormatSupported('png');
+                const jpegSupported = CanvasConverter.isFormatSupported('jpeg');
+                const webpSupported = CanvasConverter.isFormatSupported('webp');
+                
+                // Test data URL conversion
+                const pngDataUrl = CanvasConverter.canvasToDataURL(canvas, 'png');
+                const jpegDataUrl = CanvasConverter.canvasToDataURL(canvas, 'jpeg', 0.8);
+                
+                // Test file size estimation
+                const pngSize = CanvasConverter.estimateFileSize(pngDataUrl);
+                const jpegSize = CanvasConverter.estimateFileSize(jpegDataUrl);
+                
+                let html = '<div class="success">Canvas Converter Tests:</div>';
+                html += `<div class="info">PNG Support: ${pngSupported ? '✅' : '❌'}</div>`;
+                html += `<div class="info">JPEG Support: ${jpegSupported ? '✅' : '❌'}</div>`;
+                html += `<div class="info">WebP Support: ${webpSupported ? '✅' : '❌'}</div>`;
+                html += `<div class="info">PNG Size Estimate: ${(pngSize / 1024).toFixed(2)} KB</div>`;
+                html += `<div class="info">JPEG Size Estimate: ${(jpegSize / 1024).toFixed(2)} KB</div>`;
+                html += `<div class="info">PNG Data URL Length: ${pngDataUrl.length} chars</div>`;
+                html += `<div class="info">JPEG Data URL Length: ${jpegDataUrl.length} chars</div>`;
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+
+        window.testExportProcessor = async function() {
+            const resultsDiv = document.getElementById('exportResults');
+            resultsDiv.innerHTML = '<div class="info">Testing export processor...</div>';
+            
+            try {
+                const canvas = document.getElementById('testCanvas');
+                
+                // Test basic filename generation
+                const filename1 = ExportProcessor.generateFilename('png');
+                const filename2 = ExportProcessor.generateFilename('jpeg');
+                const filename3 = ExportProcessor.generateFilename('webp');
+                
+                // Test filename generation with options
+                const customFilename = ExportProcessor.generateFilename('png', null, {
+                    prefix: 'custom_meme',
+                    includeQuality: true,
+                    quality: 85,
+                    includeUniqueId: true
+                });
+                
+                // Test intelligent filename generation
+                const intelligentFilename = ExportProcessor.generateIntelligentFilename('jpeg', {
+                    topText: 'When you realize',
+                    bottomText: 'It\'s already Friday',
+                    templateName: 'Drake Pointing'
+                });
+                
+                // Test multiple filename generation
+                const multipleFilenames = ExportProcessor.generateMultipleFilenames('png', 3, {
+                    prefix: 'batch_meme',
+                    includeSequence: true
+                });
+                
+                // Test filename sanitization
+                const sanitized = ExportProcessor.sanitizeFilename('test<>:"/\\|?*file name.png');
+                const problematicFilename = ExportProcessor.sanitizeFilename('CON.png');
+                
+                // Test filename validation
+                const validation1 = ExportProcessor.validateFilename('valid_meme.png');
+                const validation2 = ExportProcessor.validateFilename('invalid<>file.png');
+                const validation3 = ExportProcessor.validateFilename('a'.repeat(300) + '.png');
+                
+                // Test alternative filename generation
+                const alternatives = ExportProcessor.generateAlternativeFilenames('meme.png', ['meme.png', 'meme_1.png'], 3);
+                
+                // Test browser compatibility check
+                const compatibility = ExportProcessor.checkBrowserCompatibility();
+                
+                let html = '<div class="success">Export Processor Tests:</div>';
+                
+                // Basic filename generation
+                html += '<h4>Basic Filename Generation:</h4>';
+                html += `<div class="info">PNG: ${filename1}</div>`;
+                html += `<div class="info">JPEG: ${filename2}</div>`;
+                html += `<div class="info">WebP: ${filename3}</div>`;
+                html += `<div class="info">Custom: ${customFilename}</div>`;
+                
+                // Intelligent filename generation
+                html += '<h4>Intelligent Filename Generation:</h4>';
+                html += `<div class="info">From meme data: ${intelligentFilename}</div>`;
+                
+                // Multiple filename generation
+                html += '<h4>Multiple Filename Generation:</h4>';
+                multipleFilenames.forEach((filename, index) => {
+                    html += `<div class="info">Batch ${index + 1}: ${filename}</div>`;
+                });
+                
+                // Filename sanitization
+                html += '<h4>Filename Sanitization:</h4>';
+                html += `<div class="info">Sanitized: ${sanitized}</div>`;
+                html += `<div class="info">Reserved name: ${problematicFilename}</div>`;
+                
+                // Filename validation
+                html += '<h4>Filename Validation:</h4>';
+                html += `<div class="${validation1.valid ? 'success' : 'error'}">Valid filename: ${validation1.valid ? '✅' : '❌'}</div>`;
+                html += `<div class="${validation2.valid ? 'success' : 'error'}">Invalid chars: ${validation2.valid ? '✅' : '❌'} (${validation2.issues.length} issues)</div>`;
+                html += `<div class="${validation3.valid ? 'success' : 'error'}">Long filename: ${validation3.valid ? '✅' : '❌'} (${validation3.issues.length} issues)</div>`;
+                
+                // Alternative filenames
+                html += '<h4>Alternative Filenames:</h4>';
+                alternatives.forEach((alt, index) => {
+                    html += `<div class="info">Alternative ${index + 1}: ${alt}</div>`;
+                });
+                
+                // Browser compatibility
+                html += '<h4>Browser Compatibility:</h4>';
+                html += `<ul>`;
+                html += `<li>Canvas: ${compatibility.canvas ? '✅' : '❌'}</li>`;
+                html += `<li>Download: ${compatibility.download ? '✅' : '❌'}</li>`;
+                html += `<li>Blob: ${compatibility.features.blob ? '✅' : '❌'}</li>`;
+                html += `<li>Object URL: ${compatibility.features.objectURL ? '✅' : '❌'}</li>`;
+                html += `</ul>`;
+                
+                // Test actual export (without triggering download)
+                try {
+                    const dataUrl = CanvasConverter.canvasToDataURL(canvas, 'png');
+                    const blob = ExportProcessor.dataUrlToBlob(dataUrl);
+                    html += `<div class="success">Blob creation successful: ${(blob.size / 1024).toFixed(2)} KB</div>`;
+                } catch (blobError) {
+                    html += `<div class="error">Blob creation failed: ${blobError.message}</div>`;
+                }
+                
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        };
+    </script>
+</body>
+</html>

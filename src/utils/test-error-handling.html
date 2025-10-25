@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Handling Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #f7fafc;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: #5a67d8;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+        .info {
+            background: #bee3f8;
+            color: #2a69ac;
+            border: 1px solid #90cdf4;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Error Handling System Test</h1>
+        <p>This page tests the comprehensive error handling system for the export functionality.</p>
+
+        <div class="test-section">
+            <h3>1. Error Analysis Test</h3>
+            <p>Test error categorization and user-friendly messages:</p>
+            <button class="test-button" onclick="testCorsError()">Test CORS Error</button>
+            <button class="test-button" onclick="testMemoryError()">Test Memory Error</button>
+            <button class="test-button" onclick="testNetworkError()">Test Network Error</button>
+            <button class="test-button" onclick="testFormatError()">Test Format Error</button>
+            <div id="error-analysis-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Browser Compatibility Test</h3>
+            <p>Check browser compatibility and get recommendations:</p>
+            <button class="test-button" onclick="testCompatibility()">Check Compatibility</button>
+            <div id="compatibility-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Canvas Conversion Test</h3>
+            <p>Test enhanced canvas conversion with error handling:</p>
+            <button class="test-button" onclick="testValidImage()">Test Valid Image</button>
+            <button class="test-button" onclick="testInvalidImage()">Test Invalid Image</button>
+            <button class="test-button" onclick="testLargeImage()">Test Large Image</button>
+            <div id="canvas-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Export Process Test</h3>
+            <p>Test complete export process with error handling:</p>
+            <button class="test-button" onclick="testSuccessfulExport()">Test Successful Export</button>
+            <button class="test-button" onclick="testFailedExport()">Test Failed Export</button>
+            <div id="export-result" class="test-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the error handling utilities
+        import ErrorHandler from './ErrorHandler.js';
+        import CanvasConverter from './CanvasConverter.js';
+        import ExportProcessor from './ExportProcessor.js';
+        import BrowserCompatibility from './BrowserCompatibility.js';
+
+        // Make utilities available globally for testing
+        window.ErrorHandler = ErrorHandler;
+        window.CanvasConverter = CanvasConverter;
+        window.ExportProcessor = ExportProcessor;
+        window.BrowserCompatibility = BrowserCompatibility;
+
+        // Test functions
+        window.testCorsError = function() {
+            const corsError = new Error('CORS error: Cross-origin image access denied');
+            corsError.name = 'SecurityError';
+            
+            const analysis = ErrorHandler.analyzeError(corsError);
+            const userFriendly = ErrorHandler.getUserFriendlyError(corsError);
+            
+            showResult('error-analysis-result', 'info', 
+                `<strong>Error Category:</strong> ${analysis.category}<br>
+                 <strong>Severity:</strong> ${analysis.severity}<br>
+                 <strong>User Message:</strong> ${userFriendly.message}<br>
+                 <strong>Suggestions:</strong> ${userFriendly.suggestions.join(', ')}`
+            );
+        };
+
+        window.testMemoryError = function() {
+            const memoryError = new Error('Image too large: 16777217 pixels. Maximum is 16777216 pixels.');
+            
+            const analysis = ErrorHandler.analyzeError(memoryError);
+            const userFriendly = ErrorHandler.getUserFriendlyError(memoryError);
+            
+            showResult('error-analysis-result', 'info',
+                `<strong>Error Category:</strong> ${analysis.category}<br>
+                 <strong>Severity:</strong> ${analysis.severity}<br>
+                 <strong>User Message:</strong> ${userFriendly.message}<br>
+                 <strong>Suggestions:</strong> ${userFriendly.suggestions.join(', ')}`
+            );
+        };
+
+        window.testNetworkError = function() {
+            const networkError = new Error('Network connection issue');
+            networkError.name = 'NetworkError';
+            
+            const analysis = ErrorHandler.analyzeError(networkError);
+            const userFriendly = ErrorHandler.getUserFriendlyError(networkError);
+            
+            showResult('error-analysis-result', 'info',
+                `<strong>Error Category:</strong> ${analysis.category}<br>
+                 <strong>Severity:</strong> ${analysis.severity}<br>
+                 <strong>User Message:</strong> ${userFriendly.message}<br>
+                 <strong>Suggestions:</strong> ${userFriendly.suggestions.join(', ')}`
+            );
+        };
+
+        window.testFormatError = function() {
+            const formatError = new Error('Unsupported format: xyz');
+            
+            const analysis = ErrorHandler.analyzeError(formatError);
+            const userFriendly = ErrorHandler.getUserFriendlyError(formatError);
+            
+            showResult('error-analysis-result', 'info',
+                `<strong>Error Category:</strong> ${analysis.category}<br>
+                 <strong>Severity:</strong> ${analysis.severity}<br>
+                 <strong>User Message:</strong> ${userFriendly.message}<br>
+                 <strong>Suggestions:</strong> ${userFriendly.suggestions.join(', ')}`
+            );
+        };
+
+        window.testCompatibility = async function() {
+            try {
+                const compatibility = await BrowserCompatibility.getCompatibilityReport();
+                const issues = await ErrorHandler.checkCompatibilityIssues();
+                
+                showResult('compatibility-result', 'success',
+                    `<strong>Browser:</strong> ${compatibility.browser.name} ${compatibility.browser.version}<br>
+                     <strong>Canvas Support:</strong> ${compatibility.features.canvas ? 'Yes' : 'No'}<br>
+                     <strong>WebP Support:</strong> ${compatibility.formats.webp ? 'Yes' : 'No'}<br>
+                     <strong>Issues Found:</strong> ${issues.issues.length}<br>
+                     <strong>Recommendations:</strong> ${issues.recommendations.join(', ')}`
+                );
+            } catch (error) {
+                showResult('compatibility-result', 'error', 'Compatibility check failed: ' + error.message);
+            }
+        };
+
+        window.testValidImage = async function() {
+            try {
+                // Create a small test image
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(0, 0, 100, 100);
+                
+                const dataUrl = canvas.toDataURL('image/png');
+                const testCanvas = await CanvasConverter.urlToCanvas(dataUrl);
+                
+                showResult('canvas-result', 'success', 
+                    `Successfully converted image to canvas: ${testCanvas.width}x${testCanvas.height}`
+                );
+            } catch (error) {
+                showResult('canvas-result', 'error', 'Canvas conversion failed: ' + error.message);
+            }
+        };
+
+        window.testInvalidImage = async function() {
+            try {
+                await CanvasConverter.urlToCanvas('invalid-url');
+                showResult('canvas-result', 'error', 'Should have failed but did not');
+            } catch (error) {
+                showResult('canvas-result', 'success', 
+                    `Correctly caught invalid image error: ${error.message}`
+                );
+            }
+        };
+
+        window.testLargeImage = async function() {
+            try {
+                // Test with dimensions that should trigger size limit
+                const canvas = document.createElement('canvas');
+                canvas.width = 10000;
+                canvas.height = 10000;
+                
+                showResult('canvas-result', 'info', 
+                    'Large image test - check console for memory warnings'
+                );
+            } catch (error) {
+                showResult('canvas-result', 'success', 
+                    `Correctly caught large image error: ${error.message}`
+                );
+            }
+        };
+
+        window.testSuccessfulExport = async function() {
+            try {
+                // Create a test image
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 200;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#00ff00';
+                ctx.fillRect(0, 0, 200, 200);
+                
+                const dataUrl = canvas.toDataURL('image/png');
+                
+                // Test export (without actually downloading)
+                const result = await ExportProcessor.estimateFileSize(dataUrl, 'png', 80);
+                
+                showResult('export-result', 'success', 
+                    `Export test successful. Estimated file size: ${result} bytes`
+                );
+            } catch (error) {
+                showResult('export-result', 'error', 'Export test failed: ' + error.message);
+            }
+        };
+
+        window.testFailedExport = async function() {
+            try {
+                // Test with invalid parameters
+                await ExportProcessor.exportMeme(null, 'invalid-format', 150);
+                showResult('export-result', 'error', 'Should have failed but did not');
+            } catch (error) {
+                showResult('export-result', 'success', 
+                    `Correctly caught export error: ${error.message}`
+                );
+            }
+        };
+
+        function showResult(elementId, type, message) {
+            const element = document.getElementById(elementId);
+            element.className = `test-result ${type}`;
+            element.innerHTML = message;
+            element.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
