@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // App.jsx
 import React from "react";
 import { Route, Routes } from "react-router-dom";
@@ -7,6 +8,7 @@ import "./style.css";
 import About from "./components/About";
 import History from "./components/History";
 import Dynamicmeme from "./components/Dynamicmeme";
+import NewMeme from "./components/NewMeme";
 
 const App = () => {
     return (
@@ -16,6 +18,7 @@ const App = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/history" element={<History />} />
                 <Route path="/dynamic" element={<Dynamicmeme />} />
+                <Route path="/newmeme" element={<NewMeme />} />
 
                 {/* Define other routes here */}
             </Routes>
