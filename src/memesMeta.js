@@ -18,7 +18,7 @@ const memesMeta = {
   "Change My Mind": {
     description: "Man at table with sign",
     keywords: ["table", "sign", "change my mind"],
-    captions: ["Change my mind about coding", "Coffee vs Tea"]
+    captions: ["Change my mind about coding", "Coffee vs Tea", "Coding is life", "Coffee > Tea"]
   },
   "Expanding Brain": {
     description: "Increasingly enlightened brain levels",
@@ -69,11 +69,6 @@ const memesMeta = {
     description: "Man tapping his head",
     keywords: ["thinking", "smart", "plan"],
     captions: ["Can't fail if you don't try", "Use logic"]
-  },
-  "Change My Mind": {
-    description: "Man at table with a sign",
-    keywords: ["table", "sign", "change my mind"],
-    captions: ["Coding is life", "Coffee > Tea"]
   },
   "This Is Fine": {
     description: "Dog sitting in fire saying 'This is fine'",
