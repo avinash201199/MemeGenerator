@@ -84,6 +84,14 @@ const memesMeta = {
     description: "Baby Yoda sipping soup",
     keywords: ["Baby Yoda", "Grogu", "cute"],
     captions: ["Me watching drama unfold", "Me minding my business"]
+  },
+  "Programmer Debugging": {
+    description: "Developer happily fixing one bug and creating three new ones",
+    keywords: ["programmer", "debugging", "code"],
+    captions: [
+      "When you fix one bug but five more appear",
+      "It worked yesterday... what changed?"
+    ]
   }
 };
 
