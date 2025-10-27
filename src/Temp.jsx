@@ -48,10 +48,16 @@ const Temp = ({ temp, setMeme }) => {
       className="template"
       style={{ paddingTop: "80px" }}
       onClick={() => setMeme(temps)}
+      // 1. Add aria-label to the clickable container
+      aria-label={`Select meme template: ${temps.name}`}
+      role="button" // Indicates it is an interactive element
     >
       <div
         style={{ backgroundImage: `url(${temps.url})` }}
         className="meme"
+        // 2. Add a redundant aria-label to the 'image' div
+        aria-label={`Meme template image: ${temps.name}`}
+        role="img" // Indicates it is a non-interactive image element
       ></div>
 
       {/* Caption overlay */}
