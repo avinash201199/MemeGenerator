@@ -174,7 +174,7 @@ const Dynamicmeme = () => {
       minHeight: '100vh',
       color: '#333',
       margin: 0,
-      padding: '0 0 2rem 0',
+      padding: '80px 0 2rem 0',
       position: 'relative'
     },
     header: {
