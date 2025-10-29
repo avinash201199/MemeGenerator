@@ -58,7 +58,7 @@ const History = () => {
                 color: 'white',
                 minHeight: '60vh'
             }}>
-                <h2>Meme History</h2>
+                <h2 className="history-heading" style={{ color: 'white' }}>Meme History</h2>
                 <p style={{ fontSize: '18px', marginTop: '20px' }}>
                     No memes in history yet. Generate some memes to see them here!
                 </p>
@@ -78,7 +78,7 @@ const History = () => {
                 flexWrap: 'wrap',
                 gap: '10px'
             }}>
-                <h2 style={{ color: 'white', margin: 0 }}>Meme History ({savedMemes.length})</h2>
+                <h2 className="history-heading" style={{ color: 'white' }}>Meme History ({savedMemes.length})</h2>
                 <button
                     onClick={clearHistory}
                     style={{

@@ -106,3 +106,15 @@
 .dynamic-meme-input {
   transition: all 0.25s ease-in-out;
 }
+
+/* History heading spacing to avoid overlap with fixed navbar */
+.history-heading {
+  margin-top: 24px; /* default spacing for small screens */
+}
+
+@media (min-width: 670px) {
+  /* For viewports >= 670px ensure the heading sits below the fixed navbar */
+  .history-heading {
+    margin-top: 80px; /* large enough to clear the navbar and some breathing room */
+  }
+}
