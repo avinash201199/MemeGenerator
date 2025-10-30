@@ -6,7 +6,7 @@ import Meme from "../Meme";
 import Footer from "./Footer";
 import "../style.css";
 import "../index.css";
-import { useTheme } from "../hooks/useTheme";
+
 
 const Home = () => {
   const [temp, setTemp] = useState([]);
@@ -16,7 +16,16 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isDark } = useTheme();
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true;
+  });
+  
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+  };
 
   const [itemsPerPage] = useState(18); // Fixed 18 items per page
 
@@ -118,11 +127,14 @@ const Home = () => {
   };
 
   return (
-    <div className={`App min-h-screen flex flex-col ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`App min-h-screen flex flex-col transition-all duration-300 ${isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+
       <Navbar
         setMeme={setMeme}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        isDark={isDark}
+        toggleTheme={toggleTheme}
       />
 
       <main className="flex-grow px-2 sm:px-4">
@@ -145,14 +157,16 @@ const Home = () => {
                     className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-all ${
                       selectedCategory === category.id
                         ? 'bg-pink-600 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        : isDark 
+                          ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
                     {category.icon} {category.name}
                   </button>
                 ))}
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 {filteredMemes.length} memes found
                 {selectedCategory !== 'all' && ` in ${selectedCategory}`}
               </p>
@@ -181,17 +195,17 @@ const Home = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
                 {[...Array(18)].map((_, i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="bg-gray-700 h-32 sm:h-40 rounded-lg mb-2"></div>
-                    <div className="bg-gray-700 h-3 rounded mb-1"></div>
-                    <div className="bg-gray-700 h-3 w-2/3 rounded"></div>
+                    <div className={`h-32 sm:h-40 rounded-lg mb-2 ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                    <div className={`h-3 rounded mb-1 ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                    <div className={`h-3 w-2/3 rounded ${isDark ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
                   </div>
                 ))}
               </div>
             ) : filteredMemes.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">😅</div>
-                <h3 className="text-white text-xl mb-2">No memes found</h3>
-                <p className="text-gray-400 mb-4">
+                <h3 className={`text-xl mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>No memes found</h3>
+                <p className={`mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   {searchQuery ? `No results for "${searchQuery}"` : 'No memes in this category'}
                 </p>
                 <button
@@ -211,7 +225,11 @@ const Home = () => {
             {!isLoading && filteredMemes.length > 0 && (
               <div className="pagination flex flex-wrap items-center justify-center mb-20 gap-1 px-4">
               <button
-                className="bg-gray-800 text-gray-300 px-4 py-2 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className={`px-4 py-2 border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ${
+                  isDark 
+                    ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
                 onClick={prevPage}
                 disabled={currentPage === 1}
               >
@@ -221,13 +239,15 @@ const Home = () => {
               {renderPagination().map((page, index) => (
                 <React.Fragment key={`page-${index}-${page}`}>
                   {page === '...' ? (
-                    <span className="text-gray-400 px-3 py-2 text-sm">...</span>
+                    <span className={`px-3 py-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>...</span>
                   ) : (
                     <button
                       className={`px-4 py-2 min-w-[44px] border rounded-lg cursor-pointer transition-all duration-300 font-bold text-sm ${
                         currentPage === page
-                          ? 'active bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-white border-blue-400 shadow-lg shadow-blue-500/60 transform scale-110'
-                          : 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white hover:border-gray-500 hover:scale-105'
+                          ? 'bg-pink-600 text-white border-pink-500 shadow-lg transform scale-105'
+                          : isDark
+                            ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white'
+                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                       }`}
                       onClick={() => paginate(page)}
                       style={currentPage === page ? {
@@ -242,7 +262,11 @@ const Home = () => {
               ))}
 
               <button
-                className="bg-gray-800 text-gray-300 px-4 py-2 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className={`px-4 py-2 border rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ${
+                  isDark 
+                    ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
                 onClick={nextPage}
                 disabled={currentPage === Math.ceil(filteredMemes.length / itemsPerPage)}
               >
