@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import "./style.css";
 import About from "./components/About";
 import History from "./components/History";
+import MemeHistory from "./components/MemeHistory";
 import Dynamicmeme from "./components/Dynamicmeme";
 import NewMeme from "./components/NewMeme";
 
@@ -17,6 +18,7 @@ const App = () => {
 				<Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/meme-history" element={<MemeHistory />} />
                 <Route path="/dynamic" element={<Dynamicmeme />} />
                 <Route path="/newmeme" element={<NewMeme />} />
 

@@ -116,6 +116,7 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                             {[
                                 { path: "/", label: "Home" },
                                 { path: "/dynamic", label: "Dynamic" },
+                                { path: "/meme-history", label: "My Memes" },
                                 { path: "/about", label: "About" },
                                 { path: "/history", label: "History" }
                             ].map(({ path, label }) => (
@@ -299,6 +300,7 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                             {[
                                 { path: "/", label: "Home" },
                                 { path: "/dynamic", label: "Dynamic" },
+                                { path: "/meme-history", label: "My Memes" },
                                 { path: "/about", label: "About" },
                                 { path: "/history", label: "History" },
                             ].map(({ path, label }) => (
