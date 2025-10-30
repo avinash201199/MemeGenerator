@@ -2,11 +2,13 @@
 import React, { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import memesMeta from "./memesMeta";
+import { useFavorites } from "./hooks/useFavorites";
 
 const Temp = ({ temp, setMeme }) => {
   const row1 = useRef(null);
   const row2 = useRef(null);
   const row3 = useRef(null);
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   useLayoutEffect(() => {
     const ctx1 = gsap.context(() => {
@@ -45,20 +47,32 @@ const Temp = ({ temp, setMeme }) => {
   const renderTemplate = (temps) => (
     <div
       key={temps.id}
-      className="template"
+      className="template group relative"
       style={{ paddingTop: "80px" }}
       onClick={() => setMeme(temps)}
-      // 1. Add aria-label to the clickable container
       aria-label={`Select meme template: ${temps.name}`}
-      role="button" // Indicates it is an interactive element
+      role="button"
     >
       <div
         style={{ backgroundImage: `url(${temps.url})` }}
         className="meme"
-        // 2. Add a redundant aria-label to the 'image' div
         aria-label={`Meme template image: ${temps.name}`}
-        role="img" // Indicates it is a non-interactive image element
+        role="img"
       ></div>
+
+      {/* Heart button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(temps);
+        }}
+        className="absolute top-2 right-2 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100 z-10"
+        title={isFavorite(temps.id) ? 'Remove from favorites' : 'Add to favorites'}
+      >
+        <span className={`text-lg ${isFavorite(temps.id) ? 'text-red-500' : 'text-gray-300 hover:text-red-400'}`}>
+          {isFavorite(temps.id) ? '❤️' : '♡'}
+        </span>
+      </button>
 
       {/* Caption overlay */}
       <div className="hover-caption">

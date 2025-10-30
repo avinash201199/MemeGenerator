@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "./contexts/ToastContext";
 import {
     shareToTwitter,
@@ -22,6 +22,32 @@ const Meme = ({ meme, setMeme }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [showError, setShowError] = useState(false);
+    
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        downloadMeme(meme.url, "meme");
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if (!isLoading) {
+                            document.querySelector('form').requestSubmit();
+                        }
+                        break;
+                }
+            }
+            if (e.key === 'Escape') {
+                setMeme(null);
+            }
+        };
+        
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [meme.url, isLoading, setMeme]);
 
     const saveMemeToHistory = (memeData) => {
         const savedMemes = JSON.parse(localStorage.getItem('memeHistory') || '[]');
@@ -29,10 +55,18 @@ const Meme = ({ meme, setMeme }) => {
             id: Date.now(),
             url: memeData.url,
             template_name: meme.name || 'Unknown Template',
+            template_id: meme.id,
             texts: form.boxes.map(box => box.text || ''),
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            thumbnail: meme.url
         };
+        
+        // Keep only last 50 memes to avoid storage issues
         savedMemes.unshift(newMeme);
+        if (savedMemes.length > 50) {
+            savedMemes.splice(50);
+        }
+        
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
     };
 
@@ -98,31 +132,82 @@ const Meme = ({ meme, setMeme }) => {
                 <div className="flex flex-col lg:flex-row items-center justify-center gap-8 w-full">
                     
                     {/* Left Section - Image */}
-                    <div className="flex-1 flex justify-center">
-                        <img 
-                            src={meme.url} 
-                            alt="meme" 
-                            className="max-w-full max-h-96 object-contain rounded-lg shadow-lg border-4 border-pink-500"
-                        />
+                    <div className="flex-1 flex flex-col items-center">
+                        <div className="relative group">
+                            <img 
+                                src={meme.url} 
+                                alt="meme" 
+                                className="max-w-full max-h-96 object-contain rounded-lg shadow-lg border-4 border-pink-500 transition-transform hover:scale-105"
+                            />
+                            {/* Meme Info Overlay */}
+                            <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                {meme.width}x{meme.height}px
+                            </div>
+                        </div>
+                        
+                        {/* Meme Stats */}
+                        <div className="mt-4 text-center">
+                            <h2 className="text-white text-lg font-bold mb-2">{meme.name}</h2>
+                            <div className="flex gap-4 text-sm text-gray-400">
+                                <span>📝 {meme.box_count} text boxes</span>
+                                <span>📈 {meme.width}x{meme.height}</span>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Right Section - Caption Inputs */}
                     <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-                        <h3 className="text-white text-xl font-bold mb-4">Add Your Captions</h3>
-                        <div className="space-y-3 w-full max-w-md">
+                        <div className="text-center mb-4">
+                            <h3 className="text-white text-xl font-bold mb-2">Add Your Captions</h3>
+                            <div className="text-gray-400 text-xs space-y-1">
+                                <p>📝 Fill in the text boxes below</p>
+                                <p>⌨️ Shortcuts: Ctrl+S (Save), Ctrl+Enter (Generate), Esc (Back)</p>
+                            </div>
+                        </div>
+                        <div className="space-y-4 w-full max-w-md">
                             {[...Array(meme.box_count)].map((_, index) => (
-                                <input
-                                    key={index}
-                                    type="text"
-                                    placeholder={`Caption ${index + 1} (Required)`}
-                                    required
-                                    className="w-full p-3 rounded-lg border-2 border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors invalid:border-red-500 invalid:focus:border-red-500"
-                                    onChange={(e) => {
-                                        const newBox = form.boxes;
-                                        newBox[index] = { text: e.target.value };
-                                        setForm({ ...form, boxes: newBox });
-                                    }}
-                                />
+                                <div key={index} className="space-y-2">
+                                    <input
+                                        type="text"
+                                        placeholder={`Caption ${index + 1} (Required)`}
+                                        required
+                                        className="w-full p-3 rounded-lg border-2 border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:border-pink-500 focus:outline-none transition-colors invalid:border-red-500 invalid:focus:border-red-500"
+                                        onChange={(e) => {
+                                            const newBox = form.boxes;
+                                            newBox[index] = { text: e.target.value };
+                                            setForm({ ...form, boxes: newBox });
+                                        }}
+                                    />
+                                    {/* Quick Text Options */}
+                                    <div className="flex gap-2 text-xs">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const input = document.querySelector(`input:nth-of-type(${index + 1})`);
+                                                input.value = input.value.toUpperCase();
+                                                const newBox = form.boxes;
+                                                newBox[index] = { text: input.value };
+                                                setForm({ ...form, boxes: newBox });
+                                            }}
+                                            className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded"
+                                        >
+                                            CAPS
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const suggestions = ['Me:', 'When you:', 'POV:', 'Nobody:', 'Everyone:'];
+                                                const random = suggestions[Math.floor(Math.random() * suggestions.length)];
+                                                const newBox = form.boxes;
+                                                newBox[index] = { text: random };
+                                                setForm({ ...form, boxes: newBox });
+                                            }}
+                                            className="bg-pink-700 hover:bg-pink-600 text-white px-2 py-1 rounded"
+                                        >
+                                            💡 Suggest
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -158,11 +243,11 @@ const Meme = ({ meme, setMeme }) => {
                             </>
                         ) : showError ? (
                             <>
-                                ❌ Error
+                                ❌ Failed - Try Again
                             </>
                         ) : showSuccessNote ? (
                             <>
-                                ✅ Success!
+                                ✅ Meme Created!
                             </>
                         ) : (
                             <>
@@ -174,8 +259,50 @@ const Meme = ({ meme, setMeme }) => {
                         type="button"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors font-medium"
                         onClick={() => downloadMeme(meme.url, "meme")}
+                        title="Save meme (Ctrl+S)"
                     >
                         💾 Save
+                    </button>
+                    
+                    {/* Quick Actions */}
+                    <button 
+                        type="button"
+                        className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg transition-colors font-medium"
+                        onClick={() => {
+                            // Clear all inputs
+                            setForm({ ...form, boxes: [] });
+                            document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+                        }}
+                        title="Clear all text"
+                    >
+                        🗑️ Clear
+                    </button>
+                    
+                    <button 
+                        type="button"
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-lg transition-colors font-medium"
+                        onClick={() => {
+                            // Random meme suggestions
+                            const suggestions = [
+                                ['Me trying to code', 'My computer'],
+                                ['Monday morning', 'Me'],
+                                ['When it works', 'When it doesn\'t'],
+                                ['Expectation', 'Reality']
+                            ];
+                            const random = suggestions[Math.floor(Math.random() * suggestions.length)];
+                            const newBoxes = [];
+                            random.forEach((text, i) => {
+                                if (i < meme.box_count) {
+                                    newBoxes[i] = { text };
+                                    const input = document.querySelectorAll('input[type="text"]')[i];
+                                    if (input) input.value = text;
+                                }
+                            });
+                            setForm({ ...form, boxes: newBoxes });
+                        }}
+                        title="Random meme ideas"
+                    >
+                        🎲 Random
                     </button>
                     
                     {/* Success Note */}
@@ -187,8 +314,13 @@ const Meme = ({ meme, setMeme }) => {
                     
                     {/* Error Message */}
                     {showError && (
-                        <div className="bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 animate-bounce">
-                            ❌ {error}
+                        <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-2 rounded-lg flex items-start gap-2">
+                            <span>⚠️</span>
+                            <div>
+                                <p className="font-medium">Generation Failed</p>
+                                <p className="text-xs text-red-400">{error}</p>
+                                <p className="text-xs text-gray-400 mt-1">Check your connection and try again</p>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -234,6 +366,36 @@ const Meme = ({ meme, setMeme }) => {
                             onClick={() => copyToClipboard(meme.url)}
                         >
                             📋 Copy Link
+                        </button>
+                        
+                        {/* Additional Share Options */}
+                        <button
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                            onClick={() => {
+                                if (navigator.share) {
+                                    navigator.share({
+                                        title: 'Check out this meme!',
+                                        text: `Funny meme: ${meme.name}`,
+                                        url: meme.url
+                                    });
+                                } else {
+                                    copyToClipboard(meme.url);
+                                }
+                            }}
+                        >
+                            🚀 Share
+                        </button>
+                        
+                        <button
+                            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                            onClick={() => {
+                                const text = `Check out this meme: ${meme.name} - ${meme.url}`;
+                                navigator.clipboard.writeText(text).then(() => {
+                                    toast.success("Meme text copied with link!");
+                                });
+                            }}
+                        >
+                            📝 Copy Text
                         </button>
                     </div>
                 </div>
