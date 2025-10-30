@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../ThemeContext";
 import { FaSearch, FaTimes, FaGithub } from "react-icons/fa";
+import ThemeToggle from "./ThemeToggle";
 import "../index.css";
 import { useNavigate } from "react-router-dom";
 const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
@@ -193,13 +194,7 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                                 <FaGithub className="w-6 h-6" />
                             </a>
 
-                            <button
-                                onClick={toggleTheme}
-                                className={`p-2 rounded-full ${isDarkTheme ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
-                                aria-label={`Switch to ${isDarkTheme ? 'light' : 'dark'} mode`}
-                            >
-                                {isDarkTheme ? '☀️' : '🌙'}
-                            </button>
+                            <ThemeToggle />
                            <button
                                 onClick={handleBackClick}
                                 className={`group relative overflow-hidden px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300 hover:scale-105 ${

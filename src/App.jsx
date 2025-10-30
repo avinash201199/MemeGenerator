@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./ThemeContext";
 import Home from "./components/Home";
 import "./style.css";
+import "./theme.css";
 import About from "./components/About";
 import History from "./components/History";
 import MemeHistory from "./components/MemeHistory";
@@ -17,7 +18,8 @@ const App = () => {
     
     return (
         <ThemeProvider>
-            <Routes>
+            <div className="theme-bg-primary min-h-screen transition-colors">
+                <Routes>
 				<Route path="/" element={<Home setMeme={setMeme} meme={meme} />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/history" element={<History />} />
@@ -27,7 +29,8 @@ const App = () => {
                 <Route path="/newmeme" element={<NewMeme />} />
 
                 {/* Define other routes here */}
-            </Routes>
+                </Routes>
+            </div>
         </ThemeProvider>
     );
 };

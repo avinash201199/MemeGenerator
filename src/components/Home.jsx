@@ -6,6 +6,7 @@ import Meme from "../Meme";
 import Footer from "./Footer";
 import "../style.css";
 import "../index.css";
+import { useTheme } from "../hooks/useTheme";
 
 const Home = () => {
   const [temp, setTemp] = useState([]);
@@ -15,6 +16,7 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isDark } = useTheme();
 
   const [itemsPerPage] = useState(18); // Fixed 18 items per page
 
@@ -116,7 +118,7 @@ const Home = () => {
   };
 
   return (
-    <div className="App min-h-screen flex flex-col">
+    <div className={`App min-h-screen flex flex-col ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <Navbar
         setMeme={setMeme}
         searchQuery={searchQuery}
