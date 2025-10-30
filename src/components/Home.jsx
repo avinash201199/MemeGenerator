@@ -25,7 +25,7 @@ const Home = () => {
       });
   }, []);
 
-  // Function to filter memes based on the search query
+// Filters meme list according to the user's search input
   const filteredMemes = temp.filter((meme) =>
     meme.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -35,7 +35,7 @@ const Home = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentMemes = filteredMemes.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Function to change the current page
+  // Updates the current page number when a new page is selected
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
