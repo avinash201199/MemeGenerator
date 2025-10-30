@@ -155,18 +155,28 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                                 <div className="relative">
                                     <input
                                         type="text"
-                                        placeholder="Search memes..."
+                                        placeholder="Search memes... (e.g., drake, surprised)"
                                         value={searchQuery || ''}
                                         onChange={handleSearchChange}
-                                        className={`px-4 py-2 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 ${isDarkTheme 
-                                            ? 'bg-gray-800 text-white placeholder-gray-400 focus:ring-blue-500' 
-                                            : 'bg-gray-100 text-gray-900 placeholder-gray-500 focus:ring-blue-400'}`}
+                                        className={`px-4 py-2 pr-10 rounded-lg text-sm w-64 focus:outline-none focus:ring-2 transition-all ${isDarkTheme 
+                                            ? 'bg-gray-800 text-white placeholder-gray-400 focus:ring-pink-500 border border-gray-700 focus:border-pink-500' 
+                                            : 'bg-gray-100 text-gray-900 placeholder-gray-500 focus:ring-pink-400 border border-gray-300 focus:border-pink-400'}`}
                                         name="meme-search"
                                         autoComplete="off"
                                         enterKeyHint="search"
                                         aria-label="Search memes"
                                     />
-                                    <FaSearch className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} />
+                                    {searchQuery ? (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'}`}
+                                            aria-label="Clear search"
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    ) : (
+                                        <FaSearch className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} />
+                                    )}
                                 </div>
                             )}
                             <a
@@ -248,6 +258,35 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                             </button>
                         </div>
                     </div>
+                    {/* Mobile Search Bar */}
+                    {isMobileSearchOpen && isHomePage && (
+                        <div className={`md:hidden px-4 pb-4 border-t ${isDarkTheme ? 'border-gray-800 bg-gray-900' : 'border-gray-200 bg-white'}`}>
+                            <div className="relative">
+                                <input
+                                    ref={searchInputRef}
+                                    type="text"
+                                    placeholder="Search memes..."
+                                    value={searchQuery || ''}
+                                    onChange={handleSearchChange}
+                                    className={`w-full px-4 py-3 pr-10 rounded-lg text-sm focus:outline-none focus:ring-2 transition-all ${isDarkTheme 
+                                        ? 'bg-gray-800 text-white placeholder-gray-400 focus:ring-pink-500 border border-gray-700' 
+                                        : 'bg-gray-100 text-gray-900 placeholder-gray-500 focus:ring-pink-400 border border-gray-300'}`}
+                                    autoComplete="off"
+                                />
+                                {searchQuery ? (
+                                    <button
+                                        onClick={() => setSearchQuery('')}
+                                        className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}
+                                    >
+                                        <FaTimes />
+                                    </button>
+                                ) : (
+                                    <FaSearch className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} />
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    
                     {/* Mobile Dropdown Menu */}
                         {isMobileMenuOpen && (
                         <div
