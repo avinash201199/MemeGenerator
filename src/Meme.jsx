@@ -56,10 +56,18 @@ const Meme = ({ meme, setMeme }) => {
             id: Date.now(),
             url: memeData.url,
             template_name: meme.name || 'Unknown Template',
+            template_id: meme.id,
             texts: form.boxes.map(box => box.text || ''),
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            thumbnail: meme.url
         };
+        
+        // Keep only last 50 memes to avoid storage issues
         savedMemes.unshift(newMeme);
+        if (savedMemes.length > 50) {
+            savedMemes.splice(50);
+        }
+        
         localStorage.setItem('memeHistory', JSON.stringify(savedMemes));
     };
 

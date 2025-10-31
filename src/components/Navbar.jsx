@@ -115,9 +115,10 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                         <div className="hidden md:flex items-center space-x-1">
                             {[
                                 { path: "/", label: "Home" },
+                                { path: "/favorites", label: "Favorites" },
+                                { path: "/meme-history", label: "My Memes" },
                                 { path: "/dynamic", label: "Dynamic" },
-                                { path: "/about", label: "About" },
-                                { path: "/history", label: "History" }
+                                { path: "/about", label: "About" }
                             ].map(({ path, label }) => (
                                 <Link
                                     key={path}
@@ -298,9 +299,10 @@ const Navbar = ({ setMeme, searchQuery, setSearchQuery }) => {
                         >
                             {[
                                 { path: "/", label: "Home" },
+                                { path: "/favorites", label: "Favorites" },
+                                { path: "/meme-history", label: "My Memes" },
                                 { path: "/dynamic", label: "Dynamic" },
                                 { path: "/about", label: "About" },
-                                { path: "/history", label: "History" },
                             ].map(({ path, label }) => (
                                 <Link
                                     key={path}
