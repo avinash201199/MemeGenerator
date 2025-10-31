@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Canvas Meme Generation</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .result { margin: 20px 0; }
+        img { max-width: 100%; border: 2px solid #ccc; }
+        input, button { padding: 10px; margin: 5px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Canvas Meme Generator Test</h1>
+        
+        <div>
+            <input type="text" id="topText" placeholder="Top text" value="WHEN YOU">
+            <input type="text" id="bottomText" placeholder="Bottom text" value="FINALLY GET IT WORKING">
+            <button onclick="generateMeme()">Generate Meme</button>
+        </div>
+        
+        <div class="result">
+            <h3>Original Image:</h3>
+            <img id="originalImg" src="https://i.imgflip.com/1bij.jpg" alt="Drake meme template" onload="console.log('Image loaded successfully')">
+        </div>
+        
+        <div class="result">
+            <h3>Generated Meme:</h3>
+            <img id="generatedImg" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+        // Copy of the canvas generation function
+        const generateMemeWithCanvas = async (imageUrl, texts) => {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.crossOrigin = 'anonymous';
+                
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Configure text style
+                    ctx.fillStyle = 'white';
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 3;
+                    ctx.textAlign = 'center';
+                    ctx.font = 'bold 40px Impact, Arial Black, sans-serif';
+                    
+                    // Top text
+                    if (texts[0]) {
+                        const topText = texts[0].toUpperCase();
+                        ctx.strokeText(topText, canvas.width / 2, 50);
+                        ctx.fillText(topText, canvas.width / 2, 50);
+                    }
+                    
+                    // Bottom text
+                    if (texts[1]) {
+                        const bottomText = texts[1].toUpperCase();
+                        ctx.strokeText(bottomText, canvas.width / 2, canvas.height - 20);
+                        ctx.fillText(bottomText, canvas.width / 2, canvas.height - 20);
+                    }
+                    
+                    canvas.toBlob((blob) => {
+                        const url = URL.createObjectURL(blob);
+                        resolve(url);
+                    }, 'image/jpeg', 0.9);
+                };
+                
+                img.onerror = () => {
+                    reject(new Error('Failed to load image'));
+                };
+                
+                img.src = imageUrl;
+            });
+        };
+
+        async function generateMeme() {
+            const topText = document.getElementById('topText').value;
+            const bottomText = document.getElementById('bottomText').value;
+            const originalImg = document.getElementById('originalImg');
+            const generatedImg = document.getElementById('generatedImg');
+            
+            console.log('Generating meme with texts:', [topText, bottomText]);
+            
+            try {
+                const memeUrl = await generateMemeWithCanvas(originalImg.src, [topText, bottomText]);
+                generatedImg.src = memeUrl;
+                generatedImg.style.display = 'block';
+                console.log('Meme generated successfully!', memeUrl);
+            } catch (error) {
+                console.error('Error generating meme:', error);
+                alert('Error generating meme: ' + error.message);
+            }
+        }
+        
+        // Test on page load
+        window.onload = function() {
+            console.log('Test page loaded, you can click Generate Meme to test');
+        };
+    </script>
+</body>
+</html>

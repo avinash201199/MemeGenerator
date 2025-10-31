@@ -8,6 +8,7 @@ import {
     shareToWhatsApp,
     downloadMeme
 } from "./utils/socialShare";
+import { generateSimpleMeme } from "./utils/simpleMemeCanvas";
 
 const Meme = ({ meme, setMeme }) => {
     const toast = useToast();
@@ -43,33 +44,70 @@ const Meme = ({ meme, setMeme }) => {
         setShowError(false);
 
         try {
-            // POST to our secure serverless proxy
-            const resp = await fetch('/api/caption', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    template_id: form.template_id,
-                    boxes: (form.boxes || []).map((b) => ({ text: b?.text ?? '' })),
-                })
-            });
-            const data = await resp.json();
+            // Get the text values from form
+            const texts = (form.boxes || []).map((b) => b?.text ?? '');
+            
+            // Try client-side canvas generation first
+            try {
+                console.log('Generating meme with canvas:', { 
+                    imageUrl: meme.url, 
+                    texts, 
+                    boxCount: meme.box_count 
+                });
+                
+                // Add timeout to prevent hanging
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Canvas generation timeout')), 5000)
+                );
+                
+                // Use simple canvas generation for better reliability
+                const generatedUrl = await Promise.race([
+                    generateSimpleMeme(meme.url, texts),
+                    timeoutPromise
+                ]);
 
-            setIsLoading(false);
-            if (data?.success && data?.data?.url) {
-                setMeme({ ...meme, url: data.data.url });
+                console.log('Canvas generation successful, URL:', generatedUrl);
+                
+                setIsLoading(false);
+                setMeme({ ...meme, url: generatedUrl });
                 setMemeGenerated(true);
                 setShowSuccessNote(true);
-                saveMemeToHistory(data.data);
+                
+                // Save to history with the generated URL
+                saveMemeToHistory({ url: generatedUrl });
                 setTimeout(() => setShowSuccessNote(false), 4000);
-            } else {
-                setError(data?.error || 'Failed to generate meme. Please try again.');
-                setShowError(true);
-                setTimeout(() => { setShowError(false); setError(''); }, 2000);
+                return;
+                
+            } catch (canvasError) {
+                console.log('Canvas generation failed, trying API fallback:', canvasError);
+                
+                // Fallback to API method
+                const resp = await fetch('/api/caption', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        template_id: form.template_id,
+                        boxes: texts.map((text) => ({ text })),
+                    })
+                });
+                const data = await resp.json();
+
+                setIsLoading(false);
+                if (data?.success && data?.data?.url) {
+                    setMeme({ ...meme, url: data.data.url });
+                    setMemeGenerated(true);
+                    setShowSuccessNote(true);
+                    saveMemeToHistory(data.data);
+                    setTimeout(() => setShowSuccessNote(false), 4000);
+                } else {
+                    throw new Error(data?.error || 'API generation failed');
+                }
             }
+            
         } catch (err) {
-            console.error('Error:', err);
+            console.error('Error generating meme:', err);
             setIsLoading(false);
-            setError('Network error. Please check your connection and try again.');
+            setError('Failed to generate meme. Please try again.');
             setShowError(true);
             setTimeout(() => { setShowError(false); setError(''); }, 2000);
         }

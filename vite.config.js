@@ -8,5 +8,19 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.js']
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        configure: (proxy, options) => {
+          // Fallback for development - direct Imgflip API call
+          proxy.on('error', (err, req, res) => {
+            console.log('API proxy error, using direct Imgflip call');
+          });
+        }
+      }
+    }
   }
 })
